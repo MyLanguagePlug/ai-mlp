@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { TutorCardCompact } from "@/components/tutor-card"
+import { CardCarousel } from "@/components/ui/card-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
@@ -385,6 +386,18 @@ export default function HomePage() {
             {featuredTutors.map((tutor) => (
               <TutorCardCompact key={tutor.id} {...tutor} />
             ))}
+          </div>
+
+          <div className="mt-12">
+            <CardCarousel
+              images={featuredTutors.map((tutor) => ({
+                src: tutor.image,
+                alt: tutor.name,
+              }))}
+              autoplayDelay={3000}
+              showPagination={true}
+              showNavigation={true}
+            />
           </div>
         </div>
       </section>
