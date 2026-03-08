@@ -1,3 +1,7 @@
+"use client"
+
+import CountUp from './CountUp'
+
 interface Stat {
   value: string
   label: string
@@ -37,16 +41,28 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
           </h2>
         )}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className={`text-4xl font-bold md:text-5xl ${valueClasses[variant]}`}>
-                {stat.value}
+          {stats.map((stat, index) => {
+            const match = stat.value.match(/^([\d,]+)(.*)$/)
+            const numericPart = match ? parseInt(match[1].replace(/,/g, ""), 10) : null
+            const suffix = match ? match[2] : stat.value
+            return (
+              <div key={index} className="text-center">
+                <div className={`text-4xl font-bold md:text-5xl ${valueClasses[variant]}`}>
+                  {numericPart !== null ? (
+                    <>
+                      <CountUp to={numericPart} />
+                      {suffix}
+                    </>
+                  ) : (
+                    stat.value
+                  )}
+                </div>
+                <div className={`mt-2 text-sm md:text-base ${labelClasses[variant]}`}>
+                  {stat.label}
+                </div>
               </div>
-              <div className={`mt-2 text-sm md:text-base ${labelClasses[variant]}`}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
