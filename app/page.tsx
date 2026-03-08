@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { TutorCardCompact } from "@/components/tutor-card"
-import { FeaturedCoursesCarousel } from "@/components/featured-courses-carousel"
-import { type CarouselItem } from "@/components/ui/offers-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
@@ -55,69 +53,6 @@ const featuredTutors = [
     reviews: 203,
     hourlyRate: 28,
     isVerified: true,
-  },
-]
-
-const featuredCourses: CarouselItem[] = [
-  {
-    id: "c1",
-    imageUrl: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500&q=80",
-    title: "Spanish Immersion",
-    subtitle: "Beginner to Intermediate · 24 lessons",
-    rating: 4.9,
-    price: 199,
-    originalPrice: 299,
-    discountPercentage: 33,
-  },
-  {
-    id: "c2",
-    imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80",
-    title: "French Essentials",
-    subtitle: "A1–B1 · 20 lessons with a native tutor",
-    rating: 4.8,
-    price: 179,
-    originalPrice: 249,
-    discountPercentage: 28,
-  },
-  {
-    id: "c3",
-    imageUrl: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=500&q=80",
-    title: "Japanese Foundations",
-    subtitle: "Hiragana, Katakana & Conversation",
-    rating: 5.0,
-    price: 219,
-    originalPrice: 299,
-    discountPercentage: 27,
-  },
-  {
-    id: "c4",
-    imageUrl: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=500&q=80",
-    title: "German Business",
-    subtitle: "Professional German for the workplace",
-    rating: 4.9,
-    price: 239,
-    originalPrice: 319,
-    discountPercentage: 25,
-  },
-  {
-    id: "c5",
-    imageUrl: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=500&q=80",
-    title: "Mandarin Starter",
-    subtitle: "Tones, Pinyin & Daily phrases",
-    rating: 4.7,
-    price: 189,
-    originalPrice: 259,
-    discountPercentage: 27,
-  },
-  {
-    id: "c6",
-    imageUrl: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=500&q=80",
-    title: "Italian Culture & Language",
-    subtitle: "Conversational Italian for travellers",
-    rating: 4.8,
-    price: 169,
-    originalPrice: 229,
-    discountPercentage: 26,
   },
 ]
 
@@ -450,10 +385,6 @@ export default function HomePage() {
             {featuredTutors.map((tutor) => (
               <TutorCardCompact key={tutor.id} {...tutor} />
             ))}
-          </div>
-
-          <div className="mt-12 flex justify-center">
-            <FeaturedCoursesCarousel items={featuredCourses} />
           </div>
         </div>
       </section>
