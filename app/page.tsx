@@ -127,14 +127,14 @@ const testimonials = [
 ]
 
 const languages = [
-  { name: "Spanish", flag: "🇪🇸", tutors: 520 },
-  { name: "French", flag: "🇫🇷", tutors: 380 },
-  { name: "German", flag: "🇩🇪", tutors: 290 },
-  { name: "Japanese", flag: "🇯🇵", tutors: 210 },
-  { name: "Chinese", flag: "🇨🇳", tutors: 340 },
-  { name: "Italian", flag: "🇮🇹", tutors: 180 },
-  { name: "Portuguese", flag: "🇧🇷", tutors: 220 },
-  { name: "Korean", flag: "🇰🇷", tutors: 150 },
+  { name: "Spanish", flagCode: "es", tutors: 520 },
+  { name: "French", flagCode: "fr", tutors: 380 },
+  { name: "German", flagCode: "de", tutors: 290 },
+  { name: "Japanese", flagCode: "jp", tutors: 210 },
+  { name: "Chinese", flagCode: "cn", tutors: 340 },
+  { name: "Italian", flagCode: "it", tutors: 180 },
+  { name: "Portuguese", flagCode: "br", tutors: 220 },
+  { name: "Korean", flagCode: "kr", tutors: 150 },
 ]
 
 const stats = [
@@ -296,9 +296,16 @@ export default function HomePage() {
                 {/* Flag bubble */}
                 <div
                   aria-label={lang.name}
-                  className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-4xl shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
+                  className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-secondary shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
                 >
-                  {lang.flag}
+                  <Image
+                    src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                    alt={`${lang.name} flag`}
+                    width={56}
+                    height={40}
+                    className="h-10 w-14 rounded-lg object-cover"
+                    unoptimized
+                  />
                 </div>
                 {/* Language name */}
                 <p className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
