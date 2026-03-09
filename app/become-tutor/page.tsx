@@ -73,7 +73,7 @@ const steps = [
 ]
 
 const stats = [
-  { value: "$3,500+", label: "Reliable Monthly Earnings" },
+  { value: "", label: "Reliable Monthly Earnings" },
   { value: "10,000+", label: "Active Students" },
   { value: "150+", label: "Countries Reached" },
   { value: "95%", label: "Tutor Satisfaction" },
