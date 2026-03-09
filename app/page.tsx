@@ -291,20 +291,25 @@ export default function HomePage() {
               <Link
                 key={lang.name}
                 href={`/tutors?language=${lang.name.toLowerCase()}`}
-                className="group flex items-center justify-between rounded-xl border border-border bg-background p-4 transition-all hover:border-primary hover:shadow-md"
+                className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-background px-4 py-6 text-center transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{lang.flag}</span>
-                  <div>
-                    <p className="font-semibold text-foreground group-hover:text-primary">
-                      {lang.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {lang.tutors} tutors
-                    </p>
-                  </div>
+                {/* Flag bubble */}
+                <div
+                  aria-label={lang.name}
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-4xl shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
+                >
+                  {lang.flag}
                 </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+                {/* Language name */}
+                <p className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                  {lang.name}
+                </p>
+                {/* Tutor count */}
+                <p className="text-xs font-medium text-muted-foreground">
+                  {lang.tutors} tutors available
+                </p>
+                {/* Hover accent line */}
+                <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </div>
