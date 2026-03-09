@@ -4,55 +4,98 @@ import { Search, Globe, Users, Clock, Star, CheckCircle2, ArrowRight, Play } fro
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { TutorCardCompact } from "@/components/tutor-card"
+import { TutorCarousel, type Tutor } from "@/components/ui/product-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
 
-const featuredTutors = [
+const featuredTutors: Tutor[] = [
   {
     id: "1",
     name: "Maria Santos",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-    country: "Spain",
-    languages: ["Spanish", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
+    specialty: "Spanish · English",
     rating: 4.9,
     reviews: 234,
     hourlyRate: 25,
-    isVerified: true,
+    badge: "Top Rated",
+    availability: "Available Now",
   },
   {
     id: "2",
     name: "Jean-Pierre Dubois",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-    country: "France",
-    languages: ["French", "English", "Spanish"],
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    specialty: "French · English · Spanish",
     rating: 4.8,
     reviews: 189,
     hourlyRate: 30,
-    isVerified: true,
+    badge: "Verified",
+    availability: "Available Now",
   },
   {
     id: "3",
     name: "Yuki Tanaka",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-    country: "Japan",
-    languages: ["Japanese", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    specialty: "Japanese · English",
     rating: 5.0,
     reviews: 156,
     hourlyRate: 35,
-    isVerified: true,
+    badge: "Top Rated",
+    availability: "Available Now",
   },
   {
     id: "4",
     name: "Hans Mueller",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-    country: "Germany",
-    languages: ["German", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    specialty: "German · English",
     rating: 4.9,
     reviews: 203,
     hourlyRate: 28,
-    isVerified: true,
+    badge: "Verified",
+    availability: "Available Now",
+  },
+  {
+    id: "5",
+    name: "Ana Silva",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
+    specialty: "Portuguese · Spanish",
+    rating: 4.8,
+    reviews: 142,
+    hourlyRate: 22,
+    badge: "Verified",
+    availability: "Available Now",
+  },
+  {
+    id: "6",
+    name: "Wei Zhang",
+    imageUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=face",
+    specialty: "Mandarin · English",
+    rating: 4.9,
+    reviews: 178,
+    hourlyRate: 32,
+    badge: "Top Rated",
+    availability: "Available Now",
+  },
+  {
+    id: "7",
+    name: "Sofia Rossi",
+    imageUrl: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=400&fit=crop&crop=face",
+    specialty: "Italian · French",
+    rating: 4.7,
+    reviews: 98,
+    hourlyRate: 24,
+    availability: "Available Now",
+  },
+  {
+    id: "8",
+    name: "Min-jun Lee",
+    imageUrl: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&h=400&fit=crop&crop=face",
+    specialty: "Korean · English",
+    rating: 4.8,
+    reviews: 121,
+    hourlyRate: 27,
+    badge: "Verified",
+    availability: "Available Now",
   },
 ]
 
@@ -377,8 +420,8 @@ export default function HomePage() {
 
       {/* Featured Tutors */}
       <section className="bg-[#F0F6FA] py-16 md:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8">
             <div>
               <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Featured Tutors
@@ -387,19 +430,19 @@ export default function HomePage() {
                 Top-rated tutors ready to help you succeed
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/tutors">
-                View All Tutors
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <a
+              href="/tutors"
+              className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              See all tutors →
+            </a>
           </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredTutors.map((tutor) => (
-              <TutorCardCompact key={tutor.id} {...tutor} />
-            ))}
-          </div>
+          <TutorCarousel
+            tutors={featuredTutors}
+            viewAllHref="/tutors"
+            className="py-4"
+          />
         </div>
       </section>
 
