@@ -175,7 +175,7 @@ export function Footer() {
                   alt="My Language Plug"
                   width={888}
                   height={364}
-                  className="h-10 w-auto sm:h-12"
+                  className="h-12 w-auto sm:h-14"
                 />
               </Link>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
