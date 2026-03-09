@@ -101,6 +101,12 @@ const stats = [
   { value: "98%", label: "Satisfaction Rate" },
 ]
 
+const onlineTutorAvatars = [
+  { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 1" },
+  { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 2" },
+  { src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 3" },
+]
+
 const features = [
   {
     icon: Users,
@@ -191,11 +197,19 @@ export default function HomePage() {
                 <div className="absolute -left-8 bottom-8 rounded-xl bg-background p-4 shadow-lg">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
-                      {[1, 2, 3].map((i) => (
+                      {onlineTutorAvatars.map((tutor, i) => (
                         <div
                           key={i}
-                          className="h-8 w-8 rounded-full bg-primary ring-2 ring-background"
-                        />
+                          className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-background"
+                        >
+                          <Image
+                            src={tutor.src}
+                            alt={tutor.alt}
+                            width={32}
+                            height={32}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
                       ))}
                     </div>
                     <div>
