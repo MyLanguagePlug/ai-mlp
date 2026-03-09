@@ -126,7 +126,7 @@ export default function BecomeTutorPage() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
                 <Button size="lg" asChild>
                   <Link href="#apply">
-                    Apply Now
+                    Become A Tutor
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
