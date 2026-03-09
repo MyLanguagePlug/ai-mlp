@@ -42,14 +42,16 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
         )}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => {
-            const match = stat.value.match(/^([\d,]+)(.*)$/)
-            const numericPart = match ? parseInt(match[1].replace(/,/g, ""), 10) : null
-            const suffix = match ? match[2] : stat.value
+            const match = stat.value.match(/^([^\d]*)(\d[\d,]*)(.*)$/)
+            const numericPart = match ? parseInt(match[2].replace(/,/g, ""), 10) : null
+            const prefix = match ? match[1] : ""
+            const suffix = match ? match[3] : stat.value
             return (
               <div key={index} className="text-center">
                 <div className={`text-4xl font-bold md:text-5xl ${valueClasses[variant]}`}>
                   {numericPart !== null ? (
                     <>
+                      {prefix}
                       <CountUp to={numericPart} />
                       {suffix}
                     </>
