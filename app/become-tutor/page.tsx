@@ -116,7 +116,7 @@ export default function BecomeTutorPage() {
               </span>
               <h1 className="font-serif mt-6 text-balance text-4xl font-bold tracking-tight text-[#042230] sm:text-5xl md:text-6xl">
                 Share Your Language,{" "}
-                <span className="text-[--accent-blue]">Change Lives</span>
+                <span className="text-[--accent-blue]">Change <span className="text-[#5A8DA5]">Lives</span></span>
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
                 Turn your language skills into a rewarding career. Set your own rates, 
