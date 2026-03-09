@@ -114,7 +114,7 @@ export default function BecomeTutorPage() {
               <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
                 Join 500+ Expert Tutors
               </span>
-              <h1 className="font-serif mt-6 text-balance text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl md:text-6xl">
+              <h1 className="font-serif mt-6 text-balance text-4xl font-bold tracking-tight text-[#042230] sm:text-5xl md:text-6xl">
                 Share Your Language,{" "}
                 <span className="text-[--accent-blue]">Change Lives</span>
               </h1>
