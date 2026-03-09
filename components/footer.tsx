@@ -173,9 +173,9 @@ export function Footer() {
                 <Image
                   src="/images/logo.png"
                   alt="My Language Plug"
-                  width={240}
-                  height={70}
-                  className="h-14 w-auto sm:h-16 lg:h-18"
+                  width={888}
+                  height={364}
+                  className="h-10 w-auto sm:h-12"
                 />
               </Link>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">

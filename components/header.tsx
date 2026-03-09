@@ -50,9 +50,9 @@ export function Header() {
           <Image
             src="/images/logo.png"
             alt="My Language Plug"
-            width={280}
-            height={80}
-            className="h-14 w-auto sm:h-16 lg:h-20"
+            width={888}
+            height={364}
+            className="h-10 w-auto sm:h-12 lg:h-14"
             priority
           />
         </Link>
