@@ -69,7 +69,7 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
   const days = Array.from({ length: 5 }, (_, i) => addDays(weekStart, i))
 
   return (
-    <div className="flex flex-col gap-3 border-t p-4 lg:w-56 lg:shrink-0 lg:border-t-0 lg:border-l">
+    <div className="flex h-full flex-col gap-3 p-4">
       {/* Header */}
       <div className="flex items-center justify-between gap-1">
         <span className="text-xs font-semibold uppercase tracking-wide text-[--navy]">

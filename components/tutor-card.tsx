@@ -38,9 +38,9 @@ export function TutorCard({
   bio,
 }: TutorCardProps) {
   return (
-    <div className="group flex flex-col md:flex-row md:items-start gap-2">
+    <div className="group flex flex-col md:flex-row gap-2">
       {/* Tutor Card */}
-      <Card className="shrink-0 overflow-hidden transition-all group-hover:shadow-lg">
+      <Card className="flex-1 min-w-0 overflow-hidden transition-all group-hover:shadow-lg">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
             {/* Tutor Image */}
@@ -136,8 +136,8 @@ export function TutorCard({
       </Card>
 
       {/* Availability Calendar — separate box on the right, revealed on card hover */}
-      <Card className="w-72 shrink-0 pointer-events-none opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
-        <CardContent className="p-0">
+      <Card className="w-64 shrink-0 pointer-events-none opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+        <CardContent className="h-full p-0">
           <TutorAvailability tutorId={id} />
         </CardContent>
       </Card>
