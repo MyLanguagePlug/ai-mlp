@@ -132,8 +132,10 @@ export function TutorCard({
             </div>
             </div>
 
-            {/* Availability Calendar */}
-            <TutorAvailability tutorId={id} />
+            {/* Availability Calendar — revealed on hover */}
+            <div className="pointer-events-none opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+              <TutorAvailability tutorId={id} />
+            </div>
           </div>
         </div>
       </CardContent>
