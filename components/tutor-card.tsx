@@ -4,6 +4,7 @@ import { Star, Globe, Clock, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { TutorAvailability } from "@/components/tutor-availability"
 
 export interface TutorCardProps {
   id: string
@@ -56,8 +57,10 @@ export function TutorCard({
             )}
           </div>
 
-          {/* Tutor Info */}
-          <div className="flex flex-1 flex-col p-4">
+          {/* Info + Availability */}
+          <div className="flex min-w-0 flex-1 flex-col lg:flex-row">
+            {/* Tutor Info */}
+            <div className="flex min-w-0 flex-1 flex-col p-4">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -127,6 +130,10 @@ export function TutorCard({
                 </Button>
               </div>
             </div>
+            </div>
+
+            {/* Availability Calendar */}
+            <TutorAvailability tutorId={id} />
           </div>
         </div>
       </CardContent>
