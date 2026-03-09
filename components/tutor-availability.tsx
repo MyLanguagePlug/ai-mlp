@@ -170,8 +170,8 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
       </div>
 
       {/* CTA */}
-      <div className="mt-auto border-t pt-3">
-        <Button size="sm" className="h-7 w-full text-xs" asChild>
+      <div className="mt-auto border-t pt-4">
+        <Button size="sm" className="w-full" asChild>
           <Link href={`/tutors/${tutorId}/book`}>
             {selectedSlot ? "Book selected time" : "Book a lesson"}
           </Link>
