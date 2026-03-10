@@ -158,8 +158,8 @@ export default function BecomeTutorPage() {
             <div className="relative hidden lg:block">
               <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
                 <Image
-                  src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=1000&fit=crop"
-                  alt="Online language tutor teaching"
+                  src="https://github.com/user-attachments/assets/281e8164-786b-45a7-bc56-c07b92b4df33"
+                  alt="Students learning languages online"
                   fill
                   className="rounded-2xl object-cover shadow-2xl"
                   priority

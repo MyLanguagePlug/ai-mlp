@@ -15,8 +15,8 @@ const pricingPlans = [
   {
     name: "Pay As You Go",
     description: "Perfect for occasional learners",
-    price: null,
-    priceDescription: "From $15/hour",
+    price: "From $15",
+    priceDescription: "/hour",
     features: [
       "Access to all verified tutors",
       "Video lessons with screen sharing",
@@ -131,7 +131,7 @@ export default function PricingPage() {
             {pricingPlans.map((plan) => (
               <Card 
                 key={plan.name} 
-                className={`relative flex flex-col ${
+                className={`relative flex flex-col transition-transform duration-300 hover:scale-[1.03] ${
                   plan.popular 
                     ? "border-primary shadow-lg ring-1 ring-primary" 
                     : ""
