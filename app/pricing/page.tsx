@@ -145,7 +145,7 @@ export default function PricingPage() {
                     </Badge>
                   </div>
                 )}
-                <CardHeader className={plan.popular ? "pt-8" : ""}>
+                <CardHeader className="pt-8">
                   <CardTitle className="text-xl text-[--navy]">{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                 </CardHeader>
