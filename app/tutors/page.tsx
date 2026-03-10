@@ -153,7 +153,7 @@ export default function TutorsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Page Header */}
-      <div className="border-b bg-[--page-break]">
+      <div className="bg-[--light-blue]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <h1 className="font-serif text-3xl font-bold text-[--navy] md:text-4xl">
             Find Your Perfect Tutor
