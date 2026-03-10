@@ -154,7 +154,7 @@ export default function PricingPage() {
                     {plan.price ? (
                       <>
                         <span className="text-4xl font-bold text-[--navy]">{plan.price}</span>
-                        <span className="text-muted-foreground">{plan.priceDescription}</span>
+                        <span className="mt-1 block text-muted-foreground">{plan.priceDescription}</span>
                       </>
                     ) : (
                       <span className="text-2xl font-bold text-[--navy]">{plan.priceDescription}</span>
