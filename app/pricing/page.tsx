@@ -47,7 +47,7 @@ const pricingPlans = [
     popular: true,
   },
   {
-    name: "Enterprise",
+    name: "Corporate",
     description: "For teams and organizations",
     price: "Custom",
     priceDescription: "Contact for pricing",
@@ -61,7 +61,7 @@ const pricingPlans = [
       "SSO integration",
     ],
     cta: "Contact Sales",
-    ctaHref: "/contact?inquiry=enterprise",
+    ctaHref: "/contact?inquiry=corporate",
     popular: false,
   },
 ]
