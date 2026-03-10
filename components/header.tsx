@@ -89,10 +89,10 @@ export function Header() {
             Become a Tutor
           </Link>
           <Link 
-            href="/pricing" 
+            href="/corporate" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Pricing
+            Corporate
           </Link>
         </nav>
 
@@ -183,11 +183,11 @@ export function Header() {
               Become a Tutor
             </Link>
             <Link 
-              href="/pricing" 
+              href="/corporate" 
               className="rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Pricing
+              Corporate
             </Link>
             <Link 
               href="/contact" 
