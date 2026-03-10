@@ -29,21 +29,20 @@ const pricingPlans = [
     popular: false,
   },
   {
-    name: "Premium",
-    description: "Best for committed learners",
-    price: "$99",
-    priceDescription: "/month",
+    name: "Lesson Packages",
+    description: "Private lessons, 50 minutes each",
+    price: "From $25.50",
+    priceDescription: "/lesson",
     features: [
-      "Everything in Pay As You Go",
-      "10% discount on all lessons",
-      "Priority tutor matching",
-      "Unlimited lesson recordings",
-      "Advanced learning materials",
-      "Progress tracking dashboard",
-      "Priority support",
+      "Free 20-minute trial lesson",
+      "1 lesson — $30.00/lesson",
+      "3 lessons — $28.50/lesson (5% off)",
+      "5 lessons — $27.75/lesson (7.5% off)",
+      "10 lessons — $27.00/lesson (10% off)",
+      "20 lessons — $25.50/lesson (15% off)",
     ],
-    cta: "Start Free Trial",
-    ctaHref: "/signup?plan=premium",
+    cta: "Book a Lesson",
+    ctaHref: "/tutors",
     popular: true,
   },
   {
@@ -80,7 +79,7 @@ const tutorRates = [
 const faqs = [
   {
     q: "How does pricing work?",
-    a: "Each tutor sets their own hourly rate based on their experience and qualifications. You only pay for the lessons you book. Premium members receive a 10% discount on all lessons.",
+    a: "Each tutor sets their own hourly rate based on their experience and qualifications. You only pay for the lessons you book. Save more by purchasing a lesson package — bundles of 3, 5, 10, or 20 lessons come with discounts of up to 15%.",
   },
   {
     q: "Is there a free trial?",
@@ -88,7 +87,7 @@ const faqs = [
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes, Premium subscriptions can be canceled anytime. You'll continue to have access until the end of your billing period. Individual lesson cancellations require 24-hour notice.",
+    a: "Yes. Pre-purchased lesson packages have no expiry pressure — use them at your own pace. Individual lesson cancellations require 24-hour notice.",
   },
   {
     q: "What payment methods do you accept?",
@@ -96,7 +95,7 @@ const faqs = [
   },
   {
     q: "Are there any hidden fees?",
-    a: "No hidden fees. You pay the tutor's hourly rate plus a small platform fee (included in the displayed price). Premium members pay a monthly subscription plus discounted lesson rates.",
+    a: "No hidden fees. The per-lesson price shown in each package is the all-in price. Bigger bundles simply give you a better rate.",
   },
   {
     q: "Do you offer refunds?",
@@ -354,7 +353,7 @@ export default function PricingPage() {
         title="Ready to Start Learning?"
         description="Join thousands of students who are achieving their language goals. Find your perfect tutor today."
         primaryCTA={{ label: "Find Your Tutor", href: "/tutors" }}
-        secondaryCTA={{ label: "Try Premium Free", href: "/signup?plan=premium" }}
+        secondaryCTA={{ label: "Book a Free Trial", href: "/tutors" }}
         variant="blue"
       />
     </div>
