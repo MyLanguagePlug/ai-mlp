@@ -138,12 +138,12 @@ export default function CorporatePage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="bg-[--light-blue] pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="bg-(--light-blue) pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <Badge className="mb-4">Corporate Language Training</Badge>
-              <h1 className="font-serif text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl md:text-6xl">
+              <h1 className="font-serif text-4xl font-bold tracking-tight text-(--navy) sm:text-5xl md:text-6xl">
                 Language Training Built for Business
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -204,7 +204,7 @@ export default function CorporatePage() {
                 Why My Language Plug
               </span>
             </div>
-            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Everything Your Organisation Needs
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -221,7 +221,7 @@ export default function CorporatePage() {
                     <benefit.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-[--navy]">{benefit.title}</h3>
+                    <h3 className="text-lg font-semibold text-(--navy)">{benefit.title}</h3>
                     <p className="mt-2 leading-relaxed text-muted-foreground">
                       {benefit.description}
                     </p>
@@ -234,7 +234,7 @@ export default function CorporatePage() {
       </section>
 
       {/* Languages */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 text-primary">
@@ -243,7 +243,7 @@ export default function CorporatePage() {
                 Languages We Offer
               </span>
             </div>
-            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               50+ Languages for Every Market
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -256,7 +256,7 @@ export default function CorporatePage() {
               <Link
                 key={lang}
                 href={`/tutors?language=${lang.toLowerCase()}`}
-                className="rounded-full bg-background px-5 py-2 text-sm font-medium text-[--navy] shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
+                className="rounded-full bg-background px-5 py-2 text-sm font-medium text-(--navy) shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 {lang}
               </Link>
@@ -272,7 +272,7 @@ export default function CorporatePage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               How It Works
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -286,7 +286,7 @@ export default function CorporatePage() {
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
                   {item.step}
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-[--navy]">{item.title}</h3>
+                <h3 className="mt-4 text-lg font-semibold text-(--navy)">{item.title}</h3>
                 <p className="mt-2 text-muted-foreground">{item.description}</p>
               </div>
             ))}
@@ -304,7 +304,7 @@ export default function CorporatePage() {
                 Client Stories
               </span>
             </div>
-            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Trusted by Leading Businesses
             </h2>
           </div>
@@ -328,7 +328,7 @@ export default function CorporatePage() {
                       className="rounded-full object-cover"
                     />
                     <div>
-                      <div className="font-semibold text-[--navy]">{t.author}</div>
+                      <div className="font-semibold text-(--navy)">{t.author}</div>
                       <div className="text-sm text-muted-foreground">
                         {t.role}, {t.company}
                       </div>
@@ -352,7 +352,7 @@ export default function CorporatePage() {
                   Custom Pricing
                 </span>
               </div>
-              <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+              <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
                 Pricing Tailored to Your Team
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">

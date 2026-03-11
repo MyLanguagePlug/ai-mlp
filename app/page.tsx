@@ -538,7 +538,7 @@ export default function HomePage() {
 
 
       {/* Testimonials */}
-      <section className="py-16 md:py-24">
+      <section className="pt-16 pb-8 md:pt-24 md:pb-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

@@ -107,13 +107,13 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[--light-blue] to-background pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="bg-gradient-to-b from-(--light-blue) to-background pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="secondary" className="mb-4 px-4 py-1.5">
               Simple, Transparent Pricing
             </Badge>
-            <h1 className="font-serif text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl md:text-6xl">
+            <h1 className="font-serif text-4xl font-bold tracking-tight text-(--navy) sm:text-5xl md:text-6xl">
               Invest in Your Language Journey
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -146,18 +146,18 @@ export default function PricingPage() {
                   </div>
                 )}
                 <CardHeader className="pt-8">
-                  <CardTitle className="text-xl text-[--navy]">{plan.name}</CardTitle>
+                  <CardTitle className="text-xl text-(--navy)">{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col">
                   <div className="mb-6">
                     {plan.price ? (
                       <>
-                        <span className="text-4xl font-bold text-[--navy]">{plan.price}</span>
+                        <span className="text-4xl font-bold text-(--navy)">{plan.price}</span>
                         <span className="mt-1 block text-muted-foreground">{plan.priceDescription}</span>
                       </>
                     ) : (
-                      <span className="text-2xl font-bold text-[--navy]">{plan.priceDescription}</span>
+                      <span className="text-2xl font-bold text-(--navy)">{plan.priceDescription}</span>
                     )}
                   </div>
 
@@ -189,10 +189,10 @@ export default function PricingPage() {
       </section>
 
       {/* Tutor Rates Section */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Average Tutor Rates by Language
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -204,10 +204,10 @@ export default function PricingPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     Language
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger className="flex items-center gap-1">
@@ -220,10 +220,10 @@ export default function PricingPage() {
                       </Tooltip>
                     </TooltipProvider>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     Average Rate
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-(--navy)">
                     Action
                   </th>
                 </tr>
@@ -235,7 +235,7 @@ export default function PricingPage() {
                     className={index !== tutorRates.length - 1 ? "border-b" : ""}
                   >
                     <td className="px-6 py-4">
-                      <span className="font-medium text-[--navy]">{rate.language}</span>
+                      <span className="font-medium text-(--navy)">{rate.language}</span>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">{rate.range}</td>
                     <td className="px-6 py-4">
@@ -261,7 +261,7 @@ export default function PricingPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               What&apos;s Included in Every Lesson
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -308,7 +308,7 @@ export default function PricingPage() {
                 key={feature.title}
                 className="rounded-xl border bg-background p-6 text-center"
               >
-                <h3 className="font-semibold text-[--navy]">{feature.title}</h3>
+                <h3 className="font-semibold text-(--navy)">{feature.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{feature.description}</p>
               </div>
             ))}
@@ -320,7 +320,7 @@ export default function PricingPage() {
       <section className="bg-muted/30 py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Frequently Asked Questions
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -331,7 +331,7 @@ export default function PricingPage() {
           <div className="mt-12 space-y-6">
             {faqs.map((faq, index) => (
               <div key={index} className="rounded-lg border bg-background p-6">
-                <h3 className="font-semibold text-[--navy]">{faq.q}</h3>
+                <h3 className="font-semibold text-(--navy)">{faq.q}</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">{faq.a}</p>
               </div>
             ))}

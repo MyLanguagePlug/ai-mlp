@@ -76,13 +76,13 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[--light-blue] to-background pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="relative overflow-hidden bg-gradient-to-b from-(--light-blue) to-background pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
               Our Story
             </span>
-            <h1 className="font-serif mt-6 text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl md:text-6xl">
+            <h1 className="font-serif mt-6 text-4xl font-bold tracking-tight text-(--navy) sm:text-5xl md:text-6xl">
               Connecting the World Through Language
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -119,7 +119,7 @@ export default function AboutPage() {
                 <Target className="h-5 w-5" />
                 <span className="text-sm font-semibold uppercase tracking-wide">Our Mission</span>
               </div>
-              <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+              <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
                 Making Quality Language Education Accessible to Everyone
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
@@ -150,14 +150,14 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 text-primary">
               <Lightbulb className="h-5 w-5" />
               <span className="text-sm font-semibold uppercase tracking-wide">Our Values</span>
             </div>
-            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif mt-4 text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               What Drives Us
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -173,7 +173,7 @@ export default function AboutPage() {
                     <value.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-[--navy]">{value.title}</h3>
+                    <h3 className="text-lg font-semibold text-(--navy)">{value.title}</h3>
                     <p className="mt-2 leading-relaxed text-muted-foreground">
                       {value.description}
                     </p>
@@ -189,7 +189,7 @@ export default function AboutPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Our Journey
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -212,7 +212,7 @@ export default function AboutPage() {
                   <div className={`flex-1 ${index % 2 === 0 ? "md:text-right" : "md:text-left"}`}>
                     <div className="rounded-lg bg-muted/50 p-6">
                       <div className="text-sm font-semibold text-primary">{milestone.year}</div>
-                      <h3 className="mt-1 text-lg font-semibold text-[--navy]">
+                      <h3 className="mt-1 text-lg font-semibold text-(--navy)">
                         {milestone.title}
                       </h3>
                       <p className="mt-2 text-muted-foreground">{milestone.description}</p>
@@ -236,7 +236,7 @@ export default function AboutPage() {
       <section className="bg-muted/30 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Meet Our Team
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -256,7 +256,7 @@ export default function AboutPage() {
                       className="object-cover"
                     />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-[--navy]">{member.name}</h3>
+                  <h3 className="mt-4 text-lg font-semibold text-(--navy)">{member.name}</h3>
                   <p className="text-sm font-medium text-primary">{member.role}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{member.bio}</p>
                 </CardContent>
@@ -271,7 +271,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
                 A Truly Global Platform
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">

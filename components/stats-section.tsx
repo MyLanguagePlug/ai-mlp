@@ -17,15 +17,15 @@ interface StatsSectionProps {
 
 export function StatsSection({ title, stats, variant = "default" }: StatsSectionProps) {
   const bgClasses = {
-    default: "bg-[--light-blue]",
+    default: "bg-(--light-blue)",
     blue: "bg-primary",
     white: "bg-background",
   }
 
   const valueClasses = {
-    default: "text-[--navy]",
+    default: "text-(--navy)",
     blue: "text-primary-foreground",
-    white: "text-[--navy]",
+    white: "text-(--navy)",
   }
 
   const labelClasses = {

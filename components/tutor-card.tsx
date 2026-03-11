@@ -64,7 +64,7 @@ export function TutorCard({
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-[--navy]">{name}</h3>
+                    <h3 className="text-lg font-semibold text-(--navy)">{name}</h3>
                     {isNativeSpeaker && (
                       <Badge variant="secondary" className="text-xs">
                         Native Speaker
@@ -108,7 +108,7 @@ export function TutorCard({
                 {specialties.slice(0, 3).map((specialty) => (
                   <span
                     key={specialty}
-                    className="rounded-full bg-[--light-blue] px-2.5 py-0.5 text-xs font-medium text-[--navy]"
+                    className="rounded-full bg-(--light-blue) px-2.5 py-0.5 text-xs font-medium text-(--navy)"
                   >
                     {specialty}
                   </span>
@@ -118,7 +118,7 @@ export function TutorCard({
               {/* Footer */}
               <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
                 <div>
-                  <span className="text-xl font-bold text-[--navy]">${hourlyRate}</span>
+                  <span className="text-xl font-bold text-(--navy)">${hourlyRate}</span>
                   <span className="text-sm text-muted-foreground"> / hour</span>
                 </div>
                 <div className="flex gap-2">
@@ -180,7 +180,7 @@ export function TutorCardCompact({
         <div className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="font-semibold text-[--navy]">{name}</h3>
+              <h3 className="font-semibold text-(--navy)">{name}</h3>
               <p className="text-sm text-muted-foreground">{country}</p>
             </div>
             <div className="flex items-center gap-1">
@@ -206,7 +206,7 @@ export function TutorCardCompact({
           {/* Price & CTA */}
           <div className="mt-4 flex items-center justify-between">
             <div>
-              <span className="text-lg font-bold text-[--navy]">${hourlyRate}</span>
+              <span className="text-lg font-bold text-(--navy)">${hourlyRate}</span>
               <span className="text-xs text-muted-foreground">/hr</span>
             </div>
             <Button size="sm" asChild>

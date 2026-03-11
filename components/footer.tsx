@@ -93,7 +93,7 @@ export function Footer() {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
 
   return (
-    <footer className="border-t border-border bg-[--light-blue]">
+    <footer className="border-t border-border bg-(--light-blue)">
       {/* Top Bar with Language/Currency Selectors */}
       <div className="border-b border-border/50">
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -150,7 +150,7 @@ export function Footer() {
 
       {/* Popular Languages */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h3 className="mb-4 text-sm font-semibold text-[--navy]">Popular Languages</h3>
+        <h3 className="mb-4 text-sm font-semibold text-(--navy)">Popular Languages</h3>
         <div className="flex flex-wrap gap-2">
           {languages.map((lang) => (
             <Link
@@ -202,7 +202,7 @@ export function Footer() {
             {/* Links */}
             {Object.values(footerLinks).map((section) => (
               <div key={section.title}>
-                <h3 className="mb-4 text-sm font-semibold text-[--navy]">{section.title}</h3>
+                <h3 className="mb-4 text-sm font-semibold text-(--navy)">{section.title}</h3>
                 <ul className="space-y-3">
                   {section.links.map((link) => (
                     <li key={link.href}>

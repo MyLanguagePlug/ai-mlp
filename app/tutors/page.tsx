@@ -153,9 +153,9 @@ export default function TutorsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Page Header */}
-      <div className="bg-[--light-blue]">
+      <div className="bg-(--light-blue)">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h1 className="font-serif text-3xl font-bold text-[--navy] md:text-4xl">
+          <h1 className="font-serif text-3xl font-bold text-(--navy) md:text-4xl">
             Find Your Perfect Tutor
           </h1>
           <p className="mt-2 text-lg text-muted-foreground">
@@ -200,7 +200,7 @@ export default function TutorsPage() {
             <div className="sticky top-24 space-y-6">
               {/* Filter Header */}
               <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 font-semibold text-[--navy]">
+                <h2 className="flex items-center gap-2 font-semibold text-(--navy)">
                   <SlidersHorizontal className="h-4 w-4" />
                   Filters
                 </h2>
@@ -211,7 +211,7 @@ export default function TutorsPage() {
 
               {/* Price Range */}
               <div>
-                <h3 className="mb-3 text-sm font-medium text-[--navy]">
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
                   <DollarSign className="mr-1 inline h-4 w-4" />
                   Price Range
                 </h3>
@@ -224,7 +224,7 @@ export default function TutorsPage() {
 
               {/* Rating */}
               <div>
-                <h3 className="mb-3 text-sm font-medium text-[--navy]">
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
                   <Star className="mr-1 inline h-4 w-4" />
                   Rating
                 </h3>
@@ -243,7 +243,7 @@ export default function TutorsPage() {
 
               {/* Availability */}
               <div>
-                <h3 className="mb-3 text-sm font-medium text-[--navy]">
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
                   <Clock className="mr-1 inline h-4 w-4" />
                   Availability
                 </h3>
@@ -259,7 +259,7 @@ export default function TutorsPage() {
 
               {/* Specialties */}
               <div>
-                <h3 className="mb-3 text-sm font-medium text-[--navy]">Specialties</h3>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">Specialties</h3>
                 <div className="flex flex-wrap gap-2">
                   {specialties.map((specialty) => (
                     <Badge
@@ -275,7 +275,7 @@ export default function TutorsPage() {
 
               {/* Tutor Type */}
               <div>
-                <h3 className="mb-3 text-sm font-medium text-[--navy]">Tutor Type</h3>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">Tutor Type</h3>
                 <div className="space-y-2">
                   <label className="flex cursor-pointer items-center gap-2">
                     <Checkbox />

@@ -72,7 +72,7 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
     <div className="flex h-full flex-col gap-3 p-4">
       {/* Header */}
       <div className="flex items-center justify-between gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wide text-[--navy]">
+        <span className="text-xs font-semibold uppercase tracking-wide text-(--navy)">
           Availability
         </span>
         <div className="flex items-center gap-0.5">
@@ -112,7 +112,7 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
               <div
                 className={cn(
                   "w-full rounded-sm py-1 text-center",
-                  today ? "bg-[--navy]" : "bg-muted",
+                  today ? "bg-(--navy)" : "bg-muted",
                 )}
               >
                 <p
@@ -126,7 +126,7 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
                 <p
                   className={cn(
                     "mt-0.5 text-xs font-bold leading-none",
-                    today ? "text-white" : "text-[--navy]",
+                    today ? "text-white" : "text-(--navy)",
                   )}
                 >
                   {format(day, "d")}
@@ -145,8 +145,8 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
                       className={cn(
                         "w-full rounded py-1 text-[10px] font-medium leading-none transition-colors",
                         selected
-                          ? "bg-[--navy] text-white"
-                          : "bg-[--light-blue] text-[--navy] hover:bg-[--navy] hover:text-white",
+                          ? "bg-(--navy) text-white"
+                          : "bg-(--light-blue) text-(--navy) hover:bg-(--navy) hover:text-white",
                       )}
                     >
                       {slot}

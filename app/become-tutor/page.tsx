@@ -107,7 +107,7 @@ export default function BecomeTutorPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[--light-blue] pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="relative overflow-hidden bg-(--light-blue) pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="text-center lg:text-left">
@@ -116,7 +116,7 @@ export default function BecomeTutorPage() {
               </span>
               <h1 className="font-serif mt-6 text-balance text-4xl font-bold tracking-tight text-[#042230] sm:text-5xl md:text-6xl">
                 Share Your Language,{" "}
-                <span className="text-[--accent-blue]">Change <span className="text-[#5A8DA5]">Lives</span></span>
+                <span className="text-(--accent-blue)">Change <span className="text-[#5A8DA5]">Lives</span></span>
               </h1>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
                 Turn your language skills into a rewarding career. Set your own rates, 
@@ -138,17 +138,17 @@ export default function BecomeTutorPage() {
               {/* Quick Stats */}
               <div className="mt-10 flex flex-wrap items-center justify-center gap-8 lg:justify-start">
                 <div>
-                  <div className="text-2xl font-bold text-[--navy]">$15-50+</div>
+                  <div className="text-2xl font-bold text-(--navy)">$15-50+</div>
                   <div className="text-sm text-muted-foreground">Per Hour</div>
                 </div>
                 <div className="h-10 w-px bg-border" />
                 <div>
-                  <div className="text-2xl font-bold text-[--navy]">10,000+</div>
+                  <div className="text-2xl font-bold text-(--navy)">10,000+</div>
                   <div className="text-sm text-muted-foreground">Active Students</div>
                 </div>
                 <div className="h-10 w-px bg-border" />
                 <div>
-                  <div className="text-2xl font-bold text-[--navy]">150+</div>
+                  <div className="text-2xl font-bold text-(--navy)">150+</div>
                   <div className="text-sm text-muted-foreground">Countries</div>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function BecomeTutorPage() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">This month</p>
-                      <p className="text-xl font-bold text-[--navy]">$4,250 earned</p>
+                      <p className="text-xl font-bold text-(--navy)">$4,250 earned</p>
                     </div>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export default function BecomeTutorPage() {
       <section className="py-16 md:py-24" id="learn-more">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Why Teach With Us?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -201,7 +201,7 @@ export default function BecomeTutorPage() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                     <benefit.icon className="h-7 w-7 text-primary" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-[--navy]">
+                  <h3 className="mt-4 text-lg font-semibold text-(--navy)">
                     {benefit.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -221,7 +221,7 @@ export default function BecomeTutorPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               How to Get Started
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -232,13 +232,13 @@ export default function BecomeTutorPage() {
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
               <div key={step.number} className="relative text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[--light-blue] text-2xl font-bold text-primary">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-(--light-blue) text-2xl font-bold text-primary">
                   {step.number}
                 </div>
                 {index < steps.length - 1 && (
                   <div className="absolute left-[60%] top-8 hidden h-0.5 w-[80%] bg-border lg:block" />
                 )}
-                <h3 className="mt-6 text-lg font-semibold text-[--navy]">
+                <h3 className="mt-6 text-lg font-semibold text-(--navy)">
                   {step.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -251,11 +251,11 @@ export default function BecomeTutorPage() {
       </section>
 
       {/* Requirements Section */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
                 What We Look For
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
@@ -296,7 +296,7 @@ export default function BecomeTutorPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Hear From Our Tutors
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -321,7 +321,7 @@ export default function BecomeTutorPage() {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-[--navy]">{testimonial.name}</p>
+                      <p className="font-semibold text-(--navy)">{testimonial.name}</p>
                       <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                     </div>
                     <div className="text-right">
@@ -340,7 +340,7 @@ export default function BecomeTutorPage() {
       <section className="bg-muted/30 py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Everything You Need to Succeed
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -389,7 +389,7 @@ export default function BecomeTutorPage() {
                   <item.icon className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[--navy]">{item.title}</h3>
+                  <h3 className="font-semibold text-(--navy)">{item.title}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
@@ -404,7 +404,7 @@ export default function BecomeTutorPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Frequently Asked Questions
             </h2>
           </div>
@@ -433,7 +433,7 @@ export default function BecomeTutorPage() {
               },
             ].map((faq, index) => (
               <div key={index} className="rounded-lg border bg-background p-6">
-                <h3 className="font-semibold text-[--navy]">{faq.q}</h3>
+                <h3 className="font-semibold text-(--navy)">{faq.q}</h3>
                 <p className="mt-2 text-muted-foreground leading-relaxed">{faq.a}</p>
               </div>
             ))}
