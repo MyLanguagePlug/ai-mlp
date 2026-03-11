@@ -298,46 +298,8 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Mobile carousel */}
-          <div className="mt-8 sm:hidden">
-            <Carousel opts={{ align: "start", loop: false }}>
-              <CarouselContent className="-ml-3">
-                {languages.map((lang) => (
-                  <CarouselItem key={lang.name} className="basis-[47%] pl-3">
-                    <Link
-                      href={`/tutors?language=${lang.name.toLowerCase()}`}
-                      className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-background px-4 py-6 text-center transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5"
-                    >
-                      <div
-                        aria-label={lang.name}
-                        className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-secondary shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
-                      >
-                        <Image
-                          src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
-                          alt={`${lang.name} flag`}
-                          width={56}
-                          height={40}
-                          className="h-10 w-14 rounded-lg object-cover"
-                          unoptimized
-                        />
-                      </div>
-                      <p className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
-                        {lang.name}
-                      </p>
-                      <p className="text-xs font-medium text-muted-foreground">
-                        {lang.tutors} tutors available
-                      </p>
-                      <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-                    </Link>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselDots />
-            </Carousel>
-          </div>
-
-          {/* Desktop grid */}
-          <div className="mt-8 hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+          {/* Language cards grid — 2 columns on mobile, 4 on desktop */}
+          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {languages.map((lang) => (
               <Link
                 key={lang.name}
