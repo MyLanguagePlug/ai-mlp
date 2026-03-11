@@ -1,10 +1,12 @@
 "use client"
 
+import { cn } from '@/lib/utils'
 import CountUp from './CountUp'
 
 interface Stat {
   value: string
   label: string
+  mobileHidden?: boolean
 }
 
 interface StatsSectionProps {
@@ -47,7 +49,7 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
             const prefix = match ? match[1] : ""
             const suffix = match ? match[3] : stat.value
             return (
-              <div key={index} className="text-center">
+              <div key={index} className={cn("text-center", stat.mobileHidden && "hidden sm:block")}>
                 <div className={`text-3xl font-bold md:text-4xl ${valueClasses[variant]}`}>
                   {numericPart !== null ? (
                     <>

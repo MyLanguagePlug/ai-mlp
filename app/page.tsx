@@ -8,6 +8,7 @@ import { TutorCarousel, type Tutor } from "@/components/ui/product-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 
 const featuredTutors: Tutor[] = [
   {
@@ -140,8 +141,8 @@ const languages = [
 const stats = [
   { value: "10,000+", label: "Active Students" },
   { value: "500+", label: "Expert Tutors" },
-  { value: "50+", label: "Languages" },
-  { value: "98%", label: "Satisfaction Rate" },
+  { value: "50+", label: "Languages", mobileHidden: true },
+  { value: "98%", label: "Satisfaction Rate", mobileHidden: true },
 ]
 
 const onlineTutorAvatars = [
@@ -277,22 +278,69 @@ export default function HomePage() {
       {/* Languages Section */}
       <section className="py-8 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+          {/* Header: centred heading + link pinned to the right on desktop */}
+          <div className="relative text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Popular Languages
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
               Choose from over 50 languages taught by native speakers and certified professionals
             </p>
+            {/* Desktop: link pinned top-right so cards stay centred */}
             <Link
               href="/languages"
-              className="mt-4 inline-block text-base font-semibold text-primary transition-colors hover:text-primary/80"
+              className="absolute right-0 top-0 hidden text-base font-semibold text-primary transition-colors hover:text-primary/80 sm:inline-block"
+            >
+              View all languages →
+            </Link>
+            {/* Mobile: link sits below description, centred */}
+            <Link
+              href="/languages"
+              className="mt-4 inline-block text-base font-semibold text-primary transition-colors hover:text-primary/80 sm:hidden"
             >
               View all languages →
             </Link>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Mobile carousel */}
+          <div className="mt-8 sm:hidden">
+            <Carousel opts={{ align: "start", loop: false }}>
+              <CarouselContent className="-ml-3">
+                {languages.map((lang) => (
+                  <CarouselItem key={lang.name} className="basis-[47%] pl-3">
+                    <Link
+                      href={`/tutors?language=${lang.name.toLowerCase()}`}
+                      className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-background px-4 py-6 text-center transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5"
+                    >
+                      <div
+                        aria-label={lang.name}
+                        className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-secondary shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
+                      >
+                        <Image
+                          src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                          alt={`${lang.name} flag`}
+                          width={56}
+                          height={40}
+                          className="h-10 w-14 rounded-lg object-cover"
+                          unoptimized
+                        />
+                      </div>
+                      <p className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                        {lang.name}
+                      </p>
+                      <p className="text-xs font-medium text-muted-foreground">
+                        {lang.tutors} tutors available
+                      </p>
+                      <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="mt-8 hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4">
             {languages.map((lang) => (
               <Link
                 key={lang.name}
@@ -343,7 +391,38 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {/* Mobile carousel */}
+          <div className="mt-12 sm:hidden">
+            <Carousel opts={{ align: "start", loop: false }}>
+              <CarouselContent className="-ml-4">
+                {features.map((feature) => (
+                  <CarouselItem key={feature.title} className="pl-4">
+                    <div className="group relative overflow-hidden rounded-2xl bg-background shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                      <div className="relative h-48 w-full overflow-hidden">
+                        <Image
+                          src={feature.image}
+                          alt={feature.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/90 shadow-lg transition-transform duration-300 group-hover:scale-110">
+                          <feature.icon className="h-6 w-6 text-primary-foreground" />
+                        </div>
+                      </div>
+                      <div className="p-6 text-center">
+                        <h3 className="text-xl font-semibold text-foreground">{feature.title}</h3>
+                        <p className="mt-3 leading-relaxed text-muted-foreground">{feature.description}</p>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="mt-12 hidden gap-8 sm:grid md:grid-cols-3">
             {features.map((feature) => (
               <div
                 key={feature.title}
@@ -485,7 +564,22 @@ export default function HomePage() {
           </div>
 
           {/* Testimonial Grid */}
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+
+          {/* Mobile carousel */}
+          <div className="mt-8 sm:hidden">
+            <Carousel opts={{ align: "start", loop: false }}>
+              <CarouselContent className="-ml-4">
+                {testimonials.map((testimonial) => (
+                  <CarouselItem key={testimonial.name} className="pl-4">
+                    <TestimonialCard {...testimonial} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="mt-8 hidden gap-6 sm:grid md:grid-cols-3">
             {testimonials.map((testimonial) => (
               <TestimonialCard key={testimonial.name} {...testimonial} />
             ))}
