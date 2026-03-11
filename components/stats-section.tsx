@@ -33,14 +33,14 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
   }
 
   return (
-    <section className={`py-12 md:py-16 ${bgClasses[variant]}`}>
+    <section className={`py-4 md:py-6 ${bgClasses[variant]}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {title && (
-          <h2 className={`mb-8 text-center text-2xl font-bold ${valueClasses[variant]}`}>
+          <h2 className={`mb-6 text-center text-2xl font-bold ${valueClasses[variant]}`}>
             {title}
           </h2>
         )}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => {
             const match = stat.value.match(/^([^\d]*)(\d[\d,]*)(.*)$/)
             const numericPart = match ? parseInt(match[2].replace(/,/g, ""), 10) : null
@@ -48,7 +48,7 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
             const suffix = match ? match[3] : stat.value
             return (
               <div key={index} className="text-center">
-                <div className={`text-4xl font-bold md:text-5xl ${valueClasses[variant]}`}>
+                <div className={`text-3xl font-bold md:text-4xl ${valueClasses[variant]}`}>
                   {numericPart !== null ? (
                     <>
                       {prefix}
@@ -59,7 +59,7 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
                     stat.value
                   )}
                 </div>
-                <div className={`mt-2 text-sm md:text-base ${labelClasses[variant]}`}>
+                <div className={`mt-1 text-sm md:text-base ${labelClasses[variant]}`}>
                   {stat.label}
                 </div>
               </div>

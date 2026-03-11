@@ -175,7 +175,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#F0F6FA] pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="relative overflow-hidden bg-[#F0F6FA] pb-8 pt-8 md:pb-12 md:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Hero Content */}
@@ -184,17 +184,17 @@ export default function HomePage() {
                 <Star className="mr-1 h-3 w-3 fill-amber-400 text-amber-400" />
                 Rated 4.9/5 by 10,000+ students
               </Badge>
-              <h1 className="font-serif text-balance text-4xl font-bold tracking-tight text-[#042230] sm:text-5xl md:text-6xl">
+              <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-[#042230] sm:text-4xl md:text-5xl">
                 Learn Any Language with{" "}
                 <span>Expert </span>
                 <span className="text-[#5A8DA5]">Tutors</span>
               </h1>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground md:text-xl">
                 Flexible scheduling, affordable rates, and real results.
               </p>
 
               {/* Search Bar */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -210,7 +210,7 @@ export default function HomePage() {
               </div>
 
               {/* Trust Indicators */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                   <span className="text-sm text-muted-foreground">Free trial lesson</span>
@@ -228,7 +228,7 @@ export default function HomePage() {
 
             {/* Hero Image */}
             <div className="relative hidden lg:block">
-              <div className="relative aspect-square w-full max-w-lg mx-auto">
+              <div className="relative aspect-[4/3] w-full max-w-lg mx-auto">
                 <Image
                   src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop"
                   alt="Students learning languages online"
@@ -275,18 +275,18 @@ export default function HomePage() {
 
 
       {/* Languages Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-8 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Popular Languages
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
               Choose from over 50 languages taught by native speakers and certified professionals
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {languages.map((lang) => (
               <Link
                 key={lang.name}
