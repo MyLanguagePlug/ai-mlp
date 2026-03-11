@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Search, Globe, Users, Clock, Star, CheckCircle2, ArrowRight, Play } from "lucide-react"
+import { Search, Globe, Users, Clock, Star, CheckCircle2, ArrowRight, Play, CalendarCheck, BookOpen, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -457,50 +457,93 @@ export default function HomePage() {
 
 
       {/* How It Works */}
-      <section className="py-16 md:py-24">
+      <section className="bg-(--navy) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Header */}
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <span className="inline-block rounded-full bg-white/10 px-4 py-1 text-sm font-medium text-white/80">
+              Simple Process
+            </span>
+            <h2 className="mt-4 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
               How It Works
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              Start learning in three simple steps
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
+              Start speaking a new language in just three steps — it's that simple
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {/* Steps */}
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
             {[
               {
                 step: "01",
+                icon: Search,
                 title: "Find Your Tutor",
-                description: "Browse our vetted tutors, read reviews, and find the perfect match for your learning style and goals.",
+                description: "Browse hundreds of vetted, native-speaking tutors. Filter by language, schedule, budget, and teaching style to find your perfect match.",
+                highlight: "500+ expert tutors",
               },
               {
                 step: "02",
-                title: "Book a Trial Lesson",
-                description: "Schedule a free trial lesson to experience the teaching style and ensure it's the right fit for you.",
+                icon: CalendarCheck,
+                title: "Book a Free Trial",
+                description: "Schedule a complimentary trial lesson with zero commitment. Experience the teaching style first-hand and make sure the fit feels right.",
+                highlight: "No credit card needed",
               },
               {
                 step: "03",
+                icon: BookOpen,
                 title: "Start Learning",
-                description: "Begin your personalized language journey with flexible scheduling and ongoing support.",
+                description: "Begin your personalised language journey with flexible, one-on-one sessions. Track progress and celebrate milestones every step of the way.",
+                highlight: "98% satisfaction rate",
               },
             ].map((item, index) => (
-              <div key={item.step} className="relative text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                  {item.step}
-                </div>
+              <div key={item.step} className="relative">
+                {/* Connector arrow — only between steps on desktop */}
                 {index < 2 && (
-                  <div className="absolute left-[60%] top-8 hidden h-0.5 w-[80%] bg-border md:block" />
+                  <div className="absolute -right-3 top-10 z-10 hidden items-center md:flex">
+                    <ArrowRight className="h-6 w-6 text-white/30" />
+                  </div>
                 )}
-                <h3 className="mt-6 text-xl font-semibold text-foreground">
-                  {item.title}
-                </h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
+
+                <div className="flex h-full flex-col rounded-2xl bg-white/10 p-8 ring-1 ring-white/10 transition-all duration-300 hover:bg-white/[0.15] hover:ring-white/20">
+                  {/* Step number + icon row */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
+                      <item.icon className="h-7 w-7 text-white" />
+                    </div>
+                    <span className="font-serif text-5xl font-bold leading-none text-white/10 select-none">
+                      {item.step}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="mt-6 text-xl font-semibold text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 flex-1 leading-relaxed text-white/70">
+                    {item.description}
+                  </p>
+
+                  {/* Highlight pill */}
+                  <div className="mt-6">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80">
+                      <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                      {item.highlight}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* CTA row */}
+          <div className="mt-12 text-center">
+            <Button asChild size="lg" className="bg-white text-[--navy] hover:bg-white/90">
+              <Link href="/tutors">
+                Find Your Tutor
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
