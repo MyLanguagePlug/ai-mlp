@@ -57,9 +57,7 @@ const footerLinks = {
     links: [
       { label: "About Us", href: "/about" },
       { label: "Corporate", href: "/corporate" },
-      { label: "Careers", href: "/careers" },
       { label: "Blog", href: "/blog" },
-      { label: "Press", href: "/press" },
       { label: "Contact", href: "/contact" },
     ],
   },
