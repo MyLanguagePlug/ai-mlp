@@ -278,25 +278,21 @@ export default function HomePage() {
       {/* Languages Section */}
       <section className="py-8 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Header: centred heading + link pinned to the right on desktop */}
-          <div className="relative text-center">
+          {/* Header: centred heading */}
+          <div className="text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Popular Languages
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
               Choose from over 50 languages taught by native speakers and certified professionals
             </p>
-            {/* Desktop: link pinned top-right so cards stay centred */}
+          </div>
+
+          {/* Link left-aligned above the first language card */}
+          <div className="mt-6 flex justify-start">
             <Link
               href="/languages"
-              className="absolute right-0 top-0 hidden text-base font-semibold text-primary transition-colors hover:text-primary/80 sm:inline-block"
-            >
-              View all languages →
-            </Link>
-            {/* Mobile: link sits below description, centred */}
-            <Link
-              href="/languages"
-              className="mt-4 inline-block text-base font-semibold text-primary transition-colors hover:text-primary/80 sm:hidden"
+              className="text-base font-semibold text-primary transition-colors hover:text-primary/80"
             >
               View all languages →
             </Link>
