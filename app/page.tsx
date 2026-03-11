@@ -8,7 +8,7 @@ import { TutorCarousel, type Tutor } from "@/components/ui/product-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, CarouselDots } from "@/components/ui/carousel"
 
 const featuredTutors: Tutor[] = [
   {
@@ -332,6 +332,7 @@ export default function HomePage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <CarouselDots />
             </Carousel>
           </div>
 
@@ -414,6 +415,7 @@ export default function HomePage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <CarouselDots />
             </Carousel>
           </div>
 
@@ -571,6 +573,7 @@ export default function HomePage() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <CarouselDots />
             </Carousel>
           </div>
 
