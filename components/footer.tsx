@@ -37,7 +37,6 @@ const footerLinks = {
     title: "For Students",
     links: [
       { label: "Find Tutors", href: "/tutors" },
-      { label: "How It Works", href: "/how-it-works" },
       { label: "Pricing", href: "/pricing" },
       { label: "Languages", href: "/languages" },
       { label: "Student Reviews", href: "/reviews" },
