@@ -25,13 +25,13 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
   const valueClasses = {
     default: "text-(--navy)",
     blue: "text-primary-foreground",
-    white: "text-(--navy)",
+    white: "text-black",
   }
 
   const labelClasses = {
     default: "text-muted-foreground",
     blue: "text-primary-foreground/80",
-    white: "text-muted-foreground",
+    white: "text-black",
   }
 
   return (
