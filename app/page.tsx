@@ -277,13 +277,22 @@ export default function HomePage() {
       {/* Languages Section */}
       <section className="py-8 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Popular Languages
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
-              Choose from over 50 languages taught by native speakers and certified professionals
-            </p>
+          {/* min-w-0 lets the flex child shrink below its content width so the long description wraps correctly on small screens */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Popular Languages
+              </h2>
+              <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
+                Choose from over 50 languages taught by native speakers and certified professionals
+              </p>
+            </div>
+            <Link
+              href="/languages"
+              className="mt-1 shrink-0 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              View all languages →
+            </Link>
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -319,12 +328,6 @@ export default function HomePage() {
                 <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/languages">View All Languages</Link>
-            </Button>
           </div>
         </div>
       </section>

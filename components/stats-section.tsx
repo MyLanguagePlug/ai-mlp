@@ -40,7 +40,7 @@ export function StatsSection({ title, stats, variant = "default" }: StatsSection
             {title}
           </h2>
         )}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((stat, index) => {
             const match = stat.value.match(/^([^\d]*)(\d[\d,]*)(.*)$/)
             const numericPart = match ? parseInt(match[2].replace(/,/g, ""), 10) : null
