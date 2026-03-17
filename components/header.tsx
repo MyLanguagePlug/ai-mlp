@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { LoginModal } from "@/components/login-modal"
 
 const languages = [
   "Spanish", "French", "German", "Italian", "Portuguese", 
@@ -41,6 +42,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState(siteLanguages[0])
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
+  const [loginOpen, setLoginOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -142,8 +144,8 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log In</Link>
+          <Button variant="ghost" onClick={() => setLoginOpen(true)}>
+            Log In
           </Button>
           <Button asChild>
             <Link href="/signup">Get Started</Link>
@@ -242,8 +244,15 @@ export function Header() {
             </div>
 
             <div className="mt-4 flex flex-col gap-2">
-              <Button variant="outline" asChild className="w-full">
-                <Link href="/login">Log In</Link>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  setLoginOpen(true)
+                }}
+              >
+                Log In
               </Button>
               <Button asChild className="w-full">
                 <Link href="/signup">Get Started</Link>
@@ -252,6 +261,9 @@ export function Header() {
           </nav>
         </div>
       )}
+
+      {/* Login / Sign-up modal */}
+      <LoginModal open={loginOpen} onOpenChange={setLoginOpen} />
     </header>
   )
 }
