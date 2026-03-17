@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -47,13 +46,6 @@ export default function LoginPage() {
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-white/5" />
 
-        {/* Top content */}
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white/90">
-            🌍 Learn Any Language
-          </div>
-        </div>
-
         {/* Middle content */}
         <div className="relative space-y-6">
           <h2 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
@@ -93,22 +85,8 @@ export default function LoginPage() {
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-12 lg:px-16">
         <div className="w-full max-w-md">
 
-          {/* Logo */}
-          <div className="mb-8 flex justify-center lg:justify-start">
-            <Link href="/">
-              <Image
-                src="/images/logo.png"
-                alt="My Language Plug"
-                width={888}
-                height={364}
-                className="h-14 w-auto sm:h-16"
-                priority
-              />
-            </Link>
-          </div>
-
           {/* Heading */}
-          <div className="mb-8 text-center lg:text-left">
+          <div className="mb-8 text-left">
             <h1 className="text-3xl font-bold text-foreground">
               {mode === "login" ? "Welcome back" : "Create your account"}
             </h1>

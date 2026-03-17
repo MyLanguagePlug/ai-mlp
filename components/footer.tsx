@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Globe, DollarSign, ChevronDown } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Globe, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -21,15 +21,6 @@ const siteLanguages = [
   { code: "zh", label: "Chinese" },
   { code: "ja", label: "Japanese" },
   { code: "ko", label: "Korean" },
-]
-
-const currencies = [
-  { code: "USD", symbol: "$", label: "US Dollar" },
-  { code: "EUR", symbol: "E", label: "Euro" },
-  { code: "GBP", symbol: "£", label: "British Pound" },
-  { code: "CAD", symbol: "C$", label: "Canadian Dollar" },
-  { code: "AUD", symbol: "A$", label: "Australian Dollar" },
-  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
 ]
 
 const footerLinks = {
@@ -87,11 +78,10 @@ const socialLinks = [
 
 export function Footer() {
   const [selectedLanguage, setSelectedLanguage] = useState(siteLanguages[0])
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
 
   return (
     <footer className="border-t border-border bg-(--light-blue)">
-      {/* Top Bar with Language/Currency Selectors */}
+      {/* Top Bar with Language Selector */}
       <div className="border-b border-border/50">
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 px-4 py-3 sm:px-6 lg:px-8">
           {/* Language Selector */}
@@ -115,33 +105,6 @@ export function Footer() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Currency Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-                <DollarSign className="h-4 w-4" />
-                <span className="hidden sm:inline">{selectedCurrency.code}</span>
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {currencies.map((currency) => (
-                <DropdownMenuItem
-                  key={currency.code}
-                  onClick={() => setSelectedCurrency(currency)}
-                  className={selectedCurrency.code === currency.code ? "bg-muted" : ""}
-                >
-                  {currency.symbol} {currency.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Login Button */}
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
         </div>
       </div>
 
