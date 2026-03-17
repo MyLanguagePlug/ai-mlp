@@ -174,10 +174,13 @@ export default function StudentDashboard() {
     <div className="min-h-screen bg-[#F0F6FA]">
       {/* ── Student-specific top bar ─────────────────────────────────────── */}
       <div className="sticky top-0 z-30 border-b border-border bg-white shadow-sm">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <p className="text-sm font-semibold text-[#354d73] hidden sm:block">
-            Welcome back, Jane! 👋
-          </p>
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          <div className="hidden sm:flex flex-col">
+            <span className="text-base font-bold text-[#354d73] leading-tight">My Language Plug</span>
+            <p className="text-sm font-semibold text-[#354d73]">
+              Welcome back, Jane! 👋
+            </p>
+          </div>
 
           {/* Search (inline in top bar) */}
           <div className="relative flex-1 max-w-md">
@@ -283,7 +286,7 @@ export default function StudentDashboard() {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Sidebar Filters */}
           <aside className="w-full shrink-0 lg:w-64">
-            <div className="sticky top-24 space-y-6">
+            <div className="sticky top-20 space-y-6">
               {/* Filter Header */}
               <div className="flex items-center justify-between">
                 <h2 className="flex items-center gap-2 font-semibold text-(--navy)">
