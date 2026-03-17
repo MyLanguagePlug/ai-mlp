@@ -46,6 +46,9 @@ export default function LoginPage() {
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-white/5" />
 
+        {/* Spacer keeps middle content vertically centered with justify-between */}
+        <div />
+
         {/* Middle content */}
         <div className="relative space-y-6">
           <h2 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
