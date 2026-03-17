@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Fredoka } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import { Header } from '@/components/header'
+import { HeaderController } from '@/components/header-controller'
 import { Footer } from '@/components/footer'
 
 const inter = Inter({ 
@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${fredoka.variable} font-sans antialiased`}>
-        <Header />
+        <HeaderController />
         <main>
           {children}
         </main>
