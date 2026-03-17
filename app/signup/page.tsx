@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { GraduationCap, BookOpen, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -14,16 +13,9 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-7rem)] flex-col items-center justify-center bg-[#F0F6FA] px-4 py-12">
-      {/* Logo */}
+      {/* Heading */}
       <div className="mb-6">
-        <Image
-          src="/images/logo.png"
-          alt="My Language Plug"
-          width={888}
-          height={364}
-          className="h-16 w-auto sm:h-20"
-          priority
-        />
+        <h2 className="text-2xl font-bold text-[#354d73] sm:text-3xl">My Language Plug</h2>
       </div>
       <h1 className="mb-2 text-center text-3xl font-bold text-[#042230] sm:text-4xl">
         Welcome! Let&apos;s get you started 👋
