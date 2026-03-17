@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import {
   Search,
   Heart,
   Star,
   MessageCircle,
-  Globe,
+  Clock,
+  DollarSign,
   Bell,
   User,
   BookOpen,
@@ -17,136 +17,123 @@ import {
   LogOut,
   Home,
   Gift,
-  ChevronDown,
   SlidersHorizontal,
-  BadgeCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { TutorCard } from "@/components/tutor-card"
 
 const ALL_LANGUAGES = "All languages"
+
+const specialties = [
+  "Conversational",
+  "Business",
+  "Exam Prep",
+  "Grammar",
+  "Pronunciation",
+  "Beginner Friendly",
+  "Kids",
+]
 
 const tutors = [
   {
     id: "1",
     name: "Maria Santos",
-    flag: "🇪🇸",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
     country: "Spain",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
-    subjects: ["Spanish"],
-    speaks: "Spanish (Native), English (Fluent)",
-    price: 25,
-    originalPrice: 35,
+    languages: ["Spanish", "English"],
+    specialties: ["Business Spanish", "Conversational", "DELE Prep"],
     rating: 4.9,
     reviews: 234,
-    students: 89,
-    lessons: 1240,
-    badges: ["Top Rated", "Super Tutor"],
+    hourlyRate: 25,
+    lessonsCompleted: 1240,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "Hi! I'm Maria, a passionate Spanish teacher with 8+ years of experience. I create engaging lessons tailored to your goals 🌟",
-    popular: true,
   },
   {
     id: "2",
     name: "Jean-Pierre Dubois",
-    flag: "🇫🇷",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
     country: "France",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    subjects: ["French"],
-    speaks: "French (Native), English (Advanced), Spanish (Intermediate)",
-    price: 30,
-    originalPrice: null,
+    languages: ["French", "English", "Spanish"],
+    specialties: ["Conversational", "Grammar", "Business French"],
     rating: 4.8,
     reviews: 189,
-    students: 72,
-    lessons: 980,
-    badges: ["Verified"],
+    hourlyRate: 30,
+    lessonsCompleted: 980,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "Bonjour! Let's make French fun and practical. I specialise in conversational French and business language.",
-    popular: true,
   },
   {
     id: "3",
     name: "Yuki Tanaka",
-    flag: "🇯🇵",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
     country: "Japan",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
-    subjects: ["Japanese"],
-    speaks: "Japanese (Native), English (Fluent)",
-    price: 35,
-    originalPrice: null,
+    languages: ["Japanese", "English"],
+    specialties: ["JLPT Prep", "Beginner Friendly", "Business Japanese"],
     rating: 5.0,
     reviews: 156,
-    students: 63,
-    lessons: 820,
-    badges: ["Top Rated"],
+    hourlyRate: 35,
+    lessonsCompleted: 820,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "I teach all levels from absolute beginners to advanced. My lessons focus on natural conversation and culture.",
-    popular: false,
   },
   {
     id: "4",
     name: "Hans Mueller",
-    flag: "🇩🇪",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
     country: "Germany",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-    subjects: ["German"],
-    speaks: "German (Native), English (Fluent), French (Beginner)",
-    price: 28,
-    originalPrice: 38,
+    languages: ["German", "English"],
+    specialties: ["TestDaF Prep", "Academic German", "Conversational"],
     rating: 4.9,
     reviews: 203,
-    students: 94,
-    lessons: 1560,
-    badges: ["Verified", "Super Tutor"],
+    hourlyRate: 28,
+    lessonsCompleted: 1560,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "I help students achieve fluency through structured lessons and real-world German practice.",
-    popular: true,
   },
   {
     id: "5",
     name: "Ana Silva",
-    flag: "🇧🇷",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
     country: "Brazil",
-    avatar:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face",
-    subjects: ["Portuguese", "Spanish"],
-    speaks: "Portuguese (Native), Spanish (Fluent), English (Advanced)",
-    price: 22,
-    originalPrice: null,
+    languages: ["Portuguese", "Spanish", "English"],
+    specialties: ["Conversational", "Travel", "Beginner Friendly"],
     rating: 4.8,
     reviews: 142,
-    students: 58,
-    lessons: 710,
-    badges: ["Verified"],
+    hourlyRate: 22,
+    lessonsCompleted: 710,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "As a bilingual tutor I offer Portuguese and Spanish lessons. Fun, engaging and results-driven!",
-    popular: false,
   },
   {
     id: "6",
     name: "Wei Zhang",
-    flag: "🇨🇳",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop",
     country: "China",
-    avatar:
-      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face",
-    subjects: ["Mandarin"],
-    speaks: "Mandarin (Native), English (Fluent)",
-    price: 32,
-    originalPrice: 42,
+    languages: ["Mandarin", "English"],
+    specialties: ["HSK Prep", "Business Chinese", "Pronunciation"],
     rating: 4.9,
     reviews: 178,
-    students: 81,
-    lessons: 1120,
-    badges: ["Top Rated"],
+    hourlyRate: 32,
+    lessonsCompleted: 1120,
+    isVerified: true,
+    isNativeSpeaker: true,
     bio: "I make Mandarin accessible and enjoyable. From tones to characters — I've got you covered.",
-    popular: true,
   },
 ]
 
@@ -160,110 +147,15 @@ const navLinks = [
   { href: "/help", icon: HelpCircle, label: "Help" },
 ]
 
-function TutorCard({ tutor }: { tutor: (typeof tutors)[0] }) {
-  const [saved, setSaved] = useState(false)
-
+function TutorCardSkeleton() {
   return (
-    <div className="relative flex flex-col gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:flex-row">
-      <button
-        type="button"
-        onClick={() => setSaved(!saved)}
-        className="absolute right-4 top-4 text-muted-foreground hover:text-rose-500 z-10"
-        aria-label={saved ? "Unsave tutor" : "Save tutor"}
-      >
-        <Heart
-          className={`h-5 w-5 transition-colors ${saved ? "fill-rose-500 text-rose-500" : ""}`}
-        />
-      </button>
-
-      {/* Avatar */}
-      <div className="mx-auto shrink-0 sm:mx-0">
-        <Image
-          src={tutor.avatar}
-          alt={tutor.name}
-          width={96}
-          height={96}
-          className="h-24 w-24 rounded-full object-cover"
-        />
-      </div>
-
-      {/* Info */}
-      <div className="flex flex-1 flex-col gap-2 min-w-0">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base font-bold text-[#042230]">
-              {tutor.name}{" "}
-              <span className="text-sm font-normal text-muted-foreground">
-                {tutor.flag} {tutor.country}
-              </span>
-            </h3>
-          </div>
-          <div className="mt-1 flex flex-wrap gap-1.5">
-            {tutor.badges.map((b) => (
-              <Badge
-                key={b}
-                className={
-                  b === "Top Rated"
-                    ? "bg-[#354d73] text-white text-xs"
-                    : b === "Super Tutor"
-                    ? "bg-[#5A8DA5] text-white text-xs"
-                    : "bg-[#F0F6FA] text-[#354d73] text-xs"
-                }
-              >
-                {b === "Verified" && <BadgeCheck className="mr-1 h-3 w-3" />}
-                {b}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <p className="text-xs text-muted-foreground">
-          <Globe className="mr-1 inline h-3 w-3" />
-          Speaks: {tutor.speaks}
-        </p>
-
-        <p className="line-clamp-2 text-sm text-foreground/80">{tutor.bio}</p>
-
-        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-          <span>
-            <Star className="mr-0.5 inline h-3 w-3 fill-amber-400 text-amber-400" />
-            <strong className="text-foreground">{tutor.rating}</strong>{" "}
-            ({tutor.reviews} reviews)
-          </span>
-          <span>
-            <User className="mr-0.5 inline h-3 w-3" />
-            {tutor.students} students
-          </span>
-          <span>
-            <BookOpen className="mr-0.5 inline h-3 w-3" />
-            {tutor.lessons} lessons
-          </span>
-        </div>
-
-        {tutor.popular && (
-          <p className="text-xs text-[#5A8DA5] font-medium">
-            ↑ Popular · Booked 7 times recently
-          </p>
-        )}
-      </div>
-
-      {/* Pricing + actions */}
-      <div className="flex shrink-0 flex-col items-center justify-between gap-3 sm:items-end">
-        <div className="text-right">
-          {tutor.originalPrice && (
-            <p className="text-xs text-muted-foreground line-through">${tutor.originalPrice}</p>
-          )}
-          <p className="text-xl font-bold text-[#042230]">${tutor.price}</p>
-          <p className="text-xs text-muted-foreground">50-min lesson</p>
-        </div>
-        <div className="flex flex-col gap-2 w-full sm:w-36">
-          <Button className="w-full bg-[#354d73] hover:bg-[#2a3d5e] text-white" size="sm">
-            Book trial lesson
-          </Button>
-          <Button variant="outline" className="w-full" size="sm">
-            Send message
-          </Button>
-        </div>
+    <div className="flex gap-4 rounded-lg border p-4">
+      <div className="h-48 w-48 shrink-0 rounded-lg bg-muted" />
+      <div className="flex-1 space-y-3">
+        <div className="h-6 w-1/3 rounded bg-muted" />
+        <div className="h-4 w-1/4 rounded bg-muted" />
+        <div className="h-4 w-full rounded bg-muted" />
+        <div className="h-4 w-2/3 rounded bg-muted" />
       </div>
     </div>
   )
@@ -272,17 +164,11 @@ function TutorCard({ tutor }: { tutor: (typeof tutors)[0] }) {
 export default function StudentDashboard() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [search, setSearch] = useState("")
-  const [language, setLanguage] = useState(ALL_LANGUAGES)
 
-  const filtered = tutors.filter((t) => {
-    const matchesSearch =
-      t.name.toLowerCase().includes(search.toLowerCase()) ||
-      t.subjects.some((s) => s.toLowerCase().includes(search.toLowerCase()))
-    const matchesLang =
-      language === ALL_LANGUAGES ||
-      t.subjects.some((s) => s.toLowerCase() === language.toLowerCase())
-    return matchesSearch && matchesLang
-  })
+  const filtered = tutors.filter((t) =>
+    t.name.toLowerCase().includes(search.toLowerCase()) ||
+    t.languages.some((s) => s.toLowerCase().includes(search.toLowerCase()))
+  )
 
   return (
     <div className="min-h-screen bg-[#F0F6FA]">
@@ -394,69 +280,141 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* Filters row */}
-        <div className="mb-6 flex flex-wrap items-center gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                I want to learn: <strong>{language}</strong>
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {[ALL_LANGUAGES, "Spanish", "French", "German", "Japanese", "Portuguese", "Mandarin"].map(
-                (l) => (
-                  <DropdownMenuItem key={l} onClick={() => setLanguage(l)}>
-                    {l}
-                  </DropdownMenuItem>
-                )
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex flex-col gap-8 lg:flex-row">
+          {/* Sidebar Filters */}
+          <aside className="w-full shrink-0 lg:w-64">
+            <div className="sticky top-24 space-y-6">
+              {/* Filter Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="flex items-center gap-2 font-semibold text-(--navy)">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                </h2>
+                <Button variant="ghost" size="sm" className="text-primary">
+                  Clear All
+                </Button>
+              </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                Price per lesson <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Any price</DropdownMenuItem>
-              <DropdownMenuItem>$5 – $15</DropdownMenuItem>
-              <DropdownMenuItem>$15 – $30</DropdownMenuItem>
-              <DropdownMenuItem>$30+</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              {/* Price Range */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
+                  <DollarSign className="mr-1 inline h-4 w-4" />
+                  Price Range
+                </h3>
+                <div className="flex items-center gap-2">
+                  <Input type="number" placeholder="Min" className="h-9" />
+                  <span className="text-muted-foreground">-</span>
+                  <Input type="number" placeholder="Max" className="h-9" />
+                </div>
+              </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                Availability <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Any time</DropdownMenuItem>
-              <DropdownMenuItem>This week</DropdownMenuItem>
-              <DropdownMenuItem>Weekends</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              {/* Rating */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
+                  <Star className="mr-1 inline h-4 w-4" />
+                  Rating
+                </h3>
+                <div className="space-y-2">
+                  {[4.5, 4.0, 3.5].map((rating) => (
+                    <label key={rating} className="flex cursor-pointer items-center gap-2">
+                      <Checkbox />
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-sm">{rating}+ stars</span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
-          <Button variant="ghost" size="sm" className="gap-1.5 ml-auto">
-            <SlidersHorizontal className="h-4 w-4" />
-            More filters
-          </Button>
-        </div>
+              {/* Availability */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
+                  <Clock className="mr-1 inline h-4 w-4" />
+                  Availability
+                </h3>
+                <div className="space-y-2">
+                  {["Morning", "Afternoon", "Evening", "Weekends"].map((time) => (
+                    <label key={time} className="flex cursor-pointer items-center gap-2">
+                      <Checkbox />
+                      <span className="text-sm">{time}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
-        {/* Tutor list */}
-        <div className="flex flex-col gap-4">
-          {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-border bg-white p-12 text-center">
-              <p className="text-lg font-medium text-[#042230]">No tutors found</p>
-              <p className="mt-1 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
+              {/* Specialties */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">Specialties</h3>
+                <div className="flex flex-wrap gap-2">
+                  {specialties.map((specialty) => (
+                    <Badge
+                      key={specialty}
+                      variant="outline"
+                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                    >
+                      {specialty}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tutor Type */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">Tutor Type</h3>
+                <div className="space-y-2">
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <Checkbox />
+                    <span className="text-sm">Native Speakers Only</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <Checkbox />
+                    <span className="text-sm">Verified Tutors Only</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <Checkbox />
+                    <span className="text-sm">Offers Trial Lessons</span>
+                  </label>
+                </div>
+              </div>
             </div>
-          ) : (
-            filtered.map((tutor) => <TutorCard key={tutor.id} tutor={tutor} />)
-          )}
+          </aside>
+
+          {/* Tutor List */}
+          <div className="flex-1">
+            {/* Results Header */}
+            <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <p className="text-muted-foreground">
+                Showing <span className="font-medium text-foreground">{filtered.length}</span> tutors
+              </p>
+              <Select defaultValue="recommended">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recommended">Recommended</SelectItem>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="reviews">Most Reviews</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Tutor Cards */}
+            {filtered.length === 0 ? (
+              <div className="rounded-2xl border border-border bg-white p-12 text-center">
+                <p className="text-lg font-medium text-[#042230]">No tutors found</p>
+                <p className="mt-1 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filtered.map((tutor) => (
+                  <TutorCard key={tutor.id} {...tutor} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>
