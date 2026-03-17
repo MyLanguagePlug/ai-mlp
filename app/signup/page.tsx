@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { GraduationCap, BookOpen, ArrowRight, Sparkles } from "lucide-react"
+import { GraduationCap, BookOpen, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 type Role = "student" | "tutor" | null
@@ -14,10 +14,16 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-7rem)] flex-col items-center justify-center bg-[#F0F6FA] px-4 py-12">
-      {/* Logo / heading */}
-      <div className="mb-2 flex items-center gap-2">
-        <Sparkles className="h-6 w-6 text-[#354d73]" />
-        <span className="text-sm font-semibold uppercase tracking-widest text-[#354d73]">My Language Plug</span>
+      {/* Logo */}
+      <div className="mb-6">
+        <Image
+          src="/images/logo.png"
+          alt="My Language Plug"
+          width={888}
+          height={364}
+          className="h-16 w-auto sm:h-20"
+          priority
+        />
       </div>
       <h1 className="mb-2 text-center text-3xl font-bold text-[#042230] sm:text-4xl">
         Welcome! Let&apos;s get you started 👋
