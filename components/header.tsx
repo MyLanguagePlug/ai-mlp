@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
-import { Menu, X, Globe, DollarSign, ChevronDown } from "lucide-react"
+import { Menu, X, Globe, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -28,23 +28,13 @@ const siteLanguages = [
   { code: "ko", label: "Korean" },
 ]
 
-const currencies = [
-  { code: "USD", symbol: "$", label: "US Dollar" },
-  { code: "EUR", symbol: "E", label: "Euro" },
-  { code: "GBP", symbol: "£", label: "British Pound" },
-  { code: "CAD", symbol: "C$", label: "Canadian Dollar" },
-  { code: "AUD", symbol: "A$", label: "Australian Dollar" },
-  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
-]
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState(siteLanguages[0])
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:h-24 sm:px-6 lg:h-28 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-7xl items-center px-4 sm:h-24 sm:px-6 lg:h-28 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -57,8 +47,8 @@ export function Header() {
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* Desktop Navigation — left-aligned, adjacent to logo */}
+        <nav className="hidden items-center gap-8 ml-8 md:flex">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               Languages
@@ -96,9 +86,8 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Desktop Auth Buttons & Selectors */}
-        <div className="hidden items-center gap-2 md:flex">
-          {/* Language Selector */}
+        {/* Language Selector — pushed to the far right */}
+        <div className="hidden items-center ml-auto md:flex">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
@@ -119,35 +108,6 @@ export function Header() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Currency Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
-                <DollarSign className="h-4 w-4" />
-                <span className="hidden lg:inline">{selectedCurrency.code}</span>
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {currencies.map((currency) => (
-                <DropdownMenuItem
-                  key={currency.code}
-                  onClick={() => setSelectedCurrency(currency)}
-                  className={selectedCurrency.code === currency.code ? "bg-muted" : ""}
-                >
-                  {currency.symbol} {currency.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">Get Started</Link>
-          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -196,7 +156,7 @@ export function Header() {
             >
               Contact
             </Link>
-            {/* Language & Currency Selectors */}
+            {/* Language Selector */}
             <div className="mt-4 flex items-center justify-center gap-2 border-t border-border pt-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -218,36 +178,6 @@ export function Header() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <DollarSign className="h-4 w-4" />
-                    {selectedCurrency.code}
-                    <ChevronDown className="h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  {currencies.map((currency) => (
-                    <DropdownMenuItem
-                      key={currency.code}
-                      onClick={() => setSelectedCurrency(currency)}
-                      className={selectedCurrency.code === currency.code ? "bg-muted" : ""}
-                    >
-                      {currency.symbol} {currency.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2">
-              <Button variant="outline" asChild className="w-full">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
-              </Button>
-              <Button asChild className="w-full">
-                <Link href="/signup">Get Started</Link>
-              </Button>
             </div>
           </nav>
         </div>
