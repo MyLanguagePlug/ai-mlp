@@ -403,6 +403,25 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* Results Header */}
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <p className="text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{filtered.length}</span> tutors
+          </p>
+          <Select defaultValue="recommended">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recommended">Recommended</SelectItem>
+              <SelectItem value="rating">Highest Rated</SelectItem>
+              <SelectItem value="price-low">Price: Low to High</SelectItem>
+              <SelectItem value="price-high">Price: High to Low</SelectItem>
+              <SelectItem value="reviews">Most Reviews</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Sidebar Filters */}
           <aside className="w-full shrink-0 lg:w-64">
@@ -609,25 +628,6 @@ export default function StudentDashboard() {
 
           {/* Tutor List */}
           <div className="flex-1">
-            {/* Results Header */}
-            <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <p className="text-muted-foreground">
-                Showing <span className="font-medium text-foreground">{filtered.length}</span> tutors
-              </p>
-              <Select defaultValue="recommended">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recommended">Recommended</SelectItem>
-                  <SelectItem value="rating">Highest Rated</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="reviews">Most Reviews</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Tutor Cards */}
             {filtered.length === 0 ? (
               <div className="rounded-2xl border border-border bg-white p-12 text-center">
