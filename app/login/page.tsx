@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [mode, setMode] = useState<"login" | "signup">("login")
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
@@ -107,6 +109,7 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               className="h-12 w-full gap-3 text-sm font-medium"
+              onClick={() => router.push("/student")}
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -122,6 +125,7 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               className="h-12 w-full gap-3 text-sm font-medium"
+              onClick={() => router.push("/student")}
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" aria-hidden="true">
                 <path
