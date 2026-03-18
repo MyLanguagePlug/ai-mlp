@@ -26,7 +26,6 @@ const sidebarItems = [
   { id: "email", label: "Email", icon: Mail },
   { id: "payment-methods", label: "Payment methods", icon: CreditCard },
   { id: "payment-history", label: "Payment history", icon: Clock },
-  { id: "autoconfirmation", label: "Autoconfirmation", icon: Check },
   { id: "calendar", label: "Calendar", icon: CalendarDays },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "delete-account", label: "Delete account", icon: Trash2 },
@@ -217,16 +216,11 @@ function EmailSection() {
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl font-bold text-[#042230]">Email Settings</h2>
       <div className="space-y-1.5 max-w-md">
-        <Label htmlFor="currentEmail">Current email</Label>
-        <Input id="currentEmail" type="email" defaultValue="jane@example.com" className="max-w-md" />
+        <Label>Current email</Label>
+        <p className="rounded-md border border-border bg-muted px-3 py-2 text-sm text-foreground">
+          jane@example.com
+        </p>
       </div>
-      <div className="space-y-1.5 max-w-md">
-        <Label htmlFor="newEmail">New email</Label>
-        <Input id="newEmail" type="email" placeholder="New email address" className="max-w-md" />
-      </div>
-      <Button className="max-w-md w-full bg-[#354d73] hover:bg-[#2a3d5e] h-12 font-semibold">
-        Update email
-      </Button>
     </div>
   )
 }
@@ -312,7 +306,6 @@ export default function StudentSettings() {
             {active === "email" && <EmailSection />}
             {active === "payment-methods" && <PlaceholderSection title="Payment Methods" />}
             {active === "payment-history" && <PlaceholderSection title="Payment History" />}
-            {active === "autoconfirmation" && <PlaceholderSection title="Autoconfirmation" />}
             {active === "calendar" && <PlaceholderSection title="Calendar" />}
             {active === "notifications" && <PlaceholderSection title="Notifications" />}
             {active === "delete-account" && <DeleteSection />}
