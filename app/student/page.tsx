@@ -22,11 +22,11 @@ import {
   Calendar,
   ChevronDown,
   ChevronUp,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Select,
   SelectContent,
@@ -48,6 +48,29 @@ const specialties = [
   "Kids",
 ]
 
+const priceOptions = [
+  { value: "any",    label: "Any price" },
+  { value: "u25",    label: "Under $25/hr" },
+  { value: "25-35",  label: "$25 – $35/hr" },
+  { value: "35-50",  label: "$35 – $50/hr" },
+  { value: "50plus", label: "$50+/hr" },
+]
+
+const ratingOptions = [
+  { value: "any", label: "Any rating" },
+  { value: "4.5", label: "4.5+ stars" },
+  { value: "4.0", label: "4.0+ stars" },
+  { value: "3.5", label: "3.5+ stars" },
+]
+
+const availabilityOptions = [
+  { value: "any",       label: "Any time" },
+  { value: "morning",   label: "Morning" },
+  { value: "afternoon", label: "Afternoon" },
+  { value: "evening",   label: "Evening" },
+  { value: "weekends",  label: "Weekends" },
+]
+
 const tutors = [
   {
     id: "1",
@@ -62,6 +85,7 @@ const tutors = [
     lessonsCompleted: 1240,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "Hi! I'm Maria, a passionate Spanish teacher with 8+ years of experience. I create engaging lessons tailored to your goals 🌟",
   },
   {
@@ -77,6 +101,7 @@ const tutors = [
     lessonsCompleted: 980,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: false,
     bio: "Bonjour! Let's make French fun and practical. I specialise in conversational French and business language.",
   },
   {
@@ -92,6 +117,7 @@ const tutors = [
     lessonsCompleted: 820,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "I teach all levels from absolute beginners to advanced. My lessons focus on natural conversation and culture.",
   },
   {
@@ -107,6 +133,7 @@ const tutors = [
     lessonsCompleted: 1560,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: false,
     bio: "I help students achieve fluency through structured lessons and real-world German practice.",
   },
   {
@@ -122,6 +149,7 @@ const tutors = [
     lessonsCompleted: 710,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "As a bilingual tutor I offer Portuguese and Spanish lessons. Fun, engaging and results-driven!",
   },
   {
@@ -137,6 +165,7 @@ const tutors = [
     lessonsCompleted: 1120,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "I make Mandarin accessible and enjoyable. From tones to characters — I've got you covered.",
   },
 ]
@@ -288,10 +317,86 @@ export default function StudentDashboard() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
-  const filtered = tutors.filter((t) =>
-    t.name.toLowerCase().includes(search.toLowerCase()) ||
-    t.languages.some((s) => s.toLowerCase().includes(search.toLowerCase()))
-  )
+  // ── Filter state ──────────────────────────────────────────────────────────
+  const [languageFilter, setLanguageFilter] = useState("all")
+  const [priceFilter, setPriceFilter]       = useState("any")
+  const [ratingFilter, setRatingFilter]     = useState("any")
+  const [availFilter, setAvailFilter]       = useState("any")
+  const [activeSpecialties, setActiveSpecialties] = useState<string[]>([])
+  const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false)
+  const [verifiedOnly, setVerifiedOnly]     = useState(false)
+  const [trialOnly, setTrialOnly]           = useState(false)
+  const [sortBy, setSortBy]                 = useState("recommended")
+
+  // ── Unique languages derived from tutor data ──────────────────────────────
+  const allLanguages = [...new Set(tutors.flatMap(t => t.languages))].sort()
+  // Display label for the active language filter (avoids array scan in render)
+  const languageLabel = languageFilter === "all"
+    ? "All languages"
+    : allLanguages.find(l => l.toLowerCase() === languageFilter) ?? languageFilter
+
+  // ── Price predicate map ───────────────────────────────────────────────────
+  const pricePred: Record<string, (r: number) => boolean> = {
+    any:     () => true,
+    u25:     r => r < 25,
+    "25-35":  r => r >= 25 && r < 35,
+    "35-50":  r => r >= 35 && r <= 50,
+    "50plus": r => r > 50,
+  }
+
+  // ── Filtered + sorted list ────────────────────────────────────────────────
+  const filtered = tutors.filter((t) => {
+    if (search && !t.name.toLowerCase().includes(search.toLowerCase()) &&
+        !t.languages.some(l => l.toLowerCase().includes(search.toLowerCase()))) return false
+    if (languageFilter !== "all" && !t.languages.map(l => l.toLowerCase()).includes(languageFilter)) return false
+    if (!(pricePred[priceFilter] ?? (() => true))(t.hourlyRate)) return false
+    if (ratingFilter !== "any" && t.rating < parseFloat(ratingFilter)) return false
+    if (activeSpecialties.length > 0 && !activeSpecialties.some(s =>
+      t.specialties.some(ts => ts.toLowerCase().includes(s.toLowerCase()))
+    )) return false
+    if (nativeSpeakerOnly && !t.isNativeSpeaker) return false
+    if (verifiedOnly && !t.isVerified) return false
+    if (trialOnly && !t.offersTrialLesson) return false
+    return true
+  })
+
+  const sortedFiltered = [...filtered].sort((a, b) => {
+    if (sortBy === "rating")      return b.rating - a.rating
+    if (sortBy === "price-low")   return a.hourlyRate - b.hourlyRate
+    if (sortBy === "price-high")  return b.hourlyRate - a.hourlyRate
+    if (sortBy === "reviews")     return b.reviews - a.reviews
+    return 0
+  })
+
+  // ── Active filter count (for "Clear filters" badge) ───────────────────────
+  // Note: availFilter is shown in UI but not yet applied to filter logic (no
+  // time-of-day data on tutors), so it is excluded from the active count.
+  const activeFilterCount = [
+    languageFilter !== "all",
+    priceFilter    !== "any",
+    ratingFilter   !== "any",
+    activeSpecialties.length > 0,
+    nativeSpeakerOnly,
+    verifiedOnly,
+    trialOnly,
+  ].filter(Boolean).length
+
+  function clearAllFilters() {
+    setLanguageFilter("all")
+    setPriceFilter("any")
+    setRatingFilter("any")
+    setAvailFilter("any")
+    setActiveSpecialties([])
+    setNativeSpeakerOnly(false)
+    setVerifiedOnly(false)
+    setTrialOnly(false)
+  }
+
+  function toggleSpecialty(s: string) {
+    setActiveSpecialties(prev =>
+      prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#F0F6FA]">
@@ -390,7 +495,7 @@ export default function StudentDashboard() {
             Find your perfect language tutor
           </h1>
           <p className="mt-1 text-muted-foreground">
-            {filtered.length.toLocaleString()} tutors ready to help you today
+            {tutors.length.toLocaleString()} tutors ready to help you today
           </p>
         </div>
 
@@ -403,27 +508,160 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* Results Header */}
-        <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <p className="text-muted-foreground">
-            Showing <span className="font-medium text-foreground">{filtered.length}</span> tutors
-          </p>
-          <Select defaultValue="recommended">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recommended">Recommended</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-              <SelectItem value="reviews">Most Reviews</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* ── Horizontal Filter Bar ──────────────────────────────────────── */}
+        <div className="mb-6 overflow-hidden rounded-xl border border-[#354d73]/15 bg-white shadow-sm">
+
+          {/* Row 1 — Primary dropdowns */}
+          <div className="grid grid-cols-2 divide-x divide-[#354d73]/10 border-b border-[#354d73]/10 lg:grid-cols-4">
+
+            {/* Language */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">I want to learn</p>
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All languages</SelectItem>
+                  {allLanguages.map(l => (
+                    <SelectItem key={l} value={l.toLowerCase()}>{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {languageFilter !== "all" && (
+                <p className="mt-0.5 text-[10px] text-[#354d73]">
+                  {languageLabel}
+                  <button onClick={() => setLanguageFilter("all")} className="ml-1 hover:opacity-70"><X className="inline h-2.5 w-2.5" /></button>
+                </p>
+              )}
+            </div>
+
+            {/* Price */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Price per lesson</p>
+              <Select value={priceFilter} onValueChange={setPriceFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {priceOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Rating */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Min rating</p>
+              <Select value={ratingFilter} onValueChange={setRatingFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ratingOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Availability */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">I&apos;m available</p>
+              <Select value={availFilter} onValueChange={setAvailFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {availabilityOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Row 2 — Specialty pills + tutor-type chips + sort */}
+          <div className="flex flex-wrap items-center gap-2 px-4 py-3">
+
+            {/* Specialty pills */}
+            {specialties.map(s => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => toggleSpecialty(s)}
+                className={[
+                  "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  activeSpecialties.includes(s)
+                    ? "border-[#354d73] bg-[#354d73] text-white"
+                    : "border-[#354d73]/25 bg-white text-[#354d73] hover:border-[#354d73]/60 hover:bg-[#F0F6FA]",
+                ].join(" ")}
+              >
+                {s}
+              </button>
+            ))}
+
+            {/* Divider */}
+            <div className="hidden h-5 w-px bg-[#354d73]/15 sm:block" />
+
+            {/* Tutor-type toggles */}
+            {([
+              { label: "Native Speaker", state: nativeSpeakerOnly, set: setNativeSpeakerOnly },
+              { label: "Verified Only",  state: verifiedOnly,      set: setVerifiedOnly      },
+              { label: "Trial Available",state: trialOnly,         set: setTrialOnly         },
+            ] as const).map(({ label, state, set }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => set(!state)}
+                className={[
+                  "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  state
+                    ? "border-[#042230] bg-[#042230] text-white"
+                    : "border-[#354d73]/25 bg-white text-[#042230] hover:border-[#354d73]/50 hover:bg-[#F0F6FA]",
+                ].join(" ")}
+              >
+                {state && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                {label}
+              </button>
+            ))}
+
+            {/* Spacer + right-side controls */}
+            <div className="ml-auto flex items-center gap-3">
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="flex items-center gap-1 text-xs text-[#354d73] hover:underline"
+                >
+                  <X className="h-3 w-3" />
+                  Clear {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""}
+                </button>
+              )}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-8 w-[190px] border-[#354d73]/25 text-xs text-[#042230] focus:ring-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recommended">Recommended</SelectItem>
+                  <SelectItem value="rating">Highest Rated</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="reviews">Most Reviews</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
+        {/* Results count */}
+        <p className="mb-4 text-sm text-muted-foreground">
+          Showing <span className="font-medium text-foreground">{sortedFiltered.length}</span> of {tutors.length} tutors
+        </p>
+
         <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Sidebar Filters */}
+          {/* Sidebar — personal widgets only */}
           <aside className="w-full shrink-0 lg:w-64">
             <div className="sticky top-24 space-y-6">
               {/* ── My Calendar ───────────────────────────── */}
@@ -529,114 +767,19 @@ export default function StudentDashboard() {
                   </div>
                 )}
               </div>
-
-              {/* Filter Header */}
-              <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 font-semibold text-(--navy)">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Filters
-                </h2>
-                <Button variant="ghost" size="sm" className="text-primary">
-                  Clear All
-                </Button>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <DollarSign className="mr-1 inline h-4 w-4" />
-                  Price Range
-                </h3>
-                <div className="flex items-center gap-2">
-                  <Input type="number" placeholder="Min" className="h-9" />
-                  <span className="text-muted-foreground">-</span>
-                  <Input type="number" placeholder="Max" className="h-9" />
-                </div>
-              </div>
-
-              {/* Rating */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <Star className="mr-1 inline h-4 w-4" />
-                  Rating
-                </h3>
-                <div className="space-y-2">
-                  {[4.5, 4.0, 3.5].map((rating) => (
-                    <label key={rating} className="flex cursor-pointer items-center gap-2">
-                      <Checkbox />
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                        <span className="text-sm">{rating}+ stars</span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Availability */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <Clock className="mr-1 inline h-4 w-4" />
-                  Availability
-                </h3>
-                <div className="space-y-2">
-                  {["Morning", "Afternoon", "Evening", "Weekends"].map((time) => (
-                    <label key={time} className="flex cursor-pointer items-center gap-2">
-                      <Checkbox />
-                      <span className="text-sm">{time}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Specialties */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">Specialties</h3>
-                <div className="flex flex-wrap gap-2">
-                  {specialties.map((specialty) => (
-                    <Badge
-                      key={specialty}
-                      variant="outline"
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                    >
-                      {specialty}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tutor Type */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">Tutor Type</h3>
-                <div className="space-y-2">
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Native Speakers Only</span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Verified Tutors Only</span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Offers Trial Lessons</span>
-                  </label>
-                </div>
-              </div>
             </div>
           </aside>
 
           {/* Tutor List */}
           <div className="flex-1">
-            {/* Tutor Cards */}
-            {filtered.length === 0 ? (
+            {sortedFiltered.length === 0 ? (
               <div className="rounded-2xl border border-border bg-white p-12 text-center">
                 <p className="text-lg font-medium text-[#042230]">No tutors found</p>
                 <p className="mt-1 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {filtered.map((tutor) => (
+                {sortedFiltered.map((tutor) => (
                   <TutorCard key={tutor.id} {...tutor} />
                 ))}
               </div>
