@@ -347,238 +347,234 @@ function CalendarSection() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
+      {/* ── Full monthly calendar (full width) ────────────────────── */}
+      <div className="w-full overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
 
-        {/* ── Full monthly calendar ─────────────────────────────── */}
-        <div className="w-full overflow-hidden rounded-2xl border border-border bg-white shadow-sm xl:max-w-md">
-
-          {/* Month navigation header */}
-          <div className="flex items-center justify-between border-b border-border px-5 py-4">
-            <button
-              type="button"
-              onClick={() => { setMonthOffset(o => o - 1); setSelectedDate(null) }}
-              aria-label="Previous month"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <span className="text-base font-bold text-[#042230]">
-              {CAL_MONTHS[month]} {year}
-            </span>
-            <button
-              type="button"
-              onClick={() => { setMonthOffset(o => o + 1); setSelectedDate(null) }}
-              aria-label="Next month"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Day-of-week headers */}
-          <div className="grid grid-cols-7 border-b border-border">
-            {CAL_DAYS_SHORT.map(d => (
-              <div key={d} className="py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                {d}
-              </div>
-            ))}
-          </div>
-
-          {/* Day cells */}
-          <div className="grid grid-cols-7">
-            {cells.map((day, i) => {
-              if (day === null) {
-                return <div key={i} className="h-14 border-b border-r border-border/40 last:border-r-0" />
-              }
-              const iso        = isoOf(day)
-              const isToday    = isCurrentMonth && day === TODAY.getDate()
-              const isSelected = selectedDate === iso
-              const dayLessons = lessonsByDay.get(day) ?? []
-              const hasUpcoming = dayLessons.some(l => l.type === "upcoming")
-              const hasPast     = dayLessons.some(l => l.type === "past")
-
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setSelectedDate(prev => prev === iso ? null : iso)}
-                  className={[
-                    "relative flex h-14 flex-col items-center justify-start pt-1.5",
-                    "border-b border-r border-border/40 text-sm transition-colors",
-                    "hover:bg-[#F0F6FA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]",
-                    isSelected ? "bg-[#354d73]/8 ring-2 ring-inset ring-[#354d73]" : "",
-                    (i + 1) % 7 === 0 ? "border-r-0" : "",
-                  ].filter(Boolean).join(" ")}
-                >
-                  {/* Day number */}
-                  <span className={[
-                    "flex h-7 w-7 items-center justify-center rounded-full text-sm font-medium",
-                    isToday    ? "bg-[#354d73] text-white font-bold"        : "",
-                    isSelected && !isToday ? "bg-[#354d73]/15 text-[#354d73]" : "",
-                    !isToday && !isSelected ? "text-[#042230]"              : "",
-                  ].filter(Boolean).join(" ")}>
-                    {day}
-                  </span>
-
-                  {/* Lesson dots */}
-                  {dayLessons.length > 0 && (
-                    <div className="mt-0.5 flex items-center gap-0.5">
-                      {hasUpcoming && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#354d73]" />
-                      )}
-                      {hasPast && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#042230]/40" />
-                      )}
-                    </div>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Legend */}
-          <div className="flex items-center gap-4 border-t border-border px-5 py-3">
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#354d73]" /> Today
-            </span>
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#354d73]" /> Upcoming
-            </span>
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#042230]/40" /> Past
-            </span>
-          </div>
+        {/* Month navigation header */}
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <button
+            type="button"
+            onClick={() => { setMonthOffset(o => o - 1); setSelectedDate(null) }}
+            aria-label="Previous month"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <span className="text-base font-bold text-[#042230]">
+            {CAL_MONTHS[month]} {year}
+          </span>
+          <button
+            type="button"
+            onClick={() => { setMonthOffset(o => o + 1); setSelectedDate(null) }}
+            aria-label="Next month"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
 
-        {/* ── Detail panel ─────────────────────────────────────── */}
-        <div className="flex flex-1 flex-col gap-4">
-
-          {/* Selected-day detail */}
-          {selectedDate && (
-            <div className="rounded-2xl border border-[#354d73]/20 bg-[#354d73]/5 p-5">
-              <p className="mb-3 text-sm font-bold text-[#354d73]">
-                {formatDate(selectedDate)}
-              </p>
-              {selectedDayLessons.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No lessons on this day.</p>
-              ) : (
-                <div className="space-y-3">
-                  {selectedDayLessons.map(lesson => (
-                    <div key={lesson.id} className="flex items-start gap-3 rounded-xl border border-border bg-white p-3 shadow-sm">
-                      <div className={[
-                        "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-                        lesson.type === "upcoming" ? "bg-[#354d73]/10" : "bg-muted",
-                      ].join(" ")}>
-                        <BookOpen className={[
-                          "h-4 w-4",
-                          lesson.type === "upcoming" ? "text-[#354d73]" : "text-muted-foreground",
-                        ].join(" ")} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
-                        <p className="text-xs text-muted-foreground">{lesson.subject}</p>
-                        {lesson.time && (
-                          <p className="mt-0.5 text-xs font-medium text-[#354d73]">{lesson.time}</p>
-                        )}
-                        {lesson.rating !== undefined && (
-                          <StarRating rating={lesson.rating} />
-                        )}
-                      </div>
-                      <span className={[
-                        "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                        lesson.type === "upcoming"
-                          ? "bg-[#354d73]/10 text-[#354d73]"
-                          : "bg-muted text-muted-foreground",
-                      ].join(" ")}>
-                        {lesson.type}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+        {/* Day-of-week headers */}
+        <div className="grid grid-cols-7 border-b border-border">
+          {CAL_DAYS_SHORT.map(d => (
+            <div key={d} className="py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {d}
             </div>
-          )}
+          ))}
+        </div>
 
-          {/* ── Upcoming this month ───────────────────────────── */}
-          {upcomingThisMonth.length > 0 && (
-            <div className="rounded-2xl border border-border bg-white shadow-sm">
-              <div className="border-b border-border px-5 py-3">
-                <p className="text-sm font-bold text-[#042230]">
-                  Upcoming — {CAL_MONTHS[month]}
-                </p>
-              </div>
-              <div className="divide-y divide-border">
-                {upcomingThisMonth.map(lesson => (
-                  <button
-                    key={lesson.id}
-                    type="button"
-                    onClick={() => setSelectedDate(lesson.date)}
-                    className="flex w-full items-start gap-3 px-5 py-3 text-left hover:bg-[#F0F6FA]"
-                  >
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#354d73]/10">
-                      <Calendar className="h-3.5 w-3.5 text-[#354d73]" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {lesson.subject} · {formatDate(lesson.date)}
-                        {lesson.time && ` · ${lesson.time}`}
-                      </p>
-                    </div>
-                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* Day cells */}
+        <div className="grid grid-cols-7">
+          {cells.map((day, i) => {
+            if (day === null) {
+              return <div key={i} className="h-14 border-b border-r border-border/40 last:border-r-0" />
+            }
+            const iso         = isoOf(day)
+            const isToday     = isCurrentMonth && day === TODAY.getDate()
+            const isSelected  = selectedDate === iso
+            const dayLessons  = lessonsByDay.get(day) ?? []
+            const hasUpcoming = dayLessons.some(l => l.type === "upcoming")
+            const hasPast     = dayLessons.some(l => l.type === "past")
 
-          {/* ── Past lessons this month ───────────────────────── */}
-          {pastThisMonth.length > 0 && (
-            <div className="rounded-2xl border border-border bg-white shadow-sm">
-              <div className="border-b border-border px-5 py-3">
-                <p className="text-sm font-bold text-[#042230]">
-                  Past Lessons — {CAL_MONTHS[month]}
-                </p>
-              </div>
-              <div className="divide-y divide-border">
-                {pastThisMonth.map(lesson => (
-                  <button
-                    key={lesson.id}
-                    type="button"
-                    onClick={() => setSelectedDate(lesson.date)}
-                    className="flex w-full items-start gap-3 px-5 py-3 text-left hover:bg-[#F0F6FA]"
-                  >
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
-                      <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {lesson.subject} · {formatDate(lesson.date)}
-                      </p>
-                      {lesson.rating !== undefined && (
-                        <StarRating rating={lesson.rating} />
-                      )}
-                    </div>
-                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSelectedDate(prev => prev === iso ? null : iso)}
+                className={[
+                  "relative flex h-14 flex-col items-center justify-start pt-1.5",
+                  "border-b border-r border-border/40 text-sm transition-colors",
+                  "hover:bg-[#F0F6FA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]",
+                  isSelected ? "bg-[#354d73]/8 ring-2 ring-inset ring-[#354d73]" : "",
+                  (i + 1) % 7 === 0 ? "border-r-0" : "",
+                ].filter(Boolean).join(" ")}
+              >
+                <span className={[
+                  "flex h-7 w-7 items-center justify-center rounded-full text-sm font-medium",
+                  isToday   ? "bg-[#354d73] text-white font-bold"          : "",
+                  isSelected && !isToday ? "bg-[#354d73]/15 text-[#354d73]" : "",
+                  !isToday && !isSelected ? "text-[#042230]"               : "",
+                ].filter(Boolean).join(" ")}>
+                  {day}
+                </span>
+                {dayLessons.length > 0 && (
+                  <div className="mt-0.5 flex items-center gap-0.5">
+                    {hasUpcoming && <span className="h-1.5 w-1.5 rounded-full bg-[#354d73]" />}
+                    {hasPast     && <span className="h-1.5 w-1.5 rounded-full bg-[#042230]/40" />}
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
 
-          {/* Empty state for months with no lessons */}
-          {monthLessons.length === 0 && !selectedDate && (
-            <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center shadow-sm">
-              <CalendarDays className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
-              <p className="font-medium text-[#042230]">No lessons in {CAL_MONTHS[month]}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Navigate to another month or book a new lesson.
-              </p>
-            </div>
-          )}
+        {/* Legend */}
+        <div className="flex items-center gap-4 border-t border-border px-5 py-3">
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#354d73]" /> Today
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#354d73]" /> Upcoming
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#042230]/40" /> Past
+          </span>
         </div>
       </div>
+
+      {/* ── Selected-day detail (below calendar) ──────────────────── */}
+      {selectedDate && (
+        <div className="rounded-2xl border border-[#354d73]/20 bg-[#354d73]/5 p-5">
+          <p className="mb-3 text-sm font-bold text-[#354d73]">
+            {formatDate(selectedDate)}
+          </p>
+          {selectedDayLessons.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No lessons on this day.</p>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {selectedDayLessons.map(lesson => (
+                <div key={lesson.id} className="flex min-w-[180px] flex-1 items-start gap-3 rounded-xl border border-border bg-white p-3 shadow-sm">
+                  <div className={[
+                    "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+                    lesson.type === "upcoming" ? "bg-[#354d73]/10" : "bg-muted",
+                  ].join(" ")}>
+                    <BookOpen className={[
+                      "h-4 w-4",
+                      lesson.type === "upcoming" ? "text-[#354d73]" : "text-muted-foreground",
+                    ].join(" ")} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                    <p className="text-xs text-muted-foreground">{lesson.subject}</p>
+                    {lesson.time && (
+                      <p className="mt-0.5 text-xs font-medium text-[#354d73]">{lesson.time}</p>
+                    )}
+                    {lesson.rating !== undefined && (
+                      <StarRating rating={lesson.rating} />
+                    )}
+                  </div>
+                  <span className={[
+                    "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                    lesson.type === "upcoming"
+                      ? "bg-[#354d73]/10 text-[#354d73]"
+                      : "bg-muted text-muted-foreground",
+                  ].join(" ")}>
+                    {lesson.type}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Upcoming this month — horizontal card row ─────────────── */}
+      {upcomingThisMonth.length > 0 && (
+        <div>
+          <p className="mb-3 text-sm font-bold text-[#042230]">
+            Upcoming — {CAL_MONTHS[month]}
+          </p>
+          <div
+            role="list"
+            aria-label={`Upcoming lessons in ${CAL_MONTHS[month]}`}
+            tabIndex={0}
+            className="flex gap-3 overflow-x-auto rounded-lg pb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+          >
+            {upcomingThisMonth.map(lesson => (
+              <button
+                key={lesson.id}
+                role="listitem"
+                type="button"
+                onClick={() => setSelectedDate(lesson.date)}
+                className="group flex w-44 shrink-0 flex-col rounded-2xl border border-border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+              >
+                <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#354d73]/10">
+                  <Calendar className="h-4 w-4 text-[#354d73]" />
+                </div>
+                <p className="truncate text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">{lesson.subject}</p>
+                <p className="mt-2 text-xs font-medium text-[#354d73]">{formatDate(lesson.date)}</p>
+                {lesson.time && (
+                  <p className="text-xs text-muted-foreground">{lesson.time}</p>
+                )}
+                <span className="mt-3 self-start rounded-full bg-[#354d73]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#354d73]">
+                  Upcoming
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Past lessons this month — horizontal card row ─────────── */}
+      {pastThisMonth.length > 0 && (
+        <div>
+          <p className="mb-3 text-sm font-bold text-[#042230]">
+            Past Lessons — {CAL_MONTHS[month]}
+          </p>
+          <div
+            role="list"
+            aria-label={`Past lessons in ${CAL_MONTHS[month]}`}
+            tabIndex={0}
+            className="flex gap-3 overflow-x-auto rounded-lg pb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+          >
+            {pastThisMonth.map(lesson => (
+              <button
+                key={lesson.id}
+                role="listitem"
+                type="button"
+                onClick={() => setSelectedDate(lesson.date)}
+                className="group flex w-44 shrink-0 flex-col rounded-2xl border border-border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+              >
+                <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                  <BookOpen className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <p className="truncate text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">{lesson.subject}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{formatDate(lesson.date)}</p>
+                {lesson.rating !== undefined && (
+                  <div className="mt-1">
+                    <StarRating rating={lesson.rating} />
+                  </div>
+                )}
+                <span className="mt-3 self-start rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Past
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {monthLessons.length === 0 && !selectedDate && (
+        <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center shadow-sm">
+          <CalendarDays className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
+          <p className="font-medium text-[#042230]">No lessons in {CAL_MONTHS[month]}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Navigate to another month or book a new lesson.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
