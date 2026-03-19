@@ -12,9 +12,13 @@ import {
   Bell,
   Trash2,
   Upload,
+  ChevronLeft,
   ChevronRight,
   Check,
   ArrowLeft,
+  Star,
+  BookOpen,
+  Calendar,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -225,6 +229,362 @@ function EmailSection() {
   )
 }
 
+// ── Shared lesson data (mirrors student dashboard) ───────────────────────────
+
+type Lesson = {
+  id: number
+  tutor: string
+  subject: string
+  /** ISO date string YYYY-MM-DD */
+  date: string
+  time?: string
+  /** 1-5 star rating – only on past lessons */
+  rating?: number
+  type: "upcoming" | "past"
+}
+
+const ALL_LESSONS: Lesson[] = [
+  // ── Past lessons ───────────────────────────────────────────────
+  { id: 101, tutor: "Maria Santos",       subject: "Spanish",   date: "2026-01-08",  rating: 5, type: "past" },
+  { id: 102, tutor: "Yuki Tanaka",        subject: "Japanese",  date: "2026-01-15",  rating: 4, type: "past" },
+  { id: 103, tutor: "Hans Mueller",       subject: "German",    date: "2026-01-22",  rating: 5, type: "past" },
+  { id: 104, tutor: "Maria Santos",       subject: "Spanish",   date: "2026-02-05",  rating: 5, type: "past" },
+  { id: 105, tutor: "Jean-Pierre Dubois", subject: "French",    date: "2026-02-12",  rating: 4, type: "past" },
+  { id: 106, tutor: "Yuki Tanaka",        subject: "Japanese",  date: "2026-02-19",  rating: 5, type: "past" },
+  { id: 107, tutor: "Maria Santos",       subject: "Spanish",   date: "2026-03-12",  rating: 5, type: "past" },
+  { id: 108, tutor: "Yuki Tanaka",        subject: "Japanese",  date: "2026-03-14",  rating: 4, type: "past" },
+  { id: 109, tutor: "Hans Mueller",       subject: "German",    date: "2026-03-17",  rating: 5, type: "past" },
+  // ── Upcoming lessons ───────────────────────────────────────────
+  { id: 201, tutor: "Maria Santos",       subject: "Spanish",   date: "2026-03-19",  time: "10:00 AM", type: "upcoming" },
+  { id: 202, tutor: "Yuki Tanaka",        subject: "Japanese",  date: "2026-03-21",  time: "2:00 PM",  type: "upcoming" },
+  { id: 203, tutor: "Jean-Pierre Dubois", subject: "French",    date: "2026-03-24",  time: "11:00 AM", type: "upcoming" },
+  { id: 204, tutor: "Maria Santos",       subject: "Spanish",   date: "2026-04-02",  time: "10:00 AM", type: "upcoming" },
+  { id: 205, tutor: "Yuki Tanaka",        subject: "Japanese",  date: "2026-04-09",  time: "2:00 PM",  type: "upcoming" },
+  { id: 206, tutor: "Hans Mueller",       subject: "German",    date: "2026-04-16",  time: "9:00 AM",  type: "upcoming" },
+  { id: 207, tutor: "Jean-Pierre Dubois", subject: "French",    date: "2026-04-23",  time: "11:00 AM", type: "upcoming" },
+]
+
+const CAL_MONTHS = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
+]
+const CAL_DAYS_SHORT = ["Mo","Tu","We","Th","Fr","Sa","Su"]
+
+// Stable reference — created once at module load so it doesn't change on re-renders
+const TODAY = new Date()
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="mt-0.5 flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star key={i} className={[
+          "h-3 w-3",
+          i < rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted",
+        ].join(" ")} />
+      ))}
+    </div>
+  )
+}
+
+function CalendarSection() {
+  const [monthOffset, setMonthOffset] = useState(0)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+
+  const display      = new Date(TODAY.getFullYear(), TODAY.getMonth() + monthOffset, 1)
+  const year         = display.getFullYear()
+  const month        = display.getMonth()          // 0-indexed
+  const daysInMonth  = new Date(year, month + 1, 0).getDate()
+  // Monday-first offset
+  const firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7
+
+  // Build grid cells
+  const cells: (number | null)[] = []
+  for (let i = 0; i < firstWeekday; i++) cells.push(null)
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d)
+
+  const isCurrentMonth = year === TODAY.getFullYear() && month === TODAY.getMonth()
+
+  // Group lessons for this month by day
+  const lessonsByDay = new Map<number, Lesson[]>()
+  ALL_LESSONS.forEach(lesson => {
+    const d = new Date(lesson.date)
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      const day = d.getDate()
+      if (!lessonsByDay.has(day)) lessonsByDay.set(day, [])
+      lessonsByDay.get(day)!.push(lesson)
+    }
+  })
+
+  // Lessons for the selected day
+  const selectedDayLessons: Lesson[] = selectedDate
+    ? ALL_LESSONS.filter(l => l.date === selectedDate)
+    : []
+
+  // All lessons for this month (for the side list)
+  const monthLessons = ALL_LESSONS.filter(l => {
+    const d = new Date(l.date)
+    return d.getFullYear() === year && d.getMonth() === month
+  }).sort((a, b) => a.date.localeCompare(b.date))
+
+  const upcomingThisMonth = monthLessons.filter(l => l.type === "upcoming")
+  const pastThisMonth     = monthLessons.filter(l => l.type === "past")
+
+  function formatDate(iso: string) {
+    const d = new Date(iso)
+    return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })
+  }
+
+  function isoOf(day: number) {
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl font-bold text-[#042230]">My Calendar</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          View all your upcoming and past lessons at a glance.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
+
+        {/* ── Full monthly calendar ─────────────────────────────── */}
+        <div className="w-full overflow-hidden rounded-2xl border border-border bg-white shadow-sm xl:max-w-md">
+
+          {/* Month navigation header */}
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <button
+              type="button"
+              onClick={() => { setMonthOffset(o => o - 1); setSelectedDate(null) }}
+              aria-label="Previous month"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <span className="text-base font-bold text-[#042230]">
+              {CAL_MONTHS[month]} {year}
+            </span>
+            <button
+              type="button"
+              onClick={() => { setMonthOffset(o => o + 1); setSelectedDate(null) }}
+              aria-label="Next month"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#354d73] hover:bg-[#F0F6FA]"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Day-of-week headers */}
+          <div className="grid grid-cols-7 border-b border-border">
+            {CAL_DAYS_SHORT.map(d => (
+              <div key={d} className="py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                {d}
+              </div>
+            ))}
+          </div>
+
+          {/* Day cells */}
+          <div className="grid grid-cols-7">
+            {cells.map((day, i) => {
+              if (day === null) {
+                return <div key={i} className="h-14 border-b border-r border-border/40 last:border-r-0" />
+              }
+              const iso        = isoOf(day)
+              const isToday    = isCurrentMonth && day === TODAY.getDate()
+              const isSelected = selectedDate === iso
+              const dayLessons = lessonsByDay.get(day) ?? []
+              const hasUpcoming = dayLessons.some(l => l.type === "upcoming")
+              const hasPast     = dayLessons.some(l => l.type === "past")
+
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setSelectedDate(prev => prev === iso ? null : iso)}
+                  className={[
+                    "relative flex h-14 flex-col items-center justify-start pt-1.5",
+                    "border-b border-r border-border/40 text-sm transition-colors",
+                    "hover:bg-[#F0F6FA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]",
+                    isSelected ? "bg-[#354d73]/8 ring-2 ring-inset ring-[#354d73]" : "",
+                    (i + 1) % 7 === 0 ? "border-r-0" : "",
+                  ].filter(Boolean).join(" ")}
+                >
+                  {/* Day number */}
+                  <span className={[
+                    "flex h-7 w-7 items-center justify-center rounded-full text-sm font-medium",
+                    isToday    ? "bg-[#354d73] text-white font-bold"        : "",
+                    isSelected && !isToday ? "bg-[#354d73]/15 text-[#354d73]" : "",
+                    !isToday && !isSelected ? "text-[#042230]"              : "",
+                  ].filter(Boolean).join(" ")}>
+                    {day}
+                  </span>
+
+                  {/* Lesson dots */}
+                  {dayLessons.length > 0 && (
+                    <div className="mt-0.5 flex items-center gap-0.5">
+                      {hasUpcoming && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#354d73]" />
+                      )}
+                      {hasPast && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#042230]/40" />
+                      )}
+                    </div>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center gap-4 border-t border-border px-5 py-3">
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#354d73]" /> Today
+            </span>
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#354d73]" /> Upcoming
+            </span>
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#042230]/40" /> Past
+            </span>
+          </div>
+        </div>
+
+        {/* ── Detail panel ─────────────────────────────────────── */}
+        <div className="flex flex-1 flex-col gap-4">
+
+          {/* Selected-day detail */}
+          {selectedDate && (
+            <div className="rounded-2xl border border-[#354d73]/20 bg-[#354d73]/5 p-5">
+              <p className="mb-3 text-sm font-bold text-[#354d73]">
+                {formatDate(selectedDate)}
+              </p>
+              {selectedDayLessons.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No lessons on this day.</p>
+              ) : (
+                <div className="space-y-3">
+                  {selectedDayLessons.map(lesson => (
+                    <div key={lesson.id} className="flex items-start gap-3 rounded-xl border border-border bg-white p-3 shadow-sm">
+                      <div className={[
+                        "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+                        lesson.type === "upcoming" ? "bg-[#354d73]/10" : "bg-muted",
+                      ].join(" ")}>
+                        <BookOpen className={[
+                          "h-4 w-4",
+                          lesson.type === "upcoming" ? "text-[#354d73]" : "text-muted-foreground",
+                        ].join(" ")} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                        <p className="text-xs text-muted-foreground">{lesson.subject}</p>
+                        {lesson.time && (
+                          <p className="mt-0.5 text-xs font-medium text-[#354d73]">{lesson.time}</p>
+                        )}
+                        {lesson.rating !== undefined && (
+                          <StarRating rating={lesson.rating} />
+                        )}
+                      </div>
+                      <span className={[
+                        "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                        lesson.type === "upcoming"
+                          ? "bg-[#354d73]/10 text-[#354d73]"
+                          : "bg-muted text-muted-foreground",
+                      ].join(" ")}>
+                        {lesson.type}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Upcoming this month ───────────────────────────── */}
+          {upcomingThisMonth.length > 0 && (
+            <div className="rounded-2xl border border-border bg-white shadow-sm">
+              <div className="border-b border-border px-5 py-3">
+                <p className="text-sm font-bold text-[#042230]">
+                  Upcoming — {CAL_MONTHS[month]}
+                </p>
+              </div>
+              <div className="divide-y divide-border">
+                {upcomingThisMonth.map(lesson => (
+                  <button
+                    key={lesson.id}
+                    type="button"
+                    onClick={() => setSelectedDate(lesson.date)}
+                    className="flex w-full items-start gap-3 px-5 py-3 text-left hover:bg-[#F0F6FA]"
+                  >
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#354d73]/10">
+                      <Calendar className="h-3.5 w-3.5 text-[#354d73]" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {lesson.subject} · {formatDate(lesson.date)}
+                        {lesson.time && ` · ${lesson.time}`}
+                      </p>
+                    </div>
+                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Past lessons this month ───────────────────────── */}
+          {pastThisMonth.length > 0 && (
+            <div className="rounded-2xl border border-border bg-white shadow-sm">
+              <div className="border-b border-border px-5 py-3">
+                <p className="text-sm font-bold text-[#042230]">
+                  Past Lessons — {CAL_MONTHS[month]}
+                </p>
+              </div>
+              <div className="divide-y divide-border">
+                {pastThisMonth.map(lesson => (
+                  <button
+                    key={lesson.id}
+                    type="button"
+                    onClick={() => setSelectedDate(lesson.date)}
+                    className="flex w-full items-start gap-3 px-5 py-3 text-left hover:bg-[#F0F6FA]"
+                  >
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
+                      <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-[#042230]">{lesson.tutor}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {lesson.subject} · {formatDate(lesson.date)}
+                      </p>
+                      {lesson.rating !== undefined && (
+                        <StarRating rating={lesson.rating} />
+                      )}
+                    </div>
+                    <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Empty state for months with no lessons */}
+          {monthLessons.length === 0 && !selectedDate && (
+            <div className="rounded-2xl border border-border bg-white px-6 py-12 text-center shadow-sm">
+              <CalendarDays className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
+              <p className="font-medium text-[#042230]">No lessons in {CAL_MONTHS[month]}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Navigate to another month or book a new lesson.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+
 function PlaceholderSection({ title }: { title: string }) {
   return (
     <div className="flex flex-col gap-4">
@@ -235,6 +595,7 @@ function PlaceholderSection({ title }: { title: string }) {
     </div>
   )
 }
+
 
 function DeleteSection() {
   return (
@@ -306,7 +667,7 @@ export default function StudentSettings() {
             {active === "email" && <EmailSection />}
             {active === "payment-methods" && <PlaceholderSection title="Payment Methods" />}
             {active === "payment-history" && <PlaceholderSection title="Payment History" />}
-            {active === "calendar" && <PlaceholderSection title="Calendar" />}
+            {active === "calendar" && <CalendarSection />}
             {active === "notifications" && <PlaceholderSection title="Notifications" />}
             {active === "delete-account" && <DeleteSection />}
           </div>
