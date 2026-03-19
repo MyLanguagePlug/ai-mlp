@@ -1,8 +1,11 @@
-import { Suspense } from "react"
-import { Search, SlidersHorizontal, Globe, MapPin, Clock, DollarSign } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client"
+
+import { useState } from "react"
+import {
+  Search,
+  X,
+} from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import {
   Select,
   SelectContent,
@@ -10,9 +13,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { TutorCard } from "@/components/tutor-card"
-import { Skeleton } from "@/components/ui/skeleton"
+
+// ── Constants ────────────────────────────────────────────────────────────────
+
+const specialties = [
+  "Exam Prep",
+  "Grammar",
+  "Pronunciation",
+  "Beginner Friendly",
+]
+
+const priceOptions = [
+  { value: "any",    label: "Any price" },
+  { value: "u25",    label: "Under $25/hr" },
+  { value: "25-35",  label: "$25 – $35/hr" },
+  { value: "35-50",  label: "$35 – $50/hr" },
+  { value: "50plus", label: "$50+/hr" },
+]
+
+const countryOptions = [
+  { value: "any",     label: "Any country" },
+  { value: "brazil",  label: "Brazil" },
+  { value: "china",   label: "China" },
+  { value: "france",  label: "France" },
+  { value: "germany", label: "Germany" },
+  { value: "italy",   label: "Italy" },
+  { value: "japan",   label: "Japan" },
+  { value: "spain",   label: "Spain" },
+]
+
+const availabilityOptions = [
+  { value: "any",       label: "Any time" },
+  { value: "morning",   label: "Morning" },
+  { value: "afternoon", label: "Afternoon" },
+  { value: "evening",   label: "Evening" },
+  { value: "weekends",  label: "Weekends" },
+]
 
 const tutors = [
   {
@@ -28,7 +65,8 @@ const tutors = [
     lessonsCompleted: 1250,
     isVerified: true,
     isNativeSpeaker: true,
-    bio: "Professional Spanish teacher with 10+ years of experience. I specialize in conversational Spanish and business communication. My lessons are interactive and tailored to your goals.",
+    offersTrialLesson: true,
+    bio: "Professional Spanish teacher with 10+ years of experience. I specialise in conversational Spanish and business communication. My lessons are interactive and tailored to your goals.",
   },
   {
     id: "2",
@@ -43,6 +81,7 @@ const tutors = [
     lessonsCompleted: 980,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: false,
     bio: "Native French tutor from Paris. I focus on helping students achieve natural pronunciation and confident speaking skills. Learn French the way locals speak it!",
   },
   {
@@ -58,7 +97,8 @@ const tutors = [
     lessonsCompleted: 720,
     isVerified: true,
     isNativeSpeaker: true,
-    bio: "Certified Japanese teacher specializing in JLPT preparation and business Japanese. I make learning kanji and grammar fun and accessible for all levels.",
+    offersTrialLesson: true,
+    bio: "Certified Japanese teacher specialising in JLPT preparation and business Japanese. I make learning kanji and grammar fun and accessible for all levels.",
   },
   {
     id: "4",
@@ -73,6 +113,7 @@ const tutors = [
     lessonsCompleted: 890,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: false,
     bio: "German language expert with a background in linguistics. I help students prepare for German language exams and achieve fluency through structured lessons.",
   },
   {
@@ -88,6 +129,7 @@ const tutors = [
     lessonsCompleted: 560,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "Passionate Italian teacher who loves sharing Italian culture and language. My lessons combine grammar with real-life conversations and cultural insights.",
   },
   {
@@ -103,244 +145,303 @@ const tutors = [
     lessonsCompleted: 830,
     isVerified: true,
     isNativeSpeaker: true,
+    offersTrialLesson: true,
     bio: "Experienced Mandarin teacher with expertise in HSK exam preparation and business Chinese. I use modern teaching methods to make Chinese accessible.",
   },
 ]
 
-const languages = [
-  "All Languages",
-  "Spanish",
-  "French",
-  "German",
-  "Japanese",
-  "Chinese",
-  "Italian",
-  "Portuguese",
-  "Korean",
-  "Arabic",
-  "Russian",
-]
-
-const specialties = [
-  "Exam Prep",
-  "Grammar",
-  "Pronunciation",
-  "Beginner Friendly",
-]
-
-const countries = [
-  "Any Country",
-  "Brazil",
-  "China",
-  "France",
-  "Germany",
-  "Italy",
-  "Japan",
-  "Spain",
-]
-
-function TutorListSkeleton() {
-  return (
-    <div className="space-y-4">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="flex gap-4 rounded-lg border p-4">
-          <Skeleton className="h-48 w-48 rounded-lg" />
-          <div className="flex-1 space-y-3">
-            <Skeleton className="h-6 w-1/3" />
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
+// ── Page component ────────────────────────────────────────────────────────────
 
 export default function TutorsPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Page Header */}
-      <div className="bg-(--light-blue)">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h1 className="font-serif text-3xl font-bold text-(--navy) md:text-4xl">
-            Find Your Perfect Tutor
-          </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Browse our network of verified language tutors
-          </p>
+  const [search, setSearch]                         = useState("")
 
-          {/* Search Bar */}
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search by name, language, or specialty..."
-                className="h-12 bg-background pl-10 pr-4"
-              />
-            </div>
-            <Select defaultValue="all">
-              <SelectTrigger className="h-12 w-full bg-background sm:w-[200px]">
-                <Globe className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Language" />
-              </SelectTrigger>
-              <SelectContent>
-                {languages.map((lang) => (
-                  <SelectItem key={lang} value={lang.toLowerCase().replace(" ", "-")}>
-                    {lang}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button size="lg" className="h-12">
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
+  // ── Filter state ────────────────────────────────────────────────────────
+  const [languageFilter, setLanguageFilter]         = useState("all")
+  const [priceFilter, setPriceFilter]               = useState("any")
+  const [countryFilter, setCountryFilter]           = useState("any")
+  const [alsoSpeaksFilter, setAlsoSpeaksFilter]     = useState("any")
+  const [availFilter, setAvailFilter]               = useState("any")
+  const [activeSpecialties, setActiveSpecialties]   = useState<string[]>([])
+  const [nativeSpeakerOnly, setNativeSpeakerOnly]   = useState(false)
+  const [verifiedOnly, setVerifiedOnly]             = useState(false)
+  const [trialOnly, setTrialOnly]                   = useState(false)
+  const [sortBy, setSortBy]                         = useState("recommended")
+
+  // ── Unique languages derived from tutor data ────────────────────────────
+  const allLanguages = [...new Set(tutors.flatMap(t => t.languages))].sort()
+  const languageLabel = languageFilter === "all"
+    ? "All languages"
+    : allLanguages.find(l => l.toLowerCase() === languageFilter) ?? languageFilter
+
+  // ── Price predicate map ─────────────────────────────────────────────────
+  const pricePred: Record<string, (r: number) => boolean> = {
+    any:      () => true,
+    u25:      r => r < 25,
+    "25-35":  r => r >= 25 && r < 35,
+    "35-50":  r => r >= 35 && r <= 50,
+    "50plus": r => r > 50,
+  }
+
+  // ── Filtered + sorted list ──────────────────────────────────────────────
+  const searchLower = search.toLowerCase()
+  const filtered = tutors.filter((t) => {
+    if (search && !t.name.toLowerCase().includes(searchLower) &&
+        !t.languages.some(l => l.toLowerCase().includes(searchLower))) return false
+    if (languageFilter !== "all" && !t.languages.map(l => l.toLowerCase()).includes(languageFilter)) return false
+    if (!(pricePred[priceFilter] ?? (() => true))(t.hourlyRate)) return false
+    if (countryFilter !== "any" && (t.country ?? "").toLowerCase() !== countryFilter) return false
+    if (alsoSpeaksFilter !== "any" && !t.languages.map(l => l.toLowerCase()).includes(alsoSpeaksFilter)) return false
+    if (activeSpecialties.length > 0 && !activeSpecialties.some(s =>
+      t.specialties.some(ts => ts.toLowerCase().includes(s.toLowerCase()))
+    )) return false
+    if (nativeSpeakerOnly && !t.isNativeSpeaker) return false
+    if (verifiedOnly && !t.isVerified) return false
+    if (trialOnly && !t.offersTrialLesson) return false
+    return true
+  })
+
+  const sortedFiltered = [...filtered].sort((a, b) => {
+    if (sortBy === "rating")      return b.rating - a.rating
+    if (sortBy === "price-low")   return a.hourlyRate - b.hourlyRate
+    if (sortBy === "price-high")  return b.hourlyRate - a.hourlyRate
+    if (sortBy === "reviews")     return b.reviews - a.reviews
+    return 0
+  })
+
+  // ── Active filter count ─────────────────────────────────────────────────
+  const activeFilterCount = [
+    languageFilter !== "all",
+    priceFilter    !== "any",
+    countryFilter  !== "any",
+    alsoSpeaksFilter !== "any",
+    activeSpecialties.length > 0,
+    nativeSpeakerOnly,
+    verifiedOnly,
+    trialOnly,
+  ].filter(Boolean).length
+
+  function clearAllFilters() {
+    setLanguageFilter("all")
+    setPriceFilter("any")
+    setCountryFilter("any")
+    setAlsoSpeaksFilter("any")
+    setAvailFilter("any")
+    setActiveSpecialties([])
+    setNativeSpeakerOnly(false)
+    setVerifiedOnly(false)
+    setTrialOnly(false)
+  }
+
+  function toggleSpecialty(s: string) {
+    setActiveSpecialties(prev =>
+      prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F0F6FA]">
+
+      {/* ── Search bar ─────────────────────────────────────────────────────── */}
+      <div className="sticky top-0 z-30 border-b border-border bg-white shadow-sm">
+        <div className="mx-auto flex h-14 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search tutors or languages…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-9 bg-[#F0F6FA] border-transparent focus:border-[#354d73]"
+            />
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Sidebar Filters */}
-          <aside className="w-full shrink-0 lg:w-64">
-            <div className="sticky top-24 space-y-6">
-              {/* Filter Header */}
-              <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 font-semibold text-(--navy)">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Filters
-                </h2>
-                <Button variant="ghost" size="sm" className="text-primary">
-                  Clear All
-                </Button>
-              </div>
+      {/* ── Main content ───────────────────────────────────────────────────── */}
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
-              {/* Price Range */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <DollarSign className="mr-1 inline h-4 w-4" />
-                  Price Range
-                </h3>
-                <div className="flex items-center gap-2">
-                  <Input type="number" placeholder="Min" className="h-9" />
-                  <span className="text-muted-foreground">-</span>
-                  <Input type="number" placeholder="Max" className="h-9" />
-                </div>
-              </div>
+        {/* Page title */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-[#042230] sm:text-3xl">
+            Find your perfect language tutor
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            {tutors.length.toLocaleString()} tutors ready to help you today
+          </p>
+        </div>
 
-              {/* Country of Birth */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <MapPin className="mr-1 inline h-4 w-4" />
-                  Country of Birth
-                </h3>
-                <Select defaultValue="any-country">
-                  <SelectTrigger className="h-9 w-full">
-                    <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder="Any Country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countries.map((country) => (
-                      <SelectItem
-                        key={country}
-                        value={country.toLowerCase().replace(" ", "-")}
-                      >
-                        {country}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+        {/* Promo banner */}
+        <div className="mb-6 flex items-center gap-3 rounded-xl bg-[#354d73]/10 border border-[#354d73]/20 px-5 py-4">
+          <span className="text-2xl">🎉</span>
+          <div>
+            <p className="font-semibold text-[#354d73]">Enjoy 30% off your trial lesson!</p>
+            <p className="text-sm text-muted-foreground">No code needed. Applies to tutors charging $10 or more.</p>
+          </div>
+        </div>
 
-              {/* Also Speaks */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <Globe className="mr-1 inline h-4 w-4" />
-                  Also Speaks
-                </h3>
-                <Select defaultValue="all">
-                  <SelectTrigger className="h-9 w-full">
-                    <SelectValue placeholder="Any language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languages.map((lang) => (
-                      <SelectItem key={lang} value={lang.toLowerCase().replace(" ", "-")}>
-                        {lang}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+        {/* ── Horizontal Filter Bar ──────────────────────────────────────── */}
+        <div className="mb-6 overflow-hidden rounded-xl border border-[#354d73]/15 bg-white shadow-sm">
 
-              {/* Availability */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <Clock className="mr-1 inline h-4 w-4" />
-                  Availability
-                </h3>
-                <div className="space-y-2">
-                  {["Morning", "Afternoon", "Evening", "Weekends"].map((time) => (
-                    <label key={time} className="flex cursor-pointer items-center gap-2">
-                      <Checkbox />
-                      <span className="text-sm">{time}</span>
-                    </label>
+          {/* Row 1 — Primary dropdowns */}
+          <div className="grid grid-cols-2 divide-x divide-[#354d73]/10 border-b border-[#354d73]/10 lg:grid-cols-5">
+
+            {/* Language */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">I want to learn</p>
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All languages</SelectItem>
+                  {allLanguages.map(l => (
+                    <SelectItem key={l} value={l.toLowerCase()}>{l}</SelectItem>
                   ))}
-                </div>
-              </div>
-
-              {/* Specialties */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">Specialties</h3>
-                <div className="flex flex-wrap gap-2">
-                  {specialties.map((specialty) => (
-                    <div
-                      key={specialty}
-                      className="rounded-lg border border-border bg-background"
-                    >
-                      <Badge
-                        variant="outline"
-                        className="cursor-pointer border-0 hover:bg-primary hover:text-primary-foreground"
-                      >
-                        {specialty}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tutor Type */}
-              <div>
-                <h3 className="mb-3 text-sm font-medium text-(--navy)">Tutor Type</h3>
-                <div className="space-y-2">
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Native Speakers Only</span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Verified Tutors Only</span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-2">
-                    <Checkbox />
-                    <span className="text-sm">Offers Trial Lessons</span>
-                  </label>
-                </div>
-              </div>
+                </SelectContent>
+              </Select>
+              {languageFilter !== "all" && (
+                <p className="mt-0.5 text-[10px] text-[#354d73]">
+                  {languageLabel}
+                  <button onClick={() => setLanguageFilter("all")} aria-label="Clear language filter" className="ml-1 hover:opacity-70"><X className="inline h-2.5 w-2.5" /></button>
+                </p>
+              )}
             </div>
-          </aside>
 
-          {/* Tutor List */}
-          <main className="flex-1">
-            {/* Results Header */}
-            <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <p className="text-muted-foreground">
-                Showing <span className="font-medium text-foreground">{tutors.length}</span> tutors
-              </p>
-              <Select defaultValue="recommended">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
+            {/* Also speaks */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Also speaks</p>
+              <Select value={alsoSpeaksFilter} onValueChange={setAlsoSpeaksFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any language</SelectItem>
+                  {allLanguages.map(l => (
+                    <SelectItem key={l} value={l.toLowerCase()}>{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Price */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Price per lesson</p>
+              <Select value={priceFilter} onValueChange={setPriceFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {priceOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Country of Birth */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Country of birth</p>
+              <Select value={countryFilter} onValueChange={setCountryFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {countryOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Availability */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">I&apos;m available</p>
+              <Select value={availFilter} onValueChange={setAvailFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {availabilityOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Row 2 — Specialty pills + tutor-type chips + sort */}
+          <div className="flex flex-wrap items-center gap-2 px-4 py-3">
+
+            {/* Specialty pills — each in its own box */}
+            {specialties.map(s => (
+              <div
+                key={s}
+                className={[
+                  "rounded-lg border",
+                  activeSpecialties.includes(s)
+                    ? "border-[#354d73] bg-[#354d73]"
+                    : "border-[#354d73]/25 bg-white hover:border-[#354d73]/60 hover:bg-[#F0F6FA]",
+                ].join(" ")}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleSpecialty(s)}
+                  className={[
+                    "px-3 py-1.5 text-xs font-medium transition-colors",
+                    activeSpecialties.includes(s) ? "text-white" : "text-[#354d73]",
+                  ].join(" ")}
+                >
+                  {s}
+                </button>
+              </div>
+            ))}
+
+            {/* Divider */}
+            <div className="hidden h-5 w-px bg-[#354d73]/15 sm:block" />
+
+            {/* Tutor-type toggles — each in its own box */}
+            {([
+              { label: "Native Speaker", state: nativeSpeakerOnly, set: setNativeSpeakerOnly },
+              { label: "Verified Only",  state: verifiedOnly,      set: setVerifiedOnly      },
+              { label: "Trial Available",state: trialOnly,         set: setTrialOnly         },
+            ] as const).map(({ label, state, set }) => (
+              <div
+                key={label}
+                className={[
+                  "rounded-lg border",
+                  state
+                    ? "border-[#042230] bg-[#042230]"
+                    : "border-[#354d73]/25 bg-white hover:border-[#354d73]/50 hover:bg-[#F0F6FA]",
+                ].join(" ")}
+              >
+                <button
+                  type="button"
+                  onClick={() => set(!state)}
+                  className={[
+                    "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors",
+                    state ? "text-white" : "text-[#042230]",
+                  ].join(" ")}
+                >
+                  {state && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                  {label}
+                </button>
+              </div>
+            ))}
+
+            {/* Spacer + right-side controls */}
+            <div className="ml-auto flex items-center gap-3">
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="flex items-center gap-1 text-xs text-[#354d73] hover:underline"
+                >
+                  <X className="h-3 w-3" />
+                  Clear {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""}
+                </button>
+              )}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-8 w-[190px] border-[#354d73]/25 text-xs text-[#042230] focus:ring-[#354d73]">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="recommended">Recommended</SelectItem>
@@ -351,40 +452,28 @@ export default function TutorsPage() {
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Tutor Cards */}
-            <Suspense fallback={<TutorListSkeleton />}>
-              <div className="space-y-4">
-                {tutors.map((tutor) => (
-                  <TutorCard key={tutor.id} {...tutor} />
-                ))}
-              </div>
-            </Suspense>
-
-            {/* Pagination */}
-            <div className="mt-8 flex justify-center">
-              <nav className="flex items-center gap-1">
-                <Button variant="outline" size="sm" disabled>
-                  Previous
-                </Button>
-                {[1, 2, 3, 4, 5].map((page) => (
-                  <Button
-                    key={page}
-                    variant={page === 1 ? "default" : "outline"}
-                    size="sm"
-                    className="h-9 w-9"
-                  >
-                    {page}
-                  </Button>
-                ))}
-                <Button variant="outline" size="sm">
-                  Next
-                </Button>
-              </nav>
-            </div>
-          </main>
+          </div>
         </div>
-      </div>
+
+        {/* Results count */}
+        <p className="mb-4 text-sm text-muted-foreground">
+          Showing <span className="font-medium text-foreground">{sortedFiltered.length}</span> of {tutors.length} tutors
+        </p>
+
+        {/* Tutor cards */}
+        {sortedFiltered.length === 0 ? (
+          <div className="rounded-2xl border border-border bg-white p-12 text-center">
+            <p className="text-lg font-medium text-[#042230]">No tutors found</p>
+            <p className="mt-1 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sortedFiltered.map((tutor) => (
+              <TutorCard key={tutor.id} {...tutor} />
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   )
 }
