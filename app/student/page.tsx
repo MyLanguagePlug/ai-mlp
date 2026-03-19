@@ -39,13 +39,10 @@ import { TutorCard } from "@/components/tutor-card"
 const ALL_LANGUAGES = "All languages"
 
 const specialties = [
-  "Conversational",
-  "Business",
   "Exam Prep",
   "Grammar",
   "Pronunciation",
   "Beginner Friendly",
-  "Kids",
 ]
 
 const priceOptions = [
@@ -56,11 +53,14 @@ const priceOptions = [
   { value: "50plus", label: "$50+/hr" },
 ]
 
-const ratingOptions = [
-  { value: "any", label: "Any rating" },
-  { value: "4.5", label: "4.5+ stars" },
-  { value: "4.0", label: "4.0+ stars" },
-  { value: "3.5", label: "3.5+ stars" },
+const countryOptions = [
+  { value: "any",     label: "Any country" },
+  { value: "brazil",  label: "Brazil" },
+  { value: "china",   label: "China" },
+  { value: "france",  label: "France" },
+  { value: "germany", label: "Germany" },
+  { value: "japan",   label: "Japan" },
+  { value: "spain",   label: "Spain" },
 ]
 
 const availabilityOptions = [
@@ -318,15 +318,16 @@ export default function StudentDashboard() {
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
   // ── Filter state ──────────────────────────────────────────────────────────
-  const [languageFilter, setLanguageFilter] = useState("all")
-  const [priceFilter, setPriceFilter]       = useState("any")
-  const [ratingFilter, setRatingFilter]     = useState("any")
-  const [availFilter, setAvailFilter]       = useState("any")
+  const [languageFilter, setLanguageFilter]     = useState("all")
+  const [priceFilter, setPriceFilter]           = useState("any")
+  const [countryFilter, setCountryFilter]       = useState("any")
+  const [alsoSpeaksFilter, setAlsoSpeaksFilter] = useState("any")
+  const [availFilter, setAvailFilter]           = useState("any")
   const [activeSpecialties, setActiveSpecialties] = useState<string[]>([])
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false)
-  const [verifiedOnly, setVerifiedOnly]     = useState(false)
-  const [trialOnly, setTrialOnly]           = useState(false)
-  const [sortBy, setSortBy]                 = useState("recommended")
+  const [verifiedOnly, setVerifiedOnly]         = useState(false)
+  const [trialOnly, setTrialOnly]               = useState(false)
+  const [sortBy, setSortBy]                     = useState("recommended")
 
   // ── Unique languages derived from tutor data ──────────────────────────────
   const allLanguages = [...new Set(tutors.flatMap(t => t.languages))].sort()
@@ -350,7 +351,8 @@ export default function StudentDashboard() {
         !t.languages.some(l => l.toLowerCase().includes(search.toLowerCase()))) return false
     if (languageFilter !== "all" && !t.languages.map(l => l.toLowerCase()).includes(languageFilter)) return false
     if (!(pricePred[priceFilter] ?? (() => true))(t.hourlyRate)) return false
-    if (ratingFilter !== "any" && t.rating < parseFloat(ratingFilter)) return false
+    if (countryFilter !== "any" && (t.country ?? "").toLowerCase() !== countryFilter) return false
+    if (alsoSpeaksFilter !== "any" && !t.languages.map(l => l.toLowerCase()).includes(alsoSpeaksFilter)) return false
     if (activeSpecialties.length > 0 && !activeSpecialties.some(s =>
       t.specialties.some(ts => ts.toLowerCase().includes(s.toLowerCase()))
     )) return false
@@ -374,7 +376,8 @@ export default function StudentDashboard() {
   const activeFilterCount = [
     languageFilter !== "all",
     priceFilter    !== "any",
-    ratingFilter   !== "any",
+    countryFilter  !== "any",
+    alsoSpeaksFilter !== "any",
     activeSpecialties.length > 0,
     nativeSpeakerOnly,
     verifiedOnly,
@@ -384,7 +387,8 @@ export default function StudentDashboard() {
   function clearAllFilters() {
     setLanguageFilter("all")
     setPriceFilter("any")
-    setRatingFilter("any")
+    setCountryFilter("any")
+    setAlsoSpeaksFilter("any")
     setAvailFilter("any")
     setActiveSpecialties([])
     setNativeSpeakerOnly(false)
@@ -512,7 +516,7 @@ export default function StudentDashboard() {
         <div className="mb-6 overflow-hidden rounded-xl border border-[#354d73]/15 bg-white shadow-sm">
 
           {/* Row 1 — Primary dropdowns */}
-          <div className="grid grid-cols-2 divide-x divide-[#354d73]/10 border-b border-[#354d73]/10 lg:grid-cols-4">
+          <div className="grid grid-cols-2 divide-x divide-[#354d73]/10 border-b border-[#354d73]/10 lg:grid-cols-5">
 
             {/* Language */}
             <div className="px-4 py-3">
@@ -536,6 +540,22 @@ export default function StudentDashboard() {
               )}
             </div>
 
+            {/* Also speaks */}
+            <div className="px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Also speaks</p>
+              <Select value={alsoSpeaksFilter} onValueChange={setAlsoSpeaksFilter}>
+                <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any language</SelectItem>
+                  {allLanguages.map(l => (
+                    <SelectItem key={l} value={l.toLowerCase()}>{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Price */}
             <div className="px-4 py-3">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Price per lesson</p>
@@ -551,15 +571,15 @@ export default function StudentDashboard() {
               </Select>
             </div>
 
-            {/* Rating */}
+            {/* Country of Birth */}
             <div className="px-4 py-3">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Min rating</p>
-              <Select value={ratingFilter} onValueChange={setRatingFilter}>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#354d73]">Country of birth</p>
+              <Select value={countryFilter} onValueChange={setCountryFilter}>
                 <SelectTrigger className="mt-0.5 h-auto border-0 p-0 shadow-none text-sm font-medium text-[#042230] focus:ring-0 [&>svg]:text-[#354d73]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {ratingOptions.map(o => (
+                  {countryOptions.map(o => (
                     <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
                   ))}
                 </SelectContent>
@@ -585,46 +605,60 @@ export default function StudentDashboard() {
           {/* Row 2 — Specialty pills + tutor-type chips + sort */}
           <div className="flex flex-wrap items-center gap-2 px-4 py-3">
 
-            {/* Specialty pills */}
+            {/* Specialty pills — each in its own box */}
             {specialties.map(s => (
-              <button
+              <div
                 key={s}
-                type="button"
-                onClick={() => toggleSpecialty(s)}
                 className={[
-                  "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  "rounded-lg border",
                   activeSpecialties.includes(s)
-                    ? "border-[#354d73] bg-[#354d73] text-white"
-                    : "border-[#354d73]/25 bg-white text-[#354d73] hover:border-[#354d73]/60 hover:bg-[#F0F6FA]",
+                    ? "border-[#354d73] bg-[#354d73]"
+                    : "border-[#354d73]/25 bg-white hover:border-[#354d73]/60 hover:bg-[#F0F6FA]",
                 ].join(" ")}
               >
-                {s}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => toggleSpecialty(s)}
+                  className={[
+                    "px-3 py-1.5 text-xs font-medium transition-colors",
+                    activeSpecialties.includes(s) ? "text-white" : "text-[#354d73]",
+                  ].join(" ")}
+                >
+                  {s}
+                </button>
+              </div>
             ))}
 
             {/* Divider */}
             <div className="hidden h-5 w-px bg-[#354d73]/15 sm:block" />
 
-            {/* Tutor-type toggles */}
+            {/* Tutor-type toggles — each in its own box */}
             {([
               { label: "Native Speaker", state: nativeSpeakerOnly, set: setNativeSpeakerOnly },
               { label: "Verified Only",  state: verifiedOnly,      set: setVerifiedOnly      },
               { label: "Trial Available",state: trialOnly,         set: setTrialOnly         },
             ] as const).map(({ label, state, set }) => (
-              <button
+              <div
                 key={label}
-                type="button"
-                onClick={() => set(!state)}
                 className={[
-                  "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                  "rounded-lg border",
                   state
-                    ? "border-[#042230] bg-[#042230] text-white"
-                    : "border-[#354d73]/25 bg-white text-[#042230] hover:border-[#354d73]/50 hover:bg-[#F0F6FA]",
+                    ? "border-[#042230] bg-[#042230]"
+                    : "border-[#354d73]/25 bg-white hover:border-[#354d73]/50 hover:bg-[#F0F6FA]",
                 ].join(" ")}
               >
-                {state && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
-                {label}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => set(!state)}
+                  className={[
+                    "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors",
+                    state ? "text-white" : "text-[#042230]",
+                  ].join(" ")}
+                >
+                  {state && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+                  {label}
+                </button>
+              </div>
             ))}
 
             {/* Spacer + right-side controls */}

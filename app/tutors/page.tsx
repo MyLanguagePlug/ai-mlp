@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Search, SlidersHorizontal, Globe, Star, Clock, DollarSign } from "lucide-react"
+import { Search, SlidersHorizontal, Globe, MapPin, Clock, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -122,13 +122,21 @@ const languages = [
 ]
 
 const specialties = [
-  "Conversational",
-  "Business",
   "Exam Prep",
   "Grammar",
   "Pronunciation",
   "Beginner Friendly",
-  "Kids",
+]
+
+const countries = [
+  "Any Country",
+  "Brazil",
+  "China",
+  "France",
+  "Germany",
+  "Italy",
+  "Japan",
+  "Spain",
 ]
 
 function TutorListSkeleton() {
@@ -222,23 +230,48 @@ export default function TutorsPage() {
                 </div>
               </div>
 
-              {/* Rating */}
+              {/* Country of Birth */}
               <div>
                 <h3 className="mb-3 text-sm font-medium text-(--navy)">
-                  <Star className="mr-1 inline h-4 w-4" />
-                  Rating
+                  <MapPin className="mr-1 inline h-4 w-4" />
+                  Country of Birth
                 </h3>
-                <div className="space-y-2">
-                  {[4.5, 4.0, 3.5].map((rating) => (
-                    <label key={rating} className="flex cursor-pointer items-center gap-2">
-                      <Checkbox />
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                        <span className="text-sm">{rating}+ stars</span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
+                <Select defaultValue="any-country">
+                  <SelectTrigger className="h-9 w-full">
+                    <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <SelectValue placeholder="Any Country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem
+                        key={country}
+                        value={country.toLowerCase().replace(" ", "-")}
+                      >
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Also Speaks */}
+              <div>
+                <h3 className="mb-3 text-sm font-medium text-(--navy)">
+                  <Globe className="mr-1 inline h-4 w-4" />
+                  Also Speaks
+                </h3>
+                <Select defaultValue="all">
+                  <SelectTrigger className="h-9 w-full">
+                    <SelectValue placeholder="Any language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang} value={lang.toLowerCase().replace(" ", "-")}>
+                        {lang}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Availability */}
@@ -262,13 +295,17 @@ export default function TutorsPage() {
                 <h3 className="mb-3 text-sm font-medium text-(--navy)">Specialties</h3>
                 <div className="flex flex-wrap gap-2">
                   {specialties.map((specialty) => (
-                    <Badge
+                    <div
                       key={specialty}
-                      variant="outline"
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                      className="rounded-lg border border-border bg-background"
                     >
-                      {specialty}
-                    </Badge>
+                      <Badge
+                        variant="outline"
+                        className="cursor-pointer border-0 hover:bg-primary hover:text-primary-foreground"
+                      >
+                        {specialty}
+                      </Badge>
+                    </div>
                   ))}
                 </div>
               </div>
