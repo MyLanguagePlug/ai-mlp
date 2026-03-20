@@ -184,7 +184,7 @@ const tutors = [
   },
 ]
 
-type TabId = "home" | "messages" | "lessons" | "saved" | "refer"
+type TabId = "home" | "messages" | "lessons" | "saved" | "refer" | "help"
 
 const navLinks: { tab?: TabId; href?: string; icon: React.ElementType; label: string }[] = [
   { tab: "home",     icon: Home,          label: "Home"          },
@@ -193,7 +193,7 @@ const navLinks: { tab?: TabId; href?: string; icon: React.ElementType; label: st
   { tab: "saved",    icon: Heart,         label: "Saved tutors"  },
   { tab: "refer",    icon: Gift,          label: "Refer a friend"},
   { href: "/student/settings", icon: Settings,  label: "Settings" },
-  { href: "/help",             icon: HelpCircle, label: "Help"    },
+  { tab: "help",               icon: HelpCircle, label: "Help"    },
 ]
 
 const upcomingLessons = [
@@ -455,6 +455,29 @@ function TutorCardSkeleton() {
   )
 }
 
+function HelpFaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div className="overflow-hidden rounded-xl border border-[#354d73]/15 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left hover:bg-[#F0F6FA] transition-colors"
+      >
+        <span className="text-sm font-semibold text-[#042230]">{question}</span>
+        {open
+          ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" />
+          : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+      </button>
+      {open && (
+        <div className="border-t border-[#354d73]/10 px-5 py-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function StudentDashboard() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabId>("home")
@@ -468,6 +491,7 @@ export default function StudentDashboard() {
   const [chatThreads, setChatThreads] = useState<ChatThread[]>(DEMO_CHAT_THREADS)
   const [copiedCode, setCopiedCode] = useState(false)
   const [search, setSearch] = useState("")
+  const [helpSearch, setHelpSearch] = useState("")
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
@@ -1579,6 +1603,136 @@ export default function StudentDashboard() {
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* ════════════════ HELP tab ════════════════ */}
+        {activeTab === "help" && (
+          <div className="max-w-3xl">
+            {/* Header */}
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-[#042230] sm:text-3xl">Help &amp; Support</h1>
+              <p className="mt-1 text-muted-foreground">Find answers, guides, and ways to contact our support team</p>
+            </div>
+
+            {/* Search bar */}
+            <div className="mb-8 relative">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder={`Search for help topics, e.g. "cancel lesson" or "refund"…`}
+                value={helpSearch}
+                onChange={e => setHelpSearch(e.target.value)}
+                className="w-full rounded-xl border border-[#354d73]/25 bg-white py-3.5 pl-12 pr-4 text-sm text-[#042230] shadow-sm outline-none placeholder:text-muted-foreground focus:border-[#354d73] focus:ring-2 focus:ring-[#354d73]/20"
+              />
+            </div>
+
+            {/* Quick links */}
+            <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {[
+                { icon: BookOpen,     label: "Getting started",      desc: "New to AI-MLP? Start here" },
+                { icon: CalendarDays, label: "Booking & scheduling",  desc: "Manage your lessons" },
+                { icon: CreditCard,   label: "Payments & billing",    desc: "Invoices, refunds, plans" },
+                { icon: MessageCircle,label: "Messaging tutors",      desc: "Chat tips and etiquette" },
+                { icon: Star,         label: "Reviews & ratings",     desc: "How ratings work" },
+                { icon: Settings,     label: "Account settings",      desc: "Profile, notifications" },
+              ]
+                .filter(item =>
+                  !helpSearch ||
+                  item.label.toLowerCase().includes(helpSearch.toLowerCase()) ||
+                  item.desc.toLowerCase().includes(helpSearch.toLowerCase())
+                )
+                .map(({ icon: Icon, label, desc }) => (
+                  <button
+                    key={label}
+                    type="button"
+                    className="flex flex-col items-start gap-2 rounded-xl border border-[#354d73]/15 bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md hover:border-[#354d73]/35"
+                  >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#354d73]/10">
+                      <Icon className="h-4 w-4 text-[#354d73]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#042230]">{label}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{desc}</p>
+                    </div>
+                  </button>
+                ))}
+            </div>
+
+            {/* FAQ */}
+            <div className="mb-8">
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-[#354d73]">Frequently Asked Questions</h2>
+              {(() => {
+                const faqs = [
+                  {
+                    q: "How do I book a trial lesson?",
+                    a: "Find a tutor you like, click their profile and select \"Book a trial lesson\". Trial lessons are typically 25–30 minutes and discounted. Your first trial lesson always gets 30% off automatically.",
+                  },
+                  {
+                    q: "Can I cancel or reschedule a lesson?",
+                    a: "Yes. Go to My Lessons, find the upcoming lesson and click \"Reschedule\". Cancellations made more than 24 hours before the start time are free. Late cancellations may incur a fee as per the tutor's policy.",
+                  },
+                  {
+                    q: "How does the payment process work?",
+                    a: "You purchase lesson credits which are stored in your account. Credits are deducted when you book a lesson. Unused credits are fully refundable within 30 days.",
+                  },
+                  {
+                    q: "What if I'm unhappy with my tutor?",
+                    a: "We offer a satisfaction guarantee on trial lessons. If you're not happy, contact support within 72 hours and we'll issue a full credit. For regular lessons, credits are handled on a case-by-case basis.",
+                  },
+                  {
+                    q: "How do I change my subscription plan?",
+                    a: "Go to Settings → Billing to view or upgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
+                  },
+                ]
+                const filtered = faqs.filter(item =>
+                  !helpSearch ||
+                  item.q.toLowerCase().includes(helpSearch.toLowerCase()) ||
+                  item.a.toLowerCase().includes(helpSearch.toLowerCase())
+                )
+                return filtered.length > 0 ? (
+                  <div className="space-y-2">
+                    {filtered.map(({ q, a }) => (
+                      <HelpFaqItem key={q} question={q} answer={a} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border bg-white p-6 text-center">
+                    <HelpCircle className="mx-auto mb-2 h-8 w-8 text-muted-foreground/40" />
+                    <p className="text-sm font-medium text-[#042230]">No results for &ldquo;{helpSearch}&rdquo;</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Try different keywords or contact support below.</p>
+                  </div>
+                )
+              })()}
+            </div>
+
+            {/* Contact support */}
+            <div className="rounded-2xl border border-[#354d73]/20 bg-gradient-to-br from-[#354d73]/5 to-white p-6 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-bold text-[#042230]">Still need help?</p>
+                  <p className="mt-0.5 text-sm text-muted-foreground">
+                    Our support team is available Mon–Fri, 9 AM – 6 PM (EST).
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 rounded-lg bg-[#354d73] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e] transition-colors"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Live chat
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 rounded-lg border border-[#354d73] px-4 py-2.5 text-sm font-semibold text-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+                  >
+                    <Send className="h-4 w-4" />
+                    Email support
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
