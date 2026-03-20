@@ -19,6 +19,12 @@ import {
   Star,
   BookOpen,
   Calendar,
+  Plus,
+  Download,
+  Receipt,
+  ShieldCheck,
+  BellOff,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -581,12 +587,503 @@ function CalendarSection() {
 
 
 
-function PlaceholderSection({ title }: { title: string }) {
+const SAVE_CONFIRMATION_MS = 2000
+
+// ─── Demo data ──────────────────────────────────────────────────────────────
+
+type PaymentCard = {
+  id: string
+  brand: "visa" | "mastercard" | "other"
+  last4: string
+  expiry: string
+  name: string
+  isDefault: boolean
+}
+
+const DEMO_CARDS: PaymentCard[] = [
+  { id: "c1", brand: "visa",       last4: "4242", expiry: "09/27", name: "Jane Smith",    isDefault: true  },
+  { id: "c2", brand: "mastercard", last4: "5555", expiry: "03/26", name: "Jane Smith",    isDefault: false },
+]
+
+type Transaction = {
+  id: string
+  date: string
+  tutor: string
+  subject: string
+  amount: string
+  status: "paid" | "pending" | "refunded"
+}
+
+const DEMO_TRANSACTIONS: Transaction[] = [
+  { id: "t1", date: "2026-03-19", tutor: "Maria Santos",       subject: "Spanish",  amount: "$25.00", status: "paid"     },
+  { id: "t2", date: "2026-03-14", tutor: "Yuki Tanaka",        subject: "Japanese", amount: "$30.00", status: "paid"     },
+  { id: "t3", date: "2026-03-12", tutor: "Maria Santos",       subject: "Spanish",  amount: "$25.00", status: "paid"     },
+  { id: "t4", date: "2026-02-28", tutor: "Jean-Pierre Dubois", subject: "French",   amount: "$35.00", status: "paid"     },
+  { id: "t5", date: "2026-02-20", tutor: "Hans Mueller",       subject: "German",   amount: "$28.00", status: "refunded" },
+  { id: "t6", date: "2026-02-14", tutor: "Yuki Tanaka",        subject: "Japanese", amount: "$30.00", status: "paid"     },
+  { id: "t7", date: "2026-01-30", tutor: "Maria Santos",       subject: "Spanish",  amount: "$25.00", status: "pending"  },
+]
+
+// ─── Payment Methods Section ─────────────────────────────────────────────────
+
+function CardBrandBadge({ brand }: { brand: "visa" | "mastercard" | "other" }) {
+  if (brand === "visa") {
+    return (
+      <div className="flex h-8 w-12 items-center justify-center rounded-md bg-[#1a1f71] px-1.5">
+        <span className="text-[11px] font-extrabold italic tracking-widest text-white">VISA</span>
+      </div>
+    )
+  }
+  if (brand === "mastercard") {
+    return (
+      <div className="flex h-8 w-12 items-center justify-center rounded-md bg-white px-1">
+        <div className="flex">
+          <span className="inline-block h-5 w-5 rounded-full bg-[#EB001B] opacity-90" />
+          <span className="-ml-2 inline-block h-5 w-5 rounded-full bg-[#F79E1B] opacity-90" />
+        </div>
+      </div>
+    )
+  }
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-[#042230]">{title}</h2>
-      <div className="rounded-xl border border-border bg-[#F0F6FA] px-8 py-16 text-center">
-        <p className="text-muted-foreground">This section is coming soon.</p>
+    <div className="flex h-8 w-12 items-center justify-center rounded-md bg-muted px-1.5">
+      <CreditCard className="h-4 w-4 text-muted-foreground" />
+    </div>
+  )
+}
+
+function PaymentMethodsSection() {
+  const [cards, setCards] = useState<PaymentCard[]>(DEMO_CARDS)
+  const [showForm, setShowForm] = useState(false)
+  const [newCard, setNewCard] = useState({ number: "", name: "", expiry: "", cvv: "" })
+  const [formError, setFormError] = useState("")
+
+  function setDefault(id: string) {
+    setCards(prev => prev.map(c => ({ ...c, isDefault: c.id === id })))
+  }
+
+  function removeCard(id: string) {
+    setCards(prev => prev.filter(c => c.id !== id))
+  }
+
+  function handleAdd() {
+    setFormError("")
+    const cleaned = newCard.number.replace(/\s/g, "")
+    if (cleaned.length < 13) { setFormError("Card number must be at least 13 digits."); return }
+    if (!newCard.name.trim())  { setFormError("Enter the name on card.");   return }
+    if (!/^\d{2}\/\d{2}$/.test(newCard.expiry)) { setFormError("Use MM/YY format for expiry."); return }
+    if (newCard.cvv.length < 3) { setFormError("Enter a valid CVV."); return }
+    const last4 = cleaned.slice(-4)
+    const brand: "visa" | "mastercard" | "other" =
+      cleaned[0] === "4" ? "visa" :
+      cleaned[0] === "5" ? "mastercard" :
+      "other"
+    setCards(prev => [...prev, {
+      id: `c${Date.now()}`, brand, last4, expiry: newCard.expiry,
+      name: newCard.name, isDefault: prev.length === 0,
+    }])
+    setNewCard({ number: "", name: "", expiry: "", cvv: "" })
+    setShowForm(false)
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl font-bold text-[#042230]">Payment Methods</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Manage your saved cards for lesson payments.</p>
+      </div>
+
+      {/* Saved cards */}
+      {cards.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          {cards.map(card => (
+            <div
+              key={card.id}
+              className="flex items-center gap-4 rounded-2xl border border-border bg-white p-4 shadow-sm"
+            >
+              <CardBrandBadge brand={card.brand} />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-[#042230]">
+                  •••• •••• •••• {card.last4}
+                </p>
+                <p className="text-xs text-muted-foreground">{card.name} · Expires {card.expiry}</p>
+              </div>
+              {card.isDefault ? (
+                <span className="rounded-full bg-[#354d73]/10 px-2.5 py-1 text-[11px] font-semibold text-[#354d73]">
+                  Default
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setDefault(card.id)}
+                  className="text-xs text-[#354d73] hover:underline focus:outline-none"
+                >
+                  Set default
+                </button>
+              )}
+              {!card.isDefault && (
+                <button
+                  type="button"
+                  onClick={() => removeCard(card.id)}
+                  aria-label="Remove card"
+                  className="ml-1 flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-rose-50 hover:text-rose-500"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border bg-[#F0F6FA] px-6 py-10 text-center">
+          <CreditCard className="mx-auto mb-3 h-8 w-8 text-muted-foreground/40" />
+          <p className="text-sm text-muted-foreground">No saved payment methods yet.</p>
+        </div>
+      )}
+
+      {/* Add card toggle */}
+      {!showForm && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowForm(true)}
+          className="w-fit gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Add new card
+        </Button>
+      )}
+
+      {/* Add card form */}
+      {showForm && (
+        <div className="rounded-2xl border border-[#354d73]/20 bg-[#F0F6FA] p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-sm font-bold text-[#042230]">Add new card</p>
+            <button
+              type="button"
+              onClick={() => { setShowForm(false); setFormError("") }}
+              aria-label="Cancel"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {/* Card number */}
+            <div className="space-y-1.5">
+              <Label htmlFor="cardNumber">Card number</Label>
+              <Input
+                id="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                value={newCard.number}
+                maxLength={19}
+                onChange={e => {
+                  const raw = e.target.value.replace(/\D/g, "").slice(0, 16)
+                  const formatted = raw.replace(/(.{4})/g, "$1 ").trim()
+                  setNewCard(p => ({ ...p, number: formatted }))
+                }}
+              />
+            </div>
+
+            {/* Name */}
+            <div className="space-y-1.5">
+              <Label htmlFor="cardName">Name on card</Label>
+              <Input
+                id="cardName"
+                placeholder="Jane Smith"
+                value={newCard.name}
+                onChange={e => setNewCard(p => ({ ...p, name: e.target.value }))}
+              />
+            </div>
+
+            {/* Expiry + CVV */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="cardExpiry">Expiry date</Label>
+                <Input
+                  id="cardExpiry"
+                  placeholder="MM/YY"
+                  value={newCard.expiry}
+                  maxLength={5}
+                  onChange={e => {
+                    let v = e.target.value.replace(/\D/g, "").slice(0, 4)
+                    if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2)
+                    setNewCard(p => ({ ...p, expiry: v }))
+                  }}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="cardCVV">CVV</Label>
+                <Input
+                  id="cardCVV"
+                  placeholder="•••"
+                  value={newCard.cvv}
+                  maxLength={4}
+                  onChange={e => setNewCard(p => ({ ...p, cvv: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
+                />
+              </div>
+            </div>
+
+            {formError && (
+              <p className="text-xs text-rose-600">{formError}</p>
+            )}
+
+            <div className="flex items-center gap-2 pt-1">
+              <ShieldCheck className="h-4 w-4 text-[#354d73]" />
+              <p className="text-xs text-muted-foreground">Your card info is encrypted and stored securely.</p>
+            </div>
+
+            <div className="flex gap-3 pt-1">
+              <Button type="button" onClick={handleAdd} className="bg-[#354d73] text-white hover:bg-[#354d73]/90">
+                Save card
+              </Button>
+              <Button type="button" variant="outline" onClick={() => { setShowForm(false); setFormError("") }}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Payment History Section ──────────────────────────────────────────────────
+
+function PaymentHistorySection() {
+  const statusStyles: Record<Transaction["status"], { label: string; className: string }> = {
+    paid:     { label: "Paid",     className: "bg-emerald-50 text-emerald-700" },
+    pending:  { label: "Pending",  className: "bg-amber-50   text-amber-700"  },
+    refunded: { label: "Refunded", className: "bg-[#354d73]/10 text-[#354d73]" },
+  }
+
+  const totalPaid = DEMO_TRANSACTIONS
+    .filter(t => t.status === "paid")
+    .reduce((sum, t) => sum + parseFloat(t.amount.replace("$", "")), 0)
+    .toFixed(2)
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl font-bold text-[#042230]">Payment History</h2>
+        <p className="mt-1 text-sm text-muted-foreground">A record of all your lesson payments.</p>
+      </div>
+
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        {[
+          { label: "Total spent",    value: `$${totalPaid}`, icon: Receipt   },
+          { label: "Lessons paid",   value: `${DEMO_TRANSACTIONS.filter(t => t.status === "paid").length}`,    icon: Check       },
+          { label: "Pending",        value: `${DEMO_TRANSACTIONS.filter(t => t.status === "pending").length}`, icon: Clock       },
+        ].map(({ label, value, icon: Icon }) => (
+          <div key={label} className="rounded-2xl border border-border bg-[#F0F6FA] px-5 py-4">
+            <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#354d73]/10">
+              <Icon className="h-4 w-4 text-[#354d73]" />
+            </div>
+            <p className="text-xl font-bold text-[#042230]">{value}</p>
+            <p className="text-xs text-muted-foreground">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Transaction table */}
+      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+        <div className="border-b border-border px-5 py-3">
+          <p className="text-sm font-bold text-[#042230]">All transactions</p>
+        </div>
+
+        {/* Header */}
+        <div className="hidden grid-cols-[1fr_1fr_auto_auto_auto] items-center gap-3 border-b border-border bg-[#F0F6FA] px-5 py-2 sm:grid">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Tutor</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Date</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Amount</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</p>
+          <p className="sr-only">Actions</p>
+        </div>
+
+        <div className="divide-y divide-border">
+          {DEMO_TRANSACTIONS.map(tx => {
+            const s = statusStyles[tx.status]
+            return (
+              <div
+                key={tx.id}
+                className="grid grid-cols-1 gap-1 px-5 py-4 sm:grid-cols-[1fr_1fr_auto_auto_auto] sm:items-center sm:gap-3"
+              >
+                {/* Tutor + subject */}
+                <div>
+                  <p className="text-sm font-semibold text-[#042230]">{tx.tutor}</p>
+                  <p className="text-xs text-muted-foreground">{tx.subject}</p>
+                </div>
+                {/* Date */}
+                <p className="text-sm text-muted-foreground">{formatDate(tx.date)}</p>
+                {/* Amount */}
+                <p className="text-sm font-semibold text-[#042230]">{tx.amount}</p>
+                {/* Status */}
+                <span className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${s.className}`}>
+                  {s.label}
+                </span>
+                {/* Download */}
+                <button
+                  type="button"
+                  aria-label="Download receipt"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA] hover:text-[#354d73]"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Notifications Section ────────────────────────────────────────────────────
+
+type NotifGroup = {
+  id: string
+  title: string
+  description: string
+  items: { id: string; label: string; description: string }[]
+}
+
+const NOTIF_GROUPS: NotifGroup[] = [
+  {
+    id: "email",
+    title: "Email notifications",
+    description: "Choose which emails you receive from My Language Plug.",
+    items: [
+      { id: "email-reminders",  label: "Lesson reminders",      description: "Get reminded 24 h and 1 h before a lesson."  },
+      { id: "email-bookings",   label: "New booking confirmed",  description: "When a tutor accepts your booking request."   },
+      { id: "email-messages",   label: "New messages",          description: "When a tutor sends you a message."            },
+      { id: "email-receipts",   label: "Payment receipts",      description: "After every successful payment."              },
+      { id: "email-marketing",  label: "Promotions & tips",     description: "Deals, tutor spotlights and learning tips."   },
+    ],
+  },
+  {
+    id: "push",
+    title: "Push notifications",
+    description: "Receive browser or mobile push alerts.",
+    items: [
+      { id: "push-reminders",   label: "Lesson reminders",      description: "Push alert 15 min before your lesson starts." },
+      { id: "push-bookings",    label: "Booking updates",       description: "Confirmation, changes or cancellations."      },
+      { id: "push-messages",    label: "New messages",          description: "Instant alert when a tutor replies."          },
+    ],
+  },
+]
+
+function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={onChange}
+      className={[
+        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73] focus-visible:ring-offset-1",
+        checked ? "bg-[#354d73]" : "bg-muted",
+      ].join(" ")}
+    >
+      <span
+        className={[
+          "inline-block h-4 w-4 rounded-full bg-white shadow transition-transform",
+          checked ? "translate-x-4" : "translate-x-0.5",
+        ].join(" ")}
+      />
+    </button>
+  )
+}
+
+function NotificationsSection() {
+  const defaultEnabled = new Set(["email-reminders", "email-bookings", "email-receipts", "push-reminders", "push-bookings"])
+  const [enabled, setEnabled] = useState<Set<string>>(defaultEnabled)
+  const [saved, setSaved] = useState(false)
+
+  function toggle(id: string) {
+    setEnabled(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  function toggleGroup(group: NotifGroup) {
+    const allOn = group.items.every(item => enabled.has(item.id))
+    setEnabled(prev => {
+      const next = new Set(prev)
+      group.items.forEach(item => allOn ? next.delete(item.id) : next.add(item.id))
+      return next
+    })
+  }
+
+  function handleSave() {
+    setSaved(true)
+    setTimeout(() => setSaved(false), SAVE_CONFIRMATION_MS)
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl font-bold text-[#042230]">Notifications</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Control how and when My Language Plug contacts you.</p>
+      </div>
+
+      {NOTIF_GROUPS.map(group => {
+        const allOn = group.items.every(item => enabled.has(item.id))
+        return (
+          <div key={group.id} className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+            {/* Group header */}
+            <div className="flex items-center justify-between border-b border-border bg-[#F0F6FA] px-5 py-4">
+              <div>
+                <p className="text-sm font-bold text-[#042230]">{group.title}</p>
+                <p className="text-xs text-muted-foreground">{group.description}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">{allOn ? "All on" : "Manage"}</span>
+                <Toggle checked={allOn} onChange={() => toggleGroup(group)} />
+              </div>
+            </div>
+
+            {/* Individual items */}
+            <div className="divide-y divide-border">
+              {group.items.map(item => (
+                <div key={item.id} className="flex items-center justify-between px-5 py-3">
+                  <div className="flex items-start gap-3">
+                    <div className={[
+                      "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
+                      enabled.has(item.id) ? "bg-[#354d73]/10" : "bg-muted",
+                    ].join(" ")}>
+                      {enabled.has(item.id)
+                        ? <Bell className="h-3.5 w-3.5 text-[#354d73]" />
+                        : <BellOff className="h-3.5 w-3.5 text-muted-foreground" />}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#042230]">{item.label}</p>
+                      <p className="text-xs text-muted-foreground">{item.description}</p>
+                    </div>
+                  </div>
+                  <Toggle checked={enabled.has(item.id)} onChange={() => toggle(item.id)} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      })}
+
+      <div className="flex items-center gap-3">
+        <Button
+          type="button"
+          onClick={handleSave}
+          className="bg-[#354d73] text-white hover:bg-[#354d73]/90"
+        >
+          {saved ? <><Check className="mr-2 h-4 w-4" />Saved</> : "Save preferences"}
+        </Button>
       </div>
     </div>
   )
@@ -617,7 +1114,7 @@ export default function StudentSettings() {
 
   function handleSave() {
     setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    setTimeout(() => setSaved(false), SAVE_CONFIRMATION_MS)
   }
 
   return (
@@ -661,10 +1158,10 @@ export default function StudentSettings() {
             {active === "account" && <AccountSection saved={saved} onSave={handleSave} />}
             {active === "password" && <PasswordSection />}
             {active === "email" && <EmailSection />}
-            {active === "payment-methods" && <PlaceholderSection title="Payment Methods" />}
-            {active === "payment-history" && <PlaceholderSection title="Payment History" />}
+            {active === "payment-methods" && <PaymentMethodsSection />}
+            {active === "payment-history" && <PaymentHistorySection />}
             {active === "calendar" && <CalendarSection />}
-            {active === "notifications" && <PlaceholderSection title="Notifications" />}
+            {active === "notifications" && <NotificationsSection />}
             {active === "delete-account" && <DeleteSection />}
           </div>
         </div>
