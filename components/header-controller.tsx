@@ -5,10 +5,16 @@ import { Header } from "./header"
 
 /**
  * Renders the Header with the appropriate variant based on the current route.
- * The /login page uses the "minimal" variant (left-aligned nav, language selector only).
- * All other pages use the full header (centered nav, login/get-started/currency/language).
+ * - /login  → "minimal" variant (left-aligned nav, language selector only).
+ * - /student → "student" variant (no auth buttons; shows Messages/Notifications/Profile icons).
+ * - All other pages use the full header (centered nav, login/get-started/currency/language).
  */
 export function HeaderController() {
   const pathname = usePathname()
-  return <Header variant={pathname === "/login" ? "minimal" : undefined} />
+
+  let variant: "minimal" | "student" | undefined
+  if (pathname === "/login") variant = "minimal"
+  else if (pathname.startsWith("/student")) variant = "student"
+
+  return <Header variant={variant} />
 }

@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { StudentHeaderActions } from "./student-header-actions"
 
 const languages = [
   "Spanish", "French", "German", "Italian", "Portuguese", 
@@ -39,7 +40,8 @@ const currencies = [
 
 interface HeaderProps {
   /** "minimal" renders the login-page variant: nav left-aligned, language selector only, no auth buttons or currency */
-  variant?: "minimal"
+  /** "student" renders the student-dashboard variant: no auth buttons, shows student icons (messages/notifs/profile) */
+  variant?: "minimal" | "student"
 }
 
 export function Header({ variant }: HeaderProps = {}) {
@@ -48,6 +50,7 @@ export function Header({ variant }: HeaderProps = {}) {
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
 
   const isMinimal = variant === "minimal"
+  const isStudent = variant === "student"
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -127,7 +130,7 @@ export function Header({ variant }: HeaderProps = {}) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {!isMinimal && (
+          {!isMinimal && !isStudent && (
             <>
               {/* Currency Selector */}
               <DropdownMenu>
@@ -159,6 +162,9 @@ export function Header({ variant }: HeaderProps = {}) {
               </Button>
             </>
           )}
+
+          {/* Student variant: show student action icons instead of auth buttons */}
+          {isStudent && <StudentHeaderActions />}
         </div>
 
         {/* Mobile Menu Button */}
@@ -230,7 +236,7 @@ export function Header({ variant }: HeaderProps = {}) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {!isMinimal && (
+              {!isMinimal && !isStudent && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
@@ -254,7 +260,7 @@ export function Header({ variant }: HeaderProps = {}) {
               )}
             </div>
 
-            {!isMinimal && (
+            {!isMinimal && !isStudent && (
               <div className="mt-4 flex flex-col gap-2">
                 <Button variant="outline" asChild className="w-full">
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
