@@ -182,54 +182,60 @@ export default function BecomeTutorPage() {
         </div>
       </section>
 
-      {/* ── Preply-inspired "Get Started" Quick Overview ────────────────────── */}
-      <section className="border-b border-border bg-white py-14 md:py-20" id="apply">
+      {/* ── "How It Works" Get Started section – MLP branded ───────────────── */}
+      <section className="border-b border-border bg-(--light-blue) py-14 md:py-20" id="apply">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+
+          {/* Section label */}
+          <div className="text-center">
+            <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+              How it works
+            </span>
+          </div>
+
+          <div className="mt-8 grid items-center gap-12 lg:grid-cols-2">
             {/* Left: headline + numbered steps + CTA */}
             <div>
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-[#042230] sm:text-4xl md:text-5xl">
-                Make a living by teaching the largest community of learners worldwide
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-[#042230] sm:text-4xl md:text-[2.6rem] leading-tight">
+                Turn your language skills into a{" "}
+                <span className="text-(--accent-blue)">rewarding career</span>
               </h2>
+              <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+                Joining My Language Plug is simple. Follow three easy steps and start connecting
+                with motivated learners from around the world.
+              </p>
 
-              {/* Numbered steps inline */}
+              {/* Numbered steps — MLP navy circles */}
               <div className="mt-8 flex items-start gap-0">
                 {[
                   { n: "1", title: "Sign up",       sub: "to create your tutor profile" },
                   { n: "2", title: "Get approved",  sub: "by our team in 5 business days" },
-                  { n: "3", title: "Start earning", sub: "by teaching students all over the world!" },
+                  { n: "3", title: "Start earning", sub: "by teaching students all over the world" },
                 ].map((s, i, arr) => (
                   <div key={s.n} className="flex items-start">
                     <div className="flex flex-col items-start">
-                      <div
-                        className={`flex h-9 w-9 items-center justify-center rounded font-bold text-sm border-2 ${
-                          i === 0
-                            ? "bg-[#042230] border-[#042230] text-white"
-                            : "border-border bg-white text-[#042230]"
-                        }`}
-                      >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#354d73] text-sm font-bold text-white shadow-sm">
                         {s.n}
                       </div>
-                      <p className="mt-3 text-sm font-bold text-[#042230] leading-tight">{s.title}</p>
+                      <p className="mt-3 text-sm font-semibold text-[#042230] leading-tight">{s.title}</p>
                       <p className="mt-0.5 text-xs text-muted-foreground leading-snug max-w-[110px]">{s.sub}</p>
                     </div>
                     {i < arr.length - 1 && (
-                      <div className="mx-3 mt-4 h-px w-16 shrink-0 bg-border" />
+                      <div className="mx-3 mt-5 h-px w-16 shrink-0 bg-[#354d73]/30" />
                     )}
                   </div>
                 ))}
               </div>
 
-              <Button
-                size="lg"
-                className="mt-8 bg-[#00c49a] hover:bg-[#00b38c] text-white font-semibold px-8"
-                asChild
-              >
-                <Link href="/signup">Create a tutor profile now</Link>
+              <Button size="lg" className="mt-8" asChild>
+                <Link href="/signup">
+                  Create your tutor profile
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
             </div>
 
-            {/* Right: image */}
+            {/* Right: image with brand overlay card */}
             <div className="relative hidden lg:block">
               <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl shadow-xl">
                 <Image
@@ -239,29 +245,42 @@ export default function BecomeTutorPage() {
                   className="object-cover"
                 />
               </div>
+              {/* MLP-branded stat overlay */}
+              <div className="absolute -bottom-6 -left-6 rounded-xl bg-[#354d73] px-5 py-4 text-white shadow-lg">
+                <p className="text-xs font-medium opacity-80">Average monthly earnings</p>
+                <p className="mt-0.5 text-2xl font-bold">$3,500 – $5,000</p>
+              </div>
             </div>
           </div>
 
-          {/* Three feature cards below */}
-          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+          {/* Three feature cards — MLP card style with icons */}
+          <div className="mt-16 grid gap-6 sm:grid-cols-3">
             {[
               {
+                icon: DollarSign,
                 title: "Set your own rate",
-                body: "Choose your hourly rate and change it anytime. On average, English tutors charge $15–25 per hour.",
+                body: "Choose your hourly rate and change it anytime. On average, English tutors on our platform charge $15–25 per hour.",
               },
               {
+                icon: Clock,
                 title: "Teach anytime, anywhere",
-                body: "Decide when and how many hours you want to teach. No minimum time commitment or fixed schedule. Be your own boss!",
+                body: "Decide when and how many hours you want to teach. No minimum time commitment or fixed schedule — be your own boss.",
               },
               {
+                icon: Globe,
                 title: "Grow professionally",
-                body: "Once you sign up and complete your application, you can be approved and start teaching in as little as three days.",
+                body: "Once approved, access our educator resources and dedicated support team to help you thrive and grow your student base.",
               },
             ].map(card => (
-              <div key={card.title}>
-                <h3 className="text-lg font-bold text-[#042230]">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
-              </div>
+              <Card key={card.title} className="bg-white shadow-sm">
+                <CardContent className="pt-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                    <card.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-[#042230]">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
