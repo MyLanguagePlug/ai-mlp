@@ -3,11 +3,165 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, X, Mail, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+
+// ── Forgot-password modal ─────────────────────────────────────────────────────
+
+type ForgotStep = "email" | "sending" | "sent"
+
+function ForgotPasswordModal({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState<ForgotStep>("email")
+  const [resetEmail, setResetEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
+
+  function handleSend(e: React.FormEvent) {
+    e.preventDefault()
+    if (!resetEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail)) {
+      setEmailError("Please enter a valid email address.")
+      return
+    }
+    setEmailError("")
+    setStep("sending")
+    // Simulate an API call; in production wire up the real endpoint here
+    setTimeout(() => setStep("sent"), 1500)
+  }
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        aria-hidden="true"
+        onClick={onClose}
+      />
+
+      {/* Dialog */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={step === "sent" ? "forgot-pw-title-sent" : "forgot-pw-title-email"}
+        className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-8 shadow-2xl focus:outline-none"
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-[#F0F6FA] hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* ── Step: email ──────────────────── */}
+        {(step === "email" || step === "sending") && (
+          <>
+            {/* Icon */}
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#354d73]/10">
+              <Mail className="h-7 w-7 text-[#354d73]" />
+            </div>
+
+            <h2 id="forgot-pw-title-email" className="text-xl font-bold text-[#042230]">
+              Forgot your password?
+            </h2>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              No worries! Enter the email address linked to your account and we&apos;ll
+              send you a link to reset your password.
+            </p>
+
+            <form className="mt-6 space-y-4" onSubmit={handleSend} noValidate>
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email address</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  autoFocus
+                  value={resetEmail}
+                  onChange={(e) => { setResetEmail(e.target.value); setEmailError("") }}
+                  className={`h-12 ${emailError ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
+                />
+                {emailError && (
+                  <p className="text-xs text-rose-600">{emailError}</p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="h-12 w-full bg-[#354d73] text-base font-semibold hover:bg-[#2a3d5e]"
+                disabled={step === "sending"}
+              >
+                {step === "sending" ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending…
+                  </span>
+                ) : (
+                  "Send reset link"
+                )}
+              </Button>
+            </form>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-4 flex w-full items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to log in
+            </button>
+          </>
+        )}
+
+        {/* ── Step: sent ───────────────────── */}
+        {step === "sent" && (
+          <div className="text-center">
+            {/* Success illustration */}
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
+              <CheckCircle2 className="h-9 w-9 text-emerald-500" />
+            </div>
+
+            <h2 id="forgot-pw-title-sent" className="text-xl font-bold text-[#042230]">
+              Check your inbox
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              We&apos;ve sent a password-reset link to{" "}
+              <span className="font-semibold text-[#042230]">{resetEmail}</span>.
+              It expires in 15 minutes.
+            </p>
+
+            <div className="mt-2 rounded-lg bg-[#F0F6FA] px-4 py-3 text-left text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">Didn&apos;t receive it?</span>{" "}
+              Check your spam folder, or{" "}
+              <button
+                type="button"
+                className="font-medium text-[#354d73] hover:underline"
+                onClick={() => setStep("email")}
+              >
+                try a different email
+              </button>
+              .
+            </div>
+
+            <Button
+              type="button"
+              onClick={onClose}
+              className="mt-6 h-12 w-full bg-[#354d73] text-base font-semibold hover:bg-[#2a3d5e]"
+            >
+              Back to log in
+            </Button>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
+// ── Main login page ───────────────────────────────────────────────────────────
 
 export default function LoginPage() {
   const router = useRouter()
@@ -16,6 +170,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
+  const [forgotOpen, setForgotOpen] = useState(false)
 
   function switchMode(next: "login" | "signup") {
     setMode(next)
@@ -27,6 +182,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-7rem)]">
+      {/* ── Forgot-password modal ──────────────────────────────── */}
+      {forgotOpen && <ForgotPasswordModal onClose={() => setForgotOpen(false)} />}
+
       {/* ── Left decorative panel (desktop only) ──────────────── */}
       <div
         className="relative hidden flex-col justify-between overflow-hidden bg-[#354d73] p-12 lg:flex lg:w-[45%]"
@@ -185,12 +343,13 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <Label htmlFor="login-password">Password</Label>
                 {mode === "login" && (
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs font-medium text-primary hover:underline"
+                  <button
+                    type="button"
+                    onClick={() => setForgotOpen(true)}
+                    className="text-xs font-medium text-primary hover:underline focus-visible:outline-none"
                   >
                     Forgot password?
-                  </Link>
+                  </button>
                 )}
               </div>
               <div className="relative">
