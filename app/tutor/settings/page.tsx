@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, Suspense } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   ChevronLeft,
@@ -39,7 +39,7 @@ interface Tab {
 const TABS: Tab[] = [
   { id: "profile",       label: "Profile Information",  icon: User        },
   { id: "teaching",      label: "Teaching Preferences", icon: BookOpen    },
-  { id: "pricing",       label: "Pricing & Rates",      icon: DollarSign  },
+  { id: "pricing",       label: "Pricing & rates",      icon: DollarSign  },
   { id: "notifications", label: "Notifications",         icon: Bell        },
   { id: "account",       label: "Account & Security",   icon: Shield      },
 ]
@@ -131,62 +131,16 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 
 // ── TABS ─────────────────────────────────────────────────────────────────────
 
-// 1. Profile Information
+// 1. Profile Information — redirects to the full profile page
 function ProfileTab() {
-  const [form, setForm] = useState({
-    firstName: "Brazil", lastName: "James", displayName: "Brazil J.",
-    email: "brazil.james@email.com", phone: "+1 (555) 234-5678",
-    city: "Miami, FL", country: "United States", timezone: "EST (UTC-5)",
-    tagline: "Passionate language educator with 8+ years of experience",
-    bio: "I'm a dedicated language tutor specialising in English and Portuguese. My lessons are designed around your goals — whether that's conversational fluency, business communication, or exam preparation.",
-  })
-  const [saved, setSaved] = useState(false)
-
-  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setSaved(false)
-    setForm(p => ({ ...p, [e.target.name]: e.target.value }))
-  }
-
+  const router = useRouter()
+  useEffect(() => {
+    router.replace("/tutor/profile")
+  }, [router])
   return (
-    <div className="space-y-6">
-      {/* Avatar */}
-      <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#354d73] text-2xl font-bold text-white">
-          B
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-[#042230]">Profile photo</p>
-          <p className="text-xs text-muted-foreground mb-2">JPG, PNG or GIF — max 5 MB</p>
-          <Button variant="outline" size="sm">Upload photo</Button>
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="First name"><Input name="firstName" value={form.firstName} onChange={update} /></Field>
-        <Field label="Last name"><Input name="lastName"  value={form.lastName}  onChange={update} /></Field>
-        <Field label="Display name" hint="Shown to students"><Input name="displayName" value={form.displayName} onChange={update} /></Field>
-        <Field label="Email"><Input name="email" type="email" value={form.email} onChange={update} /></Field>
-        <Field label="Phone"><Input name="phone" value={form.phone} onChange={update} /></Field>
-        <Field label="City / Location"><Input name="city" value={form.city} onChange={update} /></Field>
-        <Field label="Country"><Input name="country" value={form.country} onChange={update} /></Field>
-        <Field label="Timezone"><Input name="timezone" value={form.timezone} onChange={update} /></Field>
-      </div>
-
-      <Field label="Tagline" hint="Short phrase shown under your name on your profile">
-        <Input name="tagline" value={form.tagline} onChange={update} maxLength={100} />
-      </Field>
-
-      <Field label="Bio" hint="Tell students about your background and teaching style">
-        <textarea
-          name="bio"
-          rows={5}
-          value={form.bio}
-          onChange={update}
-          className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none w-full"
-        />
-      </Field>
-
-      <SaveBanner saved={saved} onSave={() => { setSaved(true); setTimeout(() => setSaved(false), 3000) }} />
+    <div className="flex flex-col items-center justify-center py-12 gap-3">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#354d73] border-t-transparent" />
+      <p className="text-sm text-muted-foreground">Redirecting to your profile…</p>
     </div>
   )
 }
@@ -195,7 +149,7 @@ function ProfileTab() {
 function TeachingTab() {
   const [languages, setLanguages] = useState(["English", "Portuguese", "Spanish"])
   const [specialties, setSpecialties] = useState(["Business English", "IELTS Prep", "Conversation Practice"])
-  const [lessonTypes, setLessonTypes] = useState(["Trial", "Regular", "Intensive"])
+  const [lessonTypes, setLessonTypes] = useState(["Trial", "Regular"])
   const [form, setForm] = useState({ education: "M.A. Applied Linguistics — University of Miami", experience: "8 years", certificates: "CELTA, TEFL" })
   const [saved, setSaved] = useState(false)
 
@@ -227,7 +181,7 @@ function TeachingTab() {
       <div>
         <p className="mb-2 text-xs font-semibold text-[#042230]">Lesson types offered</p>
         <TagToggle
-          options={["Trial","Regular","Intensive","Group"]}
+          options={["Trial","Regular","Group"]}
           selected={lessonTypes}
           onChange={v => { setLessonTypes(v); setSaved(false) }}
         />
@@ -244,14 +198,28 @@ function TeachingTab() {
   )
 }
 
-// 3. Pricing & Rates
+// 3. Pricing & rates
 function PricingTab() {
-  const [form, setForm] = useState({ trial: "15", regular: "40", intensive: "55", currency: "USD", minNotice: "24", maxAdvance: "30" })
+  const LANGUAGES = ["English", "Portuguese", "Spanish", "French", "German", "Italian", "Japanese", "Mandarin", "Arabic", "Korean"]
+
+  const [form, setForm] = useState({ trial: "15", regular: "40", currency: "USD", minNotice: "24", maxAdvance: "30" })
   const [saved, setSaved] = useState(false)
+  // Language-based pricing: map from language → price per hr
+  const [langPrices, setLangPrices] = useState<Record<string, string>>({
+    English:    "40",
+    Portuguese: "35",
+    Spanish:    "38",
+  })
+  const [selectedLang, setSelectedLang] = useState<string>("English")
 
   const update = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSaved(false)
     setForm(p => ({ ...p, [e.target.name]: e.target.value }))
+  }
+
+  const updateLangPrice = (price: string) => {
+    setSaved(false)
+    setLangPrices(p => ({ ...p, [selectedLang]: price }))
   }
 
   const rate = (label: string, name: keyof typeof form, hint: string) => (
@@ -282,11 +250,59 @@ function PricingTab() {
       </div>
 
       <div className="space-y-3">
-        {rate("Trial lesson",     "trial",     "First lesson with a new student")}
-        {rate("Regular lesson",   "regular",   "Standard 1-hour session")}
-        {rate("Intensive lesson", "intensive", "Extended deep-dive session")}
+        {rate("Trial lesson",   "trial",   "First lesson with a new student")}
+        {rate("Regular lesson", "regular", "Standard 1-hour session")}
       </div>
 
+      {/* Language-based pricing */}
+      <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <p className="mb-1 text-sm font-semibold text-[#042230]">Price by language taught</p>
+        <p className="mb-4 text-xs text-muted-foreground">Set a different hourly rate for each language you teach.</p>
+        <div className="flex items-end gap-3">
+          <div className="flex-1 flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-[#042230]">Language</label>
+            <select
+              value={selectedLang}
+              onChange={e => setSelectedLang(e.target.value)}
+              className="h-9 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {LANGUAGES.map(l => <option key={l}>{l}</option>)}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-[#042230]">Price per hour ($)</label>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-medium text-muted-foreground">$</span>
+              <input
+                type="number"
+                min="1"
+                value={langPrices[selectedLang] ?? ""}
+                onChange={e => updateLangPrice(e.target.value)}
+                placeholder="0"
+                className="w-24 rounded-md border border-input bg-background px-3 py-1.5 text-sm font-semibold text-[#042230] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+              />
+              <span className="text-xs text-muted-foreground">/ hr</span>
+            </div>
+          </div>
+        </div>
+        {/* Preview of all set prices */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {Object.entries(langPrices).map(([lang, price]) => Number(price) > 0 ? (
+            <span
+              key={lang}
+              className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium ${
+                lang === selectedLang
+                  ? "border-[#354d73] bg-[#354d73] text-white"
+                  : "border-border bg-[#F7F9FB] text-[#042230]"
+              }`}
+            >
+              {lang} · ${price}/hr
+            </span>
+          ) : null)}
+        </div>
+      </div>
+
+      {/* Booking window */}
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Currency">
           <select
@@ -298,10 +314,10 @@ function PricingTab() {
             {["USD","EUR","GBP","CAD","AUD"].map(c => <option key={c}>{c}</option>)}
           </select>
         </Field>
-        <Field label="Min notice (hours)" hint="Before booking">
+        <Field label="Min notice" hint="Hours before booking">
           <Input name="minNotice" type="number" value={form.minNotice} onChange={update} />
         </Field>
-        <Field label="Max advance booking (days)">
+        <Field label="Max advance" hint="Days ahead for booking">
           <Input name="maxAdvance" type="number" value={form.maxAdvance} onChange={update} />
         </Field>
       </div>
@@ -491,11 +507,11 @@ function AccountTab() {
         ))}
       </div>
 
-      {/* Danger zone */}
+      {/* WARNING zone */}
       <div className="rounded-xl border border-rose-200 bg-rose-50 p-5">
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="h-4 w-4 text-rose-600" />
-          <p className="text-sm font-semibold text-rose-700">Danger zone</p>
+          <p className="text-sm font-semibold text-rose-700">⚠️ WARNING</p>
         </div>
         <p className="text-xs text-rose-600 mb-4">
           Deleting your account is permanent. All your data, lessons, and earnings history will be erased.
@@ -534,7 +550,7 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
 
 function TutorSettingsPageInner() {
   const searchParams = useSearchParams()
-  const [active, setActive] = useState<TabId>("profile")
+  const [active, setActive] = useState<TabId>("teaching")
 
   useEffect(() => {
     const tab = searchParams.get("tab") as TabId | null

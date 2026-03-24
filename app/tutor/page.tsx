@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import {
-  Home,
+  LayoutDashboard,
   MessageCircle,
   Star,
   Calendar,
@@ -226,7 +226,7 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "home",     label: "Home",     icon: Home },
+  { id: "home",     label: "Dashboard", icon: LayoutDashboard },
   { id: "messages", label: "Messages", icon: MessageCircle, badge: 3 },
   { id: "reviews",  label: "Reviews",  icon: Star },
   { id: "schedule", label: "Schedule", icon: Calendar },
@@ -791,14 +791,23 @@ function WalletPanel() {
       </div>
 
       {/* Payout settings hint */}
-      <div className="rounded-xl border border-border bg-[#F0F6FA] px-5 py-4">
-        <p className="text-sm font-medium text-[#042230]">💳 Set up your payout method</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Add your PayPal, bank account, or Payoneer to receive weekly payouts.
-        </p>
-        <Button size="sm" variant="outline" className="mt-3">
-          Configure Payouts
-        </Button>
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">💳</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Connect your payout method to get paid</p>
+            <p className="mt-1 text-xs text-amber-700">
+              To receive your earnings, you need to connect a payout method such as PayPal, a bank account, or Payoneer.
+              Once connected, payouts are processed every Friday automatically.
+            </p>
+            <p className="mt-2 text-xs text-amber-700 font-medium">
+              ⚠️ Without a connected payout method, your earnings will accumulate here but cannot be transferred.
+            </p>
+            <Button size="sm" variant="outline" className="mt-3 border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900">
+              Connect Payout Method
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -881,7 +890,7 @@ function SettingsPanel() {
   return (
     <div className="space-y-4">
       {[
-        { label: "Profile Information", desc: "Update your name, bio, and profile photo", href: "/tutor/settings?tab=profile" },
+        { label: "Profile Information", desc: "Update your name, bio, and profile photo", href: "/tutor/profile" },
         { label: "Teaching Preferences", desc: "Set your languages, specialties, and lesson types", href: "/tutor/settings?tab=teaching" },
         { label: "Pricing & Rates",      desc: "Set your hourly rate and trial lesson pricing",  href: "/tutor/settings?tab=pricing" },
         { label: "Notifications",        desc: "Manage email and push notification preferences",  href: "/tutor/settings?tab=notifications" },
