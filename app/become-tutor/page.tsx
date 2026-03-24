@@ -209,7 +209,7 @@ export default function BecomeTutorPage() {
               <div className="mt-8 flex items-start gap-0">
                 {[
                   { n: "1", title: "Sign up",       sub: "to create your tutor profile" },
-                  { n: "2", title: "Get approved",  sub: "by our team in 5 business days" },
+                  { n: "2", title: "Make your profile stand out",  sub: "by our team in 5 business days" },
                   { n: "3", title: "Start earning", sub: "by teaching students all over the world" },
                 ].map((s, i, arr) => (
                   <div key={s.n} className="flex items-start">
