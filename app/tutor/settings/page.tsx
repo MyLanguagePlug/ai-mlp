@@ -41,7 +41,7 @@ const TABS: Tab[] = [
   { id: "teaching",      label: "Teaching Preferences", icon: BookOpen    },
   { id: "pricing",       label: "Pricing and Rates",    icon: DollarSign  },
   { id: "notifications", label: "Notifications",         icon: Bell        },
-  { id: "account",       label: "Account & Security",   icon: Shield      },
+  { id: "account",       label: "Account and Security", icon: Shield      },
 ]
 
 // ── Save banner ──────────────────────────────────────────────────────────────
@@ -403,7 +403,7 @@ function NotificationsTab() {
   )
 }
 
-// 5. Account & Security
+// 5. Account and Security
 function AccountTab() {
   const [showOld, setShowOld] = useState(false)
   const [showNew, setShowNew] = useState(false)
@@ -559,7 +559,7 @@ function TutorSettingsPageInner() {
 
   return (
     <div className="min-h-[calc(100vh-7rem)] bg-[#F7F9FB]">
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
 
         {/* Back */}
         <Link
@@ -574,7 +574,7 @@ function TutorSettingsPageInner() {
 
         <div className="flex flex-col gap-6 md:flex-row">
           {/* Sidebar tabs */}
-          <nav className="shrink-0 md:w-52">
+          <nav className="shrink-0 md:w-60">
             <div className="rounded-xl border border-border bg-white overflow-hidden shadow-sm">
               {TABS.map((tab, i) => {
                 const isActive = active === tab.id
@@ -583,7 +583,7 @@ function TutorSettingsPageInner() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActive(tab.id)}
-                    className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-left ${
+                    className={`flex w-full items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors text-left ${
                       i < TABS.length - 1 ? "border-b border-border" : ""
                     } ${
                       isActive
@@ -600,7 +600,7 @@ function TutorSettingsPageInner() {
           </nav>
 
           {/* Content */}
-          <div className="flex-1 min-w-0 rounded-xl border border-border bg-white p-6 shadow-sm">
+          <div className="flex-1 min-w-0 rounded-xl border border-border bg-white p-8 shadow-sm">
             <h2 className="mb-6 text-base font-bold text-[#042230] border-b border-border pb-4">
               {TABS.find(t => t.id === active)?.label}
             </h2>
