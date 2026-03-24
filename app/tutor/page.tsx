@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import {
-  LayoutDashboard,
+  Home,
   MessageCircle,
   Star,
   Calendar,
@@ -226,7 +226,7 @@ type NavItem = {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "home",     label: "Dashboard", icon: LayoutDashboard },
+  { id: "home",     label: "Home",      icon: Home },
   { id: "messages", label: "Messages", icon: MessageCircle, badge: 3 },
   { id: "reviews",  label: "Reviews",  icon: Star },
   { id: "schedule", label: "Schedule", icon: Calendar },

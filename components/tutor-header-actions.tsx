@@ -9,6 +9,7 @@ import {
   LogOut,
   ChevronDown,
   User,
+  LayoutDashboard,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -139,6 +140,7 @@ export function TutorHeaderActions() {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/tutor" className="flex items-center gap-2 cursor-pointer">
+              <LayoutDashboard className="h-3.5 w-3.5" />
               Dashboard
             </Link>
           </DropdownMenuItem>

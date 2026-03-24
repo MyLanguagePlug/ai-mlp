@@ -39,7 +39,7 @@ interface Tab {
 const TABS: Tab[] = [
   { id: "profile",       label: "Profile Information",  icon: User        },
   { id: "teaching",      label: "Teaching Preferences", icon: BookOpen    },
-  { id: "pricing",       label: "Pricing & rates",      icon: DollarSign  },
+  { id: "pricing",       label: "Pricing and Rates",    icon: DollarSign  },
   { id: "notifications", label: "Notifications",         icon: Bell        },
   { id: "account",       label: "Account & Security",   icon: Shield      },
 ]
@@ -123,7 +123,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-xs font-semibold text-[#042230]">{label}</label>
-      {hint && <p className="text-xs text-muted-foreground -mt-1">{hint}</p>}
+      <p className="text-xs text-muted-foreground -mt-1 min-h-[1rem]">{hint ?? "\u00A0"}</p>
       {children}
     </div>
   )
@@ -198,7 +198,7 @@ function TeachingTab() {
   )
 }
 
-// 3. Pricing & rates
+// 3. Pricing and Rates
 function PricingTab() {
   const LANGUAGES = ["English", "Portuguese", "Spanish", "French", "German", "Italian", "Japanese", "Mandarin", "Arabic", "Korean"]
 
@@ -309,7 +309,7 @@ function PricingTab() {
             name="currency"
             value={form.currency}
             onChange={update}
-            className="h-9 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {["USD","EUR","GBP","CAD","AUD"].map(c => <option key={c}>{c}</option>)}
           </select>

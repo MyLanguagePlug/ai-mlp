@@ -249,7 +249,7 @@ export default function TutorProfilePage() {
             <Badge variant="secondary" className="ml-auto text-emerald-700 bg-emerald-50 text-xs">Highly recommended ✨</Badge>
           </div>
           <p className="text-xs text-muted-foreground mb-4">
-            A 1–2 minute intro video dramatically increases your chances of getting booked.
+            A 30 seconds to a minute intro video dramatically increases your chances of getting booked.
             Say hello, share your teaching style, and let students know what to expect!
           </p>
 
@@ -280,7 +280,7 @@ export default function TutorProfilePage() {
               </div>
               <div className="text-center">
                 <p className="text-sm font-semibold text-[#354d73]">Upload your intro video</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">MP4, MOV or WebM — max 100 MB · 1–2 minutes recommended</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">MP4, MOV or WebM — max 100 MB · 30 seconds to a minute recommended</p>
               </div>
               <div className="flex items-center gap-1.5 rounded-full bg-[#354d73] px-4 py-1.5 text-xs font-semibold text-white">
                 <Upload className="h-3.5 w-3.5" />
