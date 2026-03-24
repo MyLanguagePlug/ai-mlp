@@ -881,11 +881,11 @@ function SettingsPanel() {
   return (
     <div className="space-y-4">
       {[
-        { label: "Profile Information", desc: "Update your name, bio, and profile photo", href: "/tutor/settings" },
-        { label: "Teaching Preferences", desc: "Set your languages, specialties, and lesson types", href: "/tutor/settings" },
-        { label: "Pricing & Rates",      desc: "Set your hourly rate and trial lesson pricing",  href: "/tutor/settings" },
-        { label: "Notifications",        desc: "Manage email and push notification preferences",  href: "/tutor/settings" },
-        { label: "Account & Security",   desc: "Change your password and account settings",       href: "/tutor/settings" },
+        { label: "Profile Information", desc: "Update your name, bio, and profile photo", href: "/tutor/settings?tab=profile" },
+        { label: "Teaching Preferences", desc: "Set your languages, specialties, and lesson types", href: "/tutor/settings?tab=teaching" },
+        { label: "Pricing & Rates",      desc: "Set your hourly rate and trial lesson pricing",  href: "/tutor/settings?tab=pricing" },
+        { label: "Notifications",        desc: "Manage email and push notification preferences",  href: "/tutor/settings?tab=notifications" },
+        { label: "Account & Security",   desc: "Change your password and account settings",       href: "/tutor/settings?tab=account" },
       ].map(item => (
         <Link
           key={item.label}

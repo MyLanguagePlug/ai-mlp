@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
   ChevronDown,
+  User,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -130,6 +131,12 @@ export function TutorHeaderActions() {
             <p className="text-xs text-muted-foreground">Tutor</p>
           </div>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/tutor/profile" className="flex items-center gap-2 cursor-pointer">
+              <User className="h-3.5 w-3.5" />
+              Profile
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/tutor" className="flex items-center gap-2 cursor-pointer">
               Dashboard
