@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
@@ -532,7 +532,7 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   account:       <AccountTab />,
 }
 
-export default function TutorSettingsPage() {
+function TutorSettingsPageInner() {
   const searchParams = useSearchParams()
   const [active, setActive] = useState<TabId>("profile")
 
@@ -594,5 +594,13 @@ export default function TutorSettingsPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function TutorSettingsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F7F9FB]" />}>
+      <TutorSettingsPageInner />
+    </Suspense>
   )
 }
