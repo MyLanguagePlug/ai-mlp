@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { StudentHeaderActions } from "./student-header-actions"
+import { TutorHeaderActions } from "./tutor-header-actions"
 
 const languages = [
   "Spanish", "French", "German", "Italian", "Portuguese", 
@@ -41,7 +42,8 @@ const currencies = [
 interface HeaderProps {
   /** "minimal" renders the login-page variant: nav left-aligned, language selector only, no auth buttons or currency */
   /** "student" renders the student-dashboard variant: no auth buttons, shows student icons (messages/notifs/profile) */
-  variant?: "minimal" | "student"
+  /** "tutor"   renders the tutor-dashboard variant: no auth buttons, shows tutor-specific header actions */
+  variant?: "minimal" | "student" | "tutor"
 }
 
 export function Header({ variant }: HeaderProps = {}) {
@@ -51,6 +53,7 @@ export function Header({ variant }: HeaderProps = {}) {
 
   const isMinimal = variant === "minimal"
   const isStudent = variant === "student"
+  const isTutor   = variant === "tutor"
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -130,7 +133,7 @@ export function Header({ variant }: HeaderProps = {}) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {!isMinimal && !isStudent && (
+          {!isMinimal && !isStudent && !isTutor && (
             <>
               {/* Currency Selector */}
               <DropdownMenu>
@@ -165,6 +168,9 @@ export function Header({ variant }: HeaderProps = {}) {
 
           {/* Student variant: show student action icons instead of auth buttons */}
           {isStudent && <StudentHeaderActions />}
+
+          {/* Tutor variant: show tutor action icons instead of auth buttons */}
+          {isTutor && <TutorHeaderActions />}
         </div>
 
         {/* Mobile Menu Button */}
@@ -236,7 +242,7 @@ export function Header({ variant }: HeaderProps = {}) {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {!isMinimal && !isStudent && (
+              {!isMinimal && !isStudent && !isTutor && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
@@ -260,7 +266,7 @@ export function Header({ variant }: HeaderProps = {}) {
               )}
             </div>
 
-            {!isMinimal && !isStudent && (
+            {!isMinimal && !isStudent && !isTutor && (
               <div className="mt-4 flex flex-col gap-2">
                 <Button variant="outline" asChild className="w-full">
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>

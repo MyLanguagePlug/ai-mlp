@@ -172,7 +172,7 @@ export default function SignupPage() {
           </Button>
         ) : selected === "tutor" ? (
           <Button asChild size="lg" className="w-full h-12 text-base font-semibold bg-[#5A8DA5] hover:bg-[#4a7d95]">
-            <Link href="/become-tutor">
+            <Link href="/tutor">
               Continue as Tutor
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

@@ -182,6 +182,91 @@ export default function BecomeTutorPage() {
         </div>
       </section>
 
+      {/* ── Preply-inspired "Get Started" Quick Overview ────────────────────── */}
+      <section className="border-b border-border bg-white py-14 md:py-20" id="apply">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Left: headline + numbered steps + CTA */}
+            <div>
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-[#042230] sm:text-4xl md:text-5xl">
+                Make a living by teaching the largest community of learners worldwide
+              </h2>
+
+              {/* Numbered steps inline */}
+              <div className="mt-8 flex items-start gap-0">
+                {[
+                  { n: "1", title: "Sign up",       sub: "to create your tutor profile" },
+                  { n: "2", title: "Get approved",  sub: "by our team in 5 business days" },
+                  { n: "3", title: "Start earning", sub: "by teaching students all over the world!" },
+                ].map((s, i, arr) => (
+                  <div key={s.n} className="flex items-start">
+                    <div className="flex flex-col items-start">
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded font-bold text-sm border-2 ${
+                          i === 0
+                            ? "bg-[#042230] border-[#042230] text-white"
+                            : "border-border bg-white text-[#042230]"
+                        }`}
+                      >
+                        {s.n}
+                      </div>
+                      <p className="mt-3 text-sm font-bold text-[#042230] leading-tight">{s.title}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground leading-snug max-w-[110px]">{s.sub}</p>
+                    </div>
+                    {i < arr.length - 1 && (
+                      <div className="mx-3 mt-4 h-px w-16 shrink-0 bg-border" />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                size="lg"
+                className="mt-8 bg-[#00c49a] hover:bg-[#00b38c] text-white font-semibold px-8"
+                asChild
+              >
+                <Link href="/signup">Create a tutor profile now</Link>
+              </Button>
+            </div>
+
+            {/* Right: image */}
+            <div className="relative hidden lg:block">
+              <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl shadow-xl">
+                <Image
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=640&fit=crop"
+                  alt="Tutor teaching online"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Three feature cards below */}
+          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+            {[
+              {
+                title: "Set your own rate",
+                body: "Choose your hourly rate and change it anytime. On average, English tutors charge $15–25 per hour.",
+              },
+              {
+                title: "Teach anytime, anywhere",
+                body: "Decide when and how many hours you want to teach. No minimum time commitment or fixed schedule. Be your own boss!",
+              },
+              {
+                title: "Grow professionally",
+                body: "Once you sign up and complete your application, you can be approved and start teaching in as little as three days.",
+              },
+            ].map(card => (
+              <div key={card.title}>
+                <h3 className="text-lg font-bold text-[#042230]">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Benefits Section */}
       <section className="py-16 md:py-24" id="learn-more">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
