@@ -712,7 +712,7 @@ function HelpFaqItem({ question, answer }: { question: string; answer: string })
   )
 }
 
-export default function StudentDashboard() {
+function StudentDashboardInner() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tab = searchParams.get("tab")
@@ -1778,5 +1778,13 @@ export default function StudentDashboard() {
 
       </main>
     </div>
+  )
+}
+
+export default function StudentDashboard() {
+  return (
+    <React.Suspense fallback={null}>
+      <StudentDashboardInner />
+    </React.Suspense>
   )
 }
