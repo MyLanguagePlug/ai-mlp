@@ -241,21 +241,6 @@ export default function TutorsPage() {
   return (
     <div className="min-h-screen bg-[#F0F6FA]">
 
-      {/* ── Search bar ─────────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-30 border-b border-border bg-white shadow-sm">
-        <div className="mx-auto flex h-14 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search tutors or languages…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9 bg-[#F0F6FA] border-transparent focus:border-[#354d73]"
-            />
-          </div>
-        </div>
-      </div>
-
       {/* ── Main content ───────────────────────────────────────────────────── */}
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
@@ -452,6 +437,19 @@ export default function TutorsPage() {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+        </div>
+
+        {/* ── Search bar (below filter box) ────────────────────────────────── */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search tutors or languages…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 bg-white border-[#354d73]/25 focus:border-[#354d73]"
+            />
           </div>
         </div>
 

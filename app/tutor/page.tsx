@@ -23,6 +23,8 @@ import {
   Video,
   X,
   Menu,
+  AlertTriangle,
+  ArrowLeft,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -367,7 +369,7 @@ function TutorMiniCalendar() {
 
 // ── Home (schedule) panel ─────────────────────────────────────────────────────
 
-function HomePanel() {
+function HomePanel({ walletConnected }: { walletConnected: boolean }) {
   const [scheduleTab, setScheduleTab] = useState<"lessons" | "calendar">("lessons")
   const [langFilter, setLangFilter]   = useState("all")
   const [typeFilter, setTypeFilter]   = useState("all")
@@ -389,6 +391,20 @@ function HomePanel() {
         <StatCard label="Monthly Earnings"      value="$0.00" icon={DollarSign} />
         <StatCard label="Wallet"                value="$0.00" icon={Wallet} />
       </div>
+
+      {/* Wallet warning banner */}
+      {!walletConnected && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
+          <p className="text-sm text-amber-800">
+            <span className="font-semibold">Wallet not connected.</span>{" "}
+            Connect a payout method to receive your earnings.{" "}
+            <button type="button" className="font-semibold underline hover:opacity-80">
+              Set up now
+            </button>
+          </p>
+        </div>
+      )}
 
       {/* My Schedule */}
       <div className="rounded-xl border border-border bg-white shadow-sm">
@@ -563,16 +579,22 @@ function HomePanel() {
 function MessagesPanel() {
   const [activeConv, setActiveConv] = useState<number | null>(1)
   const [draft, setDraft] = useState("")
+  const [mobileChatOpen, setMobileChatOpen] = useState(false)
   const totalUnread = DEMO_CONVERSATIONS.reduce((s, c) => s + c.unread, 0)
 
   const conv = DEMO_CONVERSATIONS.find(c => c.id === activeConv)
   const messages = activeConv ? DEMO_CHAT[activeConv] ?? [] : []
 
+  function openConversation(id: number) {
+    setActiveConv(id)
+    setMobileChatOpen(true)
+  }
+
   return (
     <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden" style={{ height: "calc(100vh - 14rem)" }}>
       <div className="flex h-full">
         {/* Conversation list */}
-        <div className="w-72 shrink-0 border-r border-border flex flex-col">
+        <div className={`${mobileChatOpen ? "hidden" : "flex"} md:flex w-full md:w-72 shrink-0 border-r border-border flex-col`}>
           <div className="border-b border-border px-4 py-3">
             <h2 className="text-base font-semibold text-[#042230]">
               Messages
@@ -588,7 +610,7 @@ function MessagesPanel() {
               <button
                 key={c.id}
                 type="button"
-                onClick={() => setActiveConv(c.id)}
+                onClick={() => openConversation(c.id)}
                 className={`w-full px-4 py-3 text-left hover:bg-[#F0F6FA] transition-colors ${activeConv === c.id ? "bg-[#F0F6FA]" : ""}`}
               >
                 <div className="flex items-start gap-3">
@@ -617,11 +639,19 @@ function MessagesPanel() {
         </div>
 
         {/* Chat window */}
-        <div className="flex flex-1 flex-col min-w-0">
+        <div className={`${mobileChatOpen ? "flex" : "hidden"} md:flex flex-1 flex-col min-w-0`}>
           {conv ? (
             <>
               {/* Chat header */}
               <div className="flex items-center gap-3 border-b border-border px-5 py-3">
+                <button
+                  type="button"
+                  onClick={() => setMobileChatOpen(false)}
+                  className="md:hidden mr-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA]"
+                  aria-label="Back to conversations"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
                 <img src={conv.avatar} alt={conv.student} className="h-9 w-9 rounded-full object-cover" />
                 <div>
                   <p className="text-sm font-semibold text-[#042230]">{conv.student}</p>
@@ -920,6 +950,7 @@ type ActiveSection = "home" | "messages" | "reviews" | "schedule" | "wallet" | "
 export default function TutorDashboardPage() {
   const [active, setActive] = useState<ActiveSection>("home")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [walletConnected] = useState(false)
 
   const sectionTitle: Record<ActiveSection, string> = {
     home:     "Dashboard",
@@ -981,6 +1012,9 @@ export default function TutorDashboardPage() {
               >
                 <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-[#354d73]" : ""}`} />
                 {item.label}
+                {item.id === "wallet" && !walletConnected && (
+                  <AlertTriangle className="ml-1 h-3.5 w-3.5 shrink-0 text-amber-500" />
+                )}
                 {item.badge !== undefined && (
                   <span className="ml-auto flex h-4 w-4 items-center justify-center rounded-full bg-[#354d73] text-[9px] font-bold text-white">
                     {item.badge}
@@ -1011,7 +1045,7 @@ export default function TutorDashboardPage() {
         </div>
 
         <div className="p-4 sm:p-6 lg:p-8">
-          {active === "home"     && <HomePanel />}
+          {active === "home"     && <HomePanel walletConnected={walletConnected} />}
           {active === "messages" && <MessagesPanel />}
           {active === "reviews"  && <ReviewsPanel />}
           {active === "schedule" && <SchedulePanel />}
