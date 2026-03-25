@@ -128,6 +128,96 @@ const MESSAGE_MENU: MessageMenuItem[] = [
     ],
   },
   {
+    subject: "Bookings",
+    classes: [
+      {
+        name: "Book a New Lesson",
+        prefixes: [
+          "I'd like to book a new lesson",
+          "Can I schedule a session this week?",
+          "I'd like to reserve a lesson slot for next week",
+          "How do I book a lesson with you?",
+          "I want to set up my first paid lesson",
+        ],
+      },
+      {
+        name: "Reschedule or Cancel",
+        prefixes: [
+          "I need to reschedule my upcoming lesson",
+          "I'd like to cancel my booked session",
+          "Can we move our lesson to a different time?",
+          "Something came up — can we rearrange?",
+          "What is your cancellation policy?",
+        ],
+      },
+      {
+        name: "Trial Lesson Booking",
+        prefixes: [
+          "I'd like to book a trial lesson",
+          "How do I arrange a trial session with you?",
+          "I'm new here — can we start with a trial?",
+          "Can we do a short introductory class first?",
+          "I'd love to try a session before committing",
+        ],
+      },
+      {
+        name: "Recurring Sessions",
+        prefixes: [
+          "Can we set up a regular weekly booking?",
+          "I'd like to book multiple lessons in advance",
+          "Can we have the same time slot each week?",
+          "How do I set up a recurring schedule with you?",
+          "I want to book a package of lessons",
+        ],
+      },
+    ],
+  },
+  {
+    subject: "Classes",
+    classes: [
+      {
+        name: "My Current Class",
+        prefixes: [
+          "I'd like to discuss my progress in our current class",
+          "Can we review what we've covered so far?",
+          "I have a question about the content of our class",
+          "I want to talk about what we're focusing on in lessons",
+          "Can we adjust the pace of our classes?",
+        ],
+      },
+      {
+        name: "Class Materials",
+        prefixes: [
+          "Can you recommend materials for our class?",
+          "I'd like resources to supplement our lessons",
+          "What textbooks or exercises do you use?",
+          "Can you share the materials from our last class?",
+          "I need extra practice materials between lessons",
+        ],
+      },
+      {
+        name: "Class Level & Progression",
+        prefixes: [
+          "I think I'm ready to move to the next level",
+          "Can we assess my current level?",
+          "I'd like to start at beginner level",
+          "I feel the class is too easy / too difficult",
+          "Can we talk about my progression plan?",
+        ],
+      },
+      {
+        name: "Group vs Private Classes",
+        prefixes: [
+          "Do you offer group classes?",
+          "What's the difference between your group and private lessons?",
+          "I'd like to join a group class if available",
+          "Can I switch from a group class to private lessons?",
+          "I prefer one-on-one classes — is that available?",
+        ],
+      },
+    ],
+  },
+  {
     subject: "Languages",
     classes: [
       {
