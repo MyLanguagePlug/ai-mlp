@@ -33,6 +33,7 @@ import {
   RotateCcw,
   Trash2,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -79,6 +80,272 @@ const availabilityOptions = [
   { value: "afternoon", label: "Afternoon" },
   { value: "evening",   label: "Evening" },
   { value: "weekends",  label: "Weekends" },
+]
+
+type MessageMenuItem = {
+  subject: string
+  classes: {
+    name: string
+    prefixes: string[]
+  }[]
+}
+
+const MESSAGE_MENU: MessageMenuItem[] = [
+  {
+    subject: "General",
+    classes: [
+      {
+        name: "First Contact",
+        prefixes: [
+          "I'd like to schedule a trial lesson",
+          "I saw your profile and I'm interested in lessons",
+          "What's your availability this week?",
+          "Can you tell me more about your teaching methods?",
+          "I have a question about your experience",
+        ],
+      },
+      {
+        name: "Scheduling",
+        prefixes: [
+          "Can we book a lesson for this week?",
+          "I need to reschedule our upcoming session",
+          "What times are you available next week?",
+          "Can we set up a recurring weekly session?",
+          "I'd like to book multiple lessons in advance",
+        ],
+      },
+      {
+        name: "Lesson Feedback",
+        prefixes: [
+          "I really enjoyed our last lesson!",
+          "I'd like to focus on something different next time",
+          "Could we review what we covered last session?",
+          "I'm making great progress, thank you!",
+          "I have some questions from our last lesson",
+        ],
+      },
+    ],
+  },
+  {
+    subject: "Languages",
+    classes: [
+      {
+        name: "Spanish",
+        prefixes: [
+          "I'd like to practice Spanish conversation",
+          "I need help with Spanish grammar",
+          "Can we work on Spanish vocabulary?",
+          "I want to prepare for a DELE/SIELE exam",
+          "I'm struggling with Spanish verb conjugations",
+        ],
+      },
+      {
+        name: "French",
+        prefixes: [
+          "I'd like to practice French conversation",
+          "I need help with French grammar",
+          "Can we work on French pronunciation?",
+          "I want to prepare for a DELF/DALF exam",
+          "I'm struggling with French verb tenses",
+        ],
+      },
+      {
+        name: "Mandarin Chinese",
+        prefixes: [
+          "I'd like to practice Mandarin conversation",
+          "I need help learning Chinese characters (Hanzi)",
+          "Can we work on Mandarin tones?",
+          "I want to prepare for the HSK exam",
+          "I'm struggling with Mandarin grammar patterns",
+        ],
+      },
+      {
+        name: "Japanese",
+        prefixes: [
+          "I'd like to practice Japanese conversation",
+          "I need help learning Hiragana / Katakana",
+          "Can we work on reading Kanji?",
+          "I want to prepare for the JLPT exam",
+          "I'm struggling with Japanese sentence structure",
+        ],
+      },
+      {
+        name: "German",
+        prefixes: [
+          "I'd like to practice German conversation",
+          "I need help with German grammar (cases)",
+          "Can we work on German pronunciation?",
+          "I want to prepare for a Goethe-Institut exam",
+          "I'm struggling with German word order",
+        ],
+      },
+      {
+        name: "Italian",
+        prefixes: [
+          "I'd like to practice Italian conversation",
+          "I need help with Italian grammar",
+          "Can we work on Italian pronunciation?",
+          "I want to prepare for a CILS/CELI exam",
+          "I'm struggling with Italian verb moods",
+        ],
+      },
+      {
+        name: "Portuguese",
+        prefixes: [
+          "I'd like to practice Portuguese conversation",
+          "I need help with Portuguese grammar",
+          "Can we work on European vs Brazilian Portuguese differences?",
+          "I want to prepare for a CELPE-Bras exam",
+          "I'm struggling with Portuguese pronunciation",
+        ],
+      },
+      {
+        name: "Arabic",
+        prefixes: [
+          "I'd like to practice Arabic conversation",
+          "I need help learning Arabic script",
+          "Can we work on Modern Standard Arabic?",
+          "I want to focus on a specific Arabic dialect",
+          "I'm struggling with Arabic grammar",
+        ],
+      },
+    ],
+  },
+  {
+    subject: "Mathematics",
+    classes: [
+      {
+        name: "Algebra",
+        prefixes: [
+          "I need help understanding algebra concepts",
+          "Can we go over solving linear equations?",
+          "I'm stuck on quadratic equations",
+          "I need help with algebra for my upcoming exam",
+          "Can we work through some algebra practice problems?",
+        ],
+      },
+      {
+        name: "Calculus",
+        prefixes: [
+          "I need help understanding calculus concepts",
+          "Can we review differentiation techniques?",
+          "I need help with integration methods",
+          "I'm struggling with limits and continuity",
+          "Can we work on calculus exam preparation?",
+        ],
+      },
+      {
+        name: "Statistics",
+        prefixes: [
+          "I need help with statistics concepts",
+          "Can we go over probability theory?",
+          "I need help with hypothesis testing",
+          "I'm struggling with data analysis",
+          "Can we work through statistics problems together?",
+        ],
+      },
+      {
+        name: "Geometry",
+        prefixes: [
+          "I need help with geometry proofs",
+          "Can we work on coordinate geometry?",
+          "I'm struggling with trigonometry",
+          "I need help with geometry for my exam",
+          "Can we review geometric theorems?",
+        ],
+      },
+    ],
+  },
+  {
+    subject: "Sciences",
+    classes: [
+      {
+        name: "Biology",
+        prefixes: [
+          "I need help understanding biology concepts",
+          "Can we review cell biology and genetics?",
+          "I'm struggling with human anatomy topics",
+          "I need help preparing for my biology exam",
+          "Can we go over ecosystems and ecology?",
+        ],
+      },
+      {
+        name: "Chemistry",
+        prefixes: [
+          "I need help with chemistry concepts",
+          "Can we go over balancing chemical equations?",
+          "I'm struggling with organic chemistry",
+          "I need help with my chemistry lab report",
+          "Can we review the periodic table and elements?",
+        ],
+      },
+      {
+        name: "Physics",
+        prefixes: [
+          "I need help with physics problems",
+          "Can we review Newton's laws of motion?",
+          "I'm struggling with electricity and magnetism",
+          "I need help with my physics exam preparation",
+          "Can we work on thermodynamics concepts?",
+        ],
+      },
+      {
+        name: "Environmental Science",
+        prefixes: [
+          "I need help understanding environmental science",
+          "Can we discuss climate change concepts?",
+          "I'm struggling with environmental systems",
+          "I need help preparing for an environmental science exam",
+          "Can we go over sustainability topics?",
+        ],
+      },
+    ],
+  },
+  {
+    subject: "Humanities",
+    classes: [
+      {
+        name: "English / Literature",
+        prefixes: [
+          "I need help with essay writing",
+          "Can we discuss a literary work I'm studying?",
+          "I need help with reading comprehension",
+          "I'm struggling with literary analysis",
+          "Can we review grammar and writing style?",
+        ],
+      },
+      {
+        name: "History",
+        prefixes: [
+          "I need help understanding historical events",
+          "Can we discuss the causes and effects of a historical event?",
+          "I need help with my history essay",
+          "I'm struggling to remember important dates and facts",
+          "Can we review a specific historical period?",
+        ],
+      },
+      {
+        name: "Geography",
+        prefixes: [
+          "I need help with geography concepts",
+          "Can we review physical geography topics?",
+          "I'm struggling with human geography",
+          "I need help with map skills and reading",
+          "Can we go over global issues for my exam?",
+        ],
+      },
+      {
+        name: "Philosophy",
+        prefixes: [
+          "I need help understanding philosophical concepts",
+          "Can we discuss a particular philosophical argument?",
+          "I'm struggling with writing a philosophy essay",
+          "Can we explore ethics and moral philosophy?",
+          "I need help with critical thinking skills",
+        ],
+      },
+    ],
+  },
 ]
 
 const tutors = [
@@ -451,6 +718,8 @@ export default function StudentDashboard() {
   const [activeChatId, setActiveChatId] = useState<number>(1)
   const [chatInput, setChatInput] = useState("")
   const [chatThreads, setChatThreads] = useState<ChatThread[]>(DEMO_CHAT_THREADS)
+  const [menuSubject, setMenuSubject] = useState<string | null>(null)
+  const [menuClass, setMenuClass] = useState<string | null>(null)
   const [copiedCode, setCopiedCode] = useState(false)
   const [search, setSearch] = useState("")
   const [helpSearch, setHelpSearch] = useState("")
@@ -551,8 +820,8 @@ export default function StudentDashboard() {
   const activeThread = chatThreads.find(t => t.convId === activeChatId)
   const activeConv   = conversations.find(c => c.id === activeChatId)
 
-  function sendChatMessage() {
-    const text = chatInput.trim()
+  function sendChatMessage(prefixText?: string) {
+    const text = (prefixText ?? chatInput).trim()
     if (!text) return
     setChatThreads(prev => prev.map(t =>
       t.convId === activeChatId
@@ -560,6 +829,8 @@ export default function StudentDashboard() {
         : t
     ))
     setChatInput("")
+    setMenuSubject(null)
+    setMenuClass(null)
   }
 
   // ── Saved tutor helpers ───────────────────────────────────────────────────
@@ -984,27 +1255,96 @@ export default function StudentDashboard() {
                     ))}
                   </div>
 
-                  {/* Input */}
+                  {/* Message menu – students choose from prefixes, no free typing */}
                   <div className="border-t border-border px-4 py-3">
-                    <div className="flex items-center gap-2 rounded-xl border border-border bg-[#F0F6FA] px-3 py-2">
-                      <input
-                        type="text"
-                        placeholder="Type a message…"
-                        value={chatInput}
-                        onChange={e => setChatInput(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && sendChatMessage()}
-                        className="flex-1 bg-transparent text-sm text-[#042230] outline-none placeholder:text-muted-foreground"
-                      />
-                      <button
-                        type="button"
-                        onClick={sendChatMessage}
-                        disabled={!chatInput.trim()}
-                        className="flex h-7 w-7 items-center justify-center rounded-full bg-[#354d73] text-white disabled:opacity-40 hover:bg-[#2a3d5e]"
-                        aria-label="Send"
-                      >
-                        <Send className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                    {!menuSubject && (
+                      <div>
+                        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                          Choose a subject
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {MESSAGE_MENU.map(item => (
+                            <button
+                              key={item.subject}
+                              type="button"
+                              onClick={() => { setMenuSubject(item.subject); setMenuClass(null) }}
+                              className="rounded-full border border-[#354d73] px-3 py-1 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors"
+                            >
+                              {item.subject}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {menuSubject && !menuClass && (() => {
+                      const subjectItem = MESSAGE_MENU.find(s => s.subject === menuSubject)
+                      if (!subjectItem) return null
+                      return (
+                        <div>
+                          <div className="mb-2 flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setMenuSubject(null)}
+                              className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
+                              aria-label="Back to subjects"
+                            >
+                              <ChevronLeft className="h-3.5 w-3.5 text-[#354d73]" />
+                            </button>
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              {menuSubject} – choose a class
+                            </p>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {subjectItem.classes.map(cls => (
+                              <button
+                                key={cls.name}
+                                type="button"
+                                onClick={() => setMenuClass(cls.name)}
+                                className="rounded-full border border-[#354d73] px-3 py-1 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors"
+                              >
+                                {cls.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
+
+                    {menuSubject && menuClass && (() => {
+                      const subjectItem = MESSAGE_MENU.find(s => s.subject === menuSubject)
+                      const classItem = subjectItem?.classes.find(c => c.name === menuClass)
+                      if (!subjectItem || !classItem) return null
+                      return (
+                        <div>
+                          <div className="mb-2 flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setMenuClass(null)}
+                              className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
+                              aria-label="Back to classes"
+                            >
+                              <ChevronLeft className="h-3.5 w-3.5 text-[#354d73]" />
+                            </button>
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              {menuSubject} › {menuClass}
+                            </p>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {classItem.prefixes.map(prefix => (
+                              <button
+                                key={prefix}
+                                type="button"
+                                onClick={() => sendChatMessage(prefix)}
+                                className="w-full rounded-lg border border-border bg-[#F0F6FA] px-3 py-2 text-left text-xs text-[#042230] hover:border-[#354d73] hover:bg-[#354d73]/10 transition-colors"
+                              >
+                                {prefix}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </div>
                 </div>
               </div>

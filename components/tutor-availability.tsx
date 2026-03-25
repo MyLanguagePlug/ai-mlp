@@ -25,16 +25,12 @@ function seededRandom(seed: number): number {
   return x - Math.floor(x)
 }
 
-const ALL_SLOTS = [
-  "8:00", "9:00", "10:00", "11:00",
-  "13:00", "14:00", "15:00", "16:00", "17:00",
-]
+const ALL_SLOTS = Array.from({ length: 24 }, (_, h) =>
+  `${String(h).padStart(2, "0")}:00`,
+)
 
 /** Maximum number of weeks ahead a student can browse. */
 const MAX_WEEK_OFFSET = 3
-
-/** Maximum number of time slots shown per day before a "+N more" indicator. */
-const MAX_VISIBLE_SLOTS = 3
 
 /** Returns sorted available time slot strings for a given tutor + day. */
 function getDaySlots(tutorId: string, date: Date): string[] {
@@ -49,7 +45,7 @@ function getDaySlots(tutorId: string, date: Date): string[] {
     date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
   const seed = numId * 1_000_000 + dateKey
 
-  const count = Math.floor(seededRandom(seed) * 5) // 0–4 slots per day
+  const count = Math.floor(seededRandom(seed) * 9) // 0–8 slots per day
   const slots: string[] = []
   for (let i = 0; i < count; i++) {
     const idx = Math.floor(seededRandom(seed + i * 23 + 11) * ALL_SLOTS.length)
@@ -103,8 +99,6 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
         {days.map((day) => {
           const slots = getDaySlots(tutorId, day)
           const today = isToday(day)
-          const visible = slots.slice(0, MAX_VISIBLE_SLOTS)
-          const extra = slots.length - visible.length
 
           return (
             <div key={day.toISOString()} className="flex flex-col items-center gap-1">
@@ -133,37 +127,33 @@ export function TutorAvailability({ tutorId }: TutorAvailabilityProps) {
                 </p>
               </div>
 
-              {/* Time slots */}
-              {visible.length > 0 ? (
-                visible.map((slot) => {
-                  const key = `${format(day, "yyyy-MM-dd")}-${slot}`
-                  const selected = selectedSlot === key
-                  return (
-                    <button
-                      key={slot}
-                      onClick={() => setSelectedSlot(selected ? null : key)}
-                      className={cn(
-                        "w-full rounded py-1 text-[10px] font-medium leading-none transition-colors",
-                        selected
-                          ? "bg-(--navy) text-white"
-                          : "bg-(--light-blue) text-(--navy) hover:bg-(--navy) hover:text-white",
-                      )}
-                    >
-                      {slot}
-                    </button>
-                  )
-                })
-              ) : (
-                <p className="py-1 text-center text-[10px] leading-none text-muted-foreground">
-                  —
-                </p>
-              )}
-
-              {extra > 0 && (
-                <span className="text-[10px] font-medium leading-none text-primary">
-                  +{extra}
-                </span>
-              )}
+              {/* All hour tabs – scrollable column */}
+              <div className="flex w-full flex-col gap-0.5 overflow-y-auto max-h-[260px]">
+                {slots.length > 0 ? (
+                  slots.map((slot) => {
+                    const key = `${format(day, "yyyy-MM-dd")}-${slot}`
+                    const selected = selectedSlot === key
+                    return (
+                      <button
+                        key={slot}
+                        onClick={() => setSelectedSlot(selected ? null : key)}
+                        className={cn(
+                          "w-full rounded py-1 text-[10px] font-medium leading-none transition-colors",
+                          selected
+                            ? "bg-(--navy) text-white"
+                            : "bg-(--light-blue) text-(--navy) hover:bg-(--navy) hover:text-white",
+                        )}
+                      >
+                        {slot}
+                      </button>
+                    )
+                  })
+                ) : (
+                  <p className="py-1 text-center text-[10px] leading-none text-muted-foreground">
+                    —
+                  </p>
+                )}
+              </div>
             </div>
           )
         })}
