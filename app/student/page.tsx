@@ -47,6 +47,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { TutorCard } from "@/components/tutor-card"
+import { BookTrialModal } from "@/components/book-trial-modal"
+import { TutorProfileModal } from "@/components/tutor-profile-modal"
 
 const ALL_LANGUAGES = "All languages"
 
@@ -788,6 +790,10 @@ function StudentDashboardInner() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
+  // ── Tutor modal state ─────────────────────────────────────────────────────
+  const [bookTrialTutor, setBookTrialTutor] = useState<typeof tutors[0] | null>(null)
+  const [profileTutor, setProfileTutor] = useState<typeof tutors[0] | null>(null)
+
   // ── Filter state ──────────────────────────────────────────────────────────
   const [languageFilter, setLanguageFilter]     = useState("all")
   const [priceFilter, setPriceFilter]           = useState("any")
@@ -1218,7 +1224,18 @@ function StudentDashboardInner() {
                 ) : (
                   <div className="space-y-4">
                     {sortedFiltered.map((tutor) => (
-                      <TutorCard key={tutor.id} {...tutor} />
+                      <TutorCard
+                        key={tutor.id}
+                        {...tutor}
+                        onBookTrial={(id) => {
+                          const t = tutors.find(x => x.id === id) ?? null
+                          setBookTrialTutor(t)
+                        }}
+                        onViewProfile={(id) => {
+                          const t = tutors.find(x => x.id === id) ?? null
+                          setProfileTutor(t)
+                        }}
+                      />
                     ))}
                   </div>
                 )}
@@ -1822,6 +1839,26 @@ function StudentDashboardInner() {
         )}
 
       </main>
+
+      {/* ── Modals ──────────────────────────────────────────────────────── */}
+      <BookTrialModal
+        open={bookTrialTutor !== null}
+        onOpenChange={(v) => { if (!v) setBookTrialTutor(null) }}
+        tutor={bookTrialTutor}
+      />
+      <TutorProfileModal
+        open={profileTutor !== null}
+        onOpenChange={(v) => { if (!v) setProfileTutor(null) }}
+        tutor={profileTutor}
+        onBookTrial={() => {
+          setBookTrialTutor(profileTutor)
+          setProfileTutor(null)
+        }}
+        onMessage={() => {
+          setProfileTutor(null)
+          setActiveTab("messages")
+        }}
+      />
     </div>
   )
 }

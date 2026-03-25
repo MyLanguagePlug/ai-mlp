@@ -20,6 +20,9 @@ export interface TutorCardProps {
   isVerified?: boolean
   isNativeSpeaker?: boolean
   bio: string
+  offersTrialLesson?: boolean
+  onBookTrial?: (id: string) => void
+  onViewProfile?: (id: string) => void
 }
 
 export function TutorCard({
@@ -36,6 +39,9 @@ export function TutorCard({
   isVerified = false,
   isNativeSpeaker = false,
   bio,
+  offersTrialLesson,
+  onBookTrial,
+  onViewProfile,
 }: TutorCardProps) {
   return (
     <div className="group flex flex-col md:flex-row gap-2">
@@ -122,12 +128,24 @@ export function TutorCard({
                   <span className="text-sm text-muted-foreground"> / hour</span>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/tutors/${id}`}>View Profile</Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href={`/tutors/${id}/book`}>Book Trial</Link>
-                  </Button>
+                  {onViewProfile ? (
+                    <Button variant="outline" size="sm" onClick={() => onViewProfile(id)}>
+                      View Profile
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/tutors/${id}`}>View Profile</Link>
+                    </Button>
+                  )}
+                  {onBookTrial ? (
+                    <Button size="sm" onClick={() => onBookTrial(id)}>
+                      Book Trial
+                    </Button>
+                  ) : (
+                    <Button size="sm" asChild>
+                      <Link href={`/tutors/${id}/book`}>Book Trial</Link>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
