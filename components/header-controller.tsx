@@ -14,7 +14,7 @@ export function HeaderController() {
   const pathname = usePathname()
 
   let variant: "minimal" | "student" | "tutor" | undefined
-  if (pathname === "/login") variant = "minimal"
+  if (pathname === "/login" || pathname === "/tutor/login") variant = "minimal"
   else if (pathname.startsWith("/student")) variant = "student"
   else if (pathname.startsWith("/tutor")) variant = "tutor"
 
