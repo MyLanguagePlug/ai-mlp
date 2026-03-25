@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import {
   Search,
   Heart,
@@ -712,7 +713,14 @@ function HelpFaqItem({ question, answer }: { question: string; answer: string })
 }
 
 export default function StudentDashboard() {
-  const [activeTab, setActiveTab] = useState<TabId>("home")
+  const searchParams = useSearchParams()
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const tab = searchParams.get("tab")
+    if (tab === "messages" || tab === "lessons" || tab === "saved" || tab === "refer" || tab === "help") {
+      return tab
+    }
+    return "home"
+  })
   const [conversations] = useState<ConversationItem[]>(DEMO_CONVERSATIONS)
   const [savedTutors, setSavedTutors] = useState<SavedTutor[]>(DEMO_SAVED_TUTORS)
   const [activeChatId, setActiveChatId] = useState<number>(1)

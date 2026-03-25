@@ -65,13 +65,13 @@ const DEMO_CONVERSATIONS: ConversationItem[] = [
 // ── Nav links for profile dropdown (links to /student) ────────────────────────
 
 const profileNavLinks = [
-  { href: "/student", icon: Home,        label: "Home"          },
-  { href: "/student", icon: MessageCircle, label: "Messages"    },
-  { href: "/student", icon: BookOpen,    label: "My lessons"    },
-  { href: "/student", icon: Heart,       label: "Saved tutors"  },
-  { href: "/student", icon: Gift,        label: "Refer a friend"},
-  { href: "/student/settings", icon: Settings, label: "Settings" },
-  { href: "/student", icon: HelpCircle,  label: "Help"          },
+  { href: "/student",                   icon: Home,          label: "Home"          },
+  { href: "/student?tab=messages",      icon: MessageCircle, label: "Messages"      },
+  { href: "/student?tab=lessons",       icon: BookOpen,      label: "My lessons"    },
+  { href: "/student?tab=saved",         icon: Heart,         label: "Saved tutors"  },
+  { href: "/student?tab=refer",         icon: Gift,          label: "Refer a friend"},
+  { href: "/student/settings",          icon: Settings,      label: "Settings"      },
+  { href: "/student?tab=help",          icon: HelpCircle,    label: "Help"          },
 ]
 
 // ── Component ─────────────────────────────────────────────────────────────────
