@@ -439,7 +439,6 @@ function HomePanel() {
                     <SelectItem value="all">All types</SelectItem>
                     <SelectItem value="trial">Trial</SelectItem>
                     <SelectItem value="regular">Regular</SelectItem>
-                    <SelectItem value="intensive">Intensive</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -455,6 +454,8 @@ function HomePanel() {
                   </SelectContent>
                 </Select>
               </div>
+
+              <h3 className="mb-3 text-sm font-semibold text-[#042230]">Upcoming lessons</h3>
 
               {filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">

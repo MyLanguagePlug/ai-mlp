@@ -166,8 +166,32 @@ export function Header({ variant }: HeaderProps = {}) {
             </>
           )}
 
-          {/* Student variant: show student action icons instead of auth buttons */}
-          {isStudent && <StudentHeaderActions />}
+          {/* Student variant: show currency selector + student action icons */}
+          {isStudent && (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground hover:text-foreground">
+                    <DollarSign className="h-4 w-4" />
+                    <span className="hidden lg:inline">{selectedCurrency.code}</span>
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {currencies.map((currency) => (
+                    <DropdownMenuItem
+                      key={currency.code}
+                      onClick={() => setSelectedCurrency(currency)}
+                      className={selectedCurrency.code === currency.code ? "bg-muted" : ""}
+                    >
+                      {currency.symbol} {currency.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <StudentHeaderActions />
+            </>
+          )}
 
           {/* Tutor variant: currency selector + tutor action icons */}
           {isTutor && (
