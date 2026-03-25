@@ -65,7 +65,7 @@ function ForgotPasswordModal({ onClose }: { onClose: () => void }) {
               Forgot your password?
             </h2>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              No worries! Enter the email address linked to your tutor account and we&apos;ll
+              No worries! Enter the email address linked to your account and we&apos;ll
               send you a link to reset your password.
             </p>
 
@@ -242,24 +242,15 @@ export default function TutorLoginPage() {
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-12 lg:px-16">
         <div className="w-full max-w-md">
 
-          {/* Back link */}
-          <Link
-            href="/become-tutor"
-            className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-[#354d73]"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to tutor info
-          </Link>
-
           {/* Heading */}
           <div className="mb-8 text-left">
             <h1 className="text-3xl font-bold text-foreground">
-              {mode === "login" ? "Welcome back, Tutor" : "Create your tutor account"}
+              {mode === "login" ? "Welcome back" : "Create your account"}
             </h1>
             <p className="mt-2 text-base text-muted-foreground">
               {mode === "login"
-                ? "Log in to manage your lessons and students"
-                : "Start teaching with students worldwide — it's free to join"}
+                ? "Log in to continue your language learning journey"
+                : "Start learning with native speakers today — it's free"}
             </p>
           </div>
 
@@ -317,9 +308,9 @@ export default function TutorLoginPage() {
           >
             {mode === "signup" && (
               <div className="space-y-2">
-                <Label htmlFor="tutor-full-name">Full name</Label>
+                <Label htmlFor="login-full-name">Full name</Label>
                 <Input
-                  id="tutor-full-name"
+                  id="login-full-name"
                   type="text"
                   placeholder="Enter your full name"
                   autoComplete="name"
@@ -331,9 +322,9 @@ export default function TutorLoginPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="tutor-email">Email address</Label>
+              <Label htmlFor="login-email">Email address</Label>
               <Input
-                id="tutor-email"
+                id="login-email"
                 type="email"
                 placeholder="Enter your email"
                 autoComplete="email"
@@ -345,7 +336,7 @@ export default function TutorLoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="tutor-password">Password</Label>
+                <Label htmlFor="login-password">Password</Label>
                 {mode === "login" && (
                   <button
                     type="button"
@@ -358,7 +349,7 @@ export default function TutorLoginPage() {
               </div>
               <div className="relative">
                 <Input
-                  id="tutor-password"
+                  id="login-password"
                   type={showPassword ? "text" : "password"}
                   placeholder={mode === "login" ? "Enter your password" : "Create a password"}
                   autoComplete={mode === "login" ? "current-password" : "new-password"}
@@ -381,8 +372,8 @@ export default function TutorLoginPage() {
               </div>
             </div>
 
-            <Button type="submit" className="h-12 w-full bg-[#042230] text-base font-semibold hover:bg-[#042230]/90">
-              {mode === "login" ? "Log In" : "Create Tutor Account"}
+            <Button type="submit" className="h-12 w-full text-base font-semibold">
+              {mode === "login" ? "Log In" : "Create Account"}
             </Button>
           </form>
 
@@ -400,13 +391,13 @@ export default function TutorLoginPage() {
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {mode === "login" ? (
               <>
-                New to My Language Plug?{" "}
+                Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   className="font-semibold text-primary hover:underline focus-visible:outline-none"
                   onClick={() => switchMode("signup")}
                 >
-                  Create a tutor account
+                  Sign up free
                 </button>
               </>
             ) : (
@@ -421,14 +412,6 @@ export default function TutorLoginPage() {
                 </button>
               </>
             )}
-          </p>
-
-          {/* ── Student login link ─────────────────────────── */}
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Looking to learn instead?{" "}
-            <Link href="/login" className="font-medium text-[#354d73] hover:underline">
-              Student login
-            </Link>
           </p>
         </div>
       </div>
