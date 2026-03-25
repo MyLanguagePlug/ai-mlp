@@ -860,16 +860,7 @@ export default function StudentDashboard() {
             Welcome back, Jane! 👋
           </p>
 
-          {/* Search (inline in top bar) */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search tutors or languages…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9 bg-[#F0F6FA] border-transparent focus:border-[#354d73]"
-            />
-          </div>
+
         </div>
       </div>
 
@@ -1054,6 +1045,17 @@ export default function StudentDashboard() {
                   </Select>
                 </div>
               </div>
+            </div>
+
+            {/* Search bar below filters */}
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search tutors or languages…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 h-10 bg-white border-[#354d73]/25 focus:border-[#354d73]"
+              />
             </div>
 
             {/* Results count */}
