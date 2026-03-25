@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import {
@@ -721,6 +721,15 @@ export default function StudentDashboard() {
     }
     return "home"
   })
+
+  useEffect(() => {
+    const tab = searchParams.get("tab")
+    if (tab === "messages" || tab === "lessons" || tab === "saved" || tab === "refer" || tab === "help") {
+      setActiveTab(tab)
+    } else {
+      setActiveTab("home")
+    }
+  }, [searchParams])
   const [conversations] = useState<ConversationItem[]>(DEMO_CONVERSATIONS)
   const [savedTutors, setSavedTutors] = useState<SavedTutor[]>(DEMO_SAVED_TUTORS)
   const [activeChatId, setActiveChatId] = useState<number>(1)
