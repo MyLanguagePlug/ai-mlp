@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -525,6 +526,7 @@ function AccountTab() {
   const [twoFA, setTwoFA] = useState(false)
   const [saved, setSaved] = useState(false)
   const [deleteInput, setDeleteInput] = useState("")
+  const [accountActive, setAccountActive] = useState(true)
 
   const update = (e: React.ChangeEvent<HTMLInputElement>) =>
     setPasswords(p => ({ ...p, [e.target.name]: e.target.value }))
@@ -618,6 +620,33 @@ function AccountTab() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Account Status */}
+      <div className="rounded-xl border border-orange-200 bg-orange-50 p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-orange-800">Account Status</p>
+            <p className="text-xs text-orange-700 mt-1">
+              {accountActive
+                ? "Your account is active and visible to students."
+                : "Your account is inactive and hidden from students."}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-xs font-medium ${accountActive ? "text-orange-400" : "text-orange-700"}`}>
+              Inactive
+            </span>
+            <Switch
+              checked={accountActive}
+              onCheckedChange={setAccountActive}
+              className="data-[state=checked]:bg-orange-500"
+            />
+            <span className={`text-xs font-medium ${accountActive ? "text-orange-700" : "text-orange-400"}`}>
+              Active
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* WARNING zone */}
