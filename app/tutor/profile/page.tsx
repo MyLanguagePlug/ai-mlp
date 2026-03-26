@@ -17,6 +17,7 @@ import {
   Upload,
   Play,
   X,
+  Plus,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,7 +39,8 @@ const INITIAL = {
     "I'm a dedicated language tutor specialising in English and Portuguese. My lessons are designed around your goals — whether that's conversational fluency, business communication, or exam preparation. I use a communicative approach that keeps things engaging and practical from day one.",
   languages:    ["English", "Portuguese", "Spanish"],
   specialties:  ["Business English", "IELTS Prep", "Conversation Practice", "Grammar"],
-  education:    "M.A. Applied Linguistics — University of Miami",
+  educations:   ["M.A. Applied Linguistics — University of Miami"],
+  certifications: ["CELTA", "TEFL"],
   experience:   "8 years",
   totalStudents: 214,
   avgRating:    4.9,
@@ -108,6 +110,71 @@ function TagToggle({
   )
 }
 
+// ── Multi-entry field ─────────────────────────────────────────────────────────
+
+function MultiEntryField({
+  label,
+  hint,
+  values,
+  onChange,
+  placeholder,
+  maxEntries = 5,
+}: {
+  label: string
+  hint?: string
+  values: string[]
+  onChange: (values: string[]) => void
+  placeholder?: string
+  maxEntries?: number
+}) {
+  const addEntry = () => {
+    if (values.length < maxEntries) onChange([...values, ""])
+  }
+  const updateEntry = (i: number, v: string) => {
+    const next = [...values]; next[i] = v; onChange(next)
+  }
+  const removeEntry = (i: number) => onChange(values.filter((_, idx) => idx !== i))
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-[#042230]">{label}</label>
+      {hint && <p className="text-xs text-muted-foreground -mt-1">{hint}</p>}
+      <div className="flex flex-col gap-2">
+        {values.map((val, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <Input
+              value={val}
+              onChange={e => updateEntry(i, e.target.value)}
+              placeholder={placeholder}
+              className="flex-1"
+            />
+            {values.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeEntry(i)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+                aria-label="Remove entry"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        ))}
+        {values.length < maxEntries && (
+          <button
+            type="button"
+            onClick={addEntry}
+            className="flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add {label.toLowerCase()}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function TutorProfilePage() {
@@ -115,6 +182,8 @@ export default function TutorProfilePage() {
   const [saved, setSaved]             = useState(false)
   const [languages, setLanguages]     = useState(INITIAL.languages)
   const [specialties, setSpecialties] = useState(INITIAL.specialties)
+  const [educations, setEducations]   = useState(INITIAL.educations)
+  const [certifications, setCertifications] = useState(INITIAL.certifications)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
   const [videoName, setVideoName]       = useState<string | null>(null)
@@ -411,17 +480,26 @@ export default function TutorProfilePage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#042230]">
-                    <BookOpen className="mb-0.5 inline h-3.5 w-3.5 mr-1" />
-                    Education
-                  </label>
-                  <Input name="education" value={form.education} onChange={handleChange} />
-                </div>
-                <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-[#042230]">Years of experience</label>
                   <Input name="experience" value={form.experience} onChange={handleChange} />
                 </div>
               </div>
+              <MultiEntryField
+                label="Education"
+                hint="Add each qualification on a separate line"
+                values={educations}
+                onChange={setEducations}
+                placeholder="e.g. M.A. Applied Linguistics — University of Miami"
+                maxEntries={4}
+              />
+              <MultiEntryField
+                label="Certifications"
+                hint="e.g. CELTA, TEFL, DELTA — add each separately"
+                values={certifications}
+                onChange={setCertifications}
+                placeholder="e.g. CELTA"
+                maxEntries={5}
+              />
             </div>
           </section>
 

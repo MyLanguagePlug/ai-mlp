@@ -19,6 +19,8 @@ import {
   CreditCard,
   Trash2,
   AlertTriangle,
+  Plus,
+  X,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -129,6 +131,71 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   )
 }
 
+// ── Multi-entry field ────────────────────────────────────────────────────────
+
+function MultiEntryField({
+  label,
+  hint,
+  values,
+  onChange,
+  placeholder,
+  maxEntries = 5,
+}: {
+  label: string
+  hint?: string
+  values: string[]
+  onChange: (values: string[]) => void
+  placeholder?: string
+  maxEntries?: number
+}) {
+  const addEntry = () => {
+    if (values.length < maxEntries) onChange([...values, ""])
+  }
+  const updateEntry = (i: number, v: string) => {
+    const next = [...values]; next[i] = v; onChange(next)
+  }
+  const removeEntry = (i: number) => onChange(values.filter((_, idx) => idx !== i))
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-[#042230]">{label}</label>
+      {hint && <p className="text-xs text-muted-foreground -mt-1">{hint}</p>}
+      <div className="flex flex-col gap-2">
+        {values.map((val, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <Input
+              value={val}
+              onChange={e => updateEntry(i, e.target.value)}
+              placeholder={placeholder}
+              className="flex-1"
+            />
+            {values.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeEntry(i)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+                aria-label="Remove entry"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        ))}
+        {values.length < maxEntries && (
+          <button
+            type="button"
+            onClick={addEntry}
+            className="flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add {label.toLowerCase()}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ── TABS ─────────────────────────────────────────────────────────────────────
 
 // 1. Profile Information — redirects to the full profile page
@@ -150,7 +217,9 @@ function TeachingTab() {
   const [languages, setLanguages] = useState(["English", "Portuguese", "Spanish"])
   const [specialties, setSpecialties] = useState(["Business English", "IELTS Prep", "Conversation Practice"])
   const [lessonTypes, setLessonTypes] = useState(["Trial", "Regular"])
-  const [form, setForm] = useState({ education: "M.A. Applied Linguistics — University of Miami", experience: "8 years", certificates: "CELTA, TEFL" })
+  const [educations, setEducations] = useState(["M.A. Applied Linguistics — University of Miami"])
+  const [certifications, setCertifications] = useState(["CELTA", "TEFL"])
+  const [form, setForm] = useState({ experience: "8 years" })
   const [saved, setSaved] = useState(false)
 
   const update = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -188,10 +257,26 @@ function TeachingTab() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Education"><Input name="education" value={form.education} onChange={update} /></Field>
         <Field label="Years of experience"><Input name="experience" value={form.experience} onChange={update} /></Field>
-        <Field label="Certifications" hint="e.g. CELTA, TEFL, DELTA"><Input name="certificates" value={form.certificates} onChange={update} /></Field>
       </div>
+
+      <MultiEntryField
+        label="Education"
+        hint="Add each qualification on a separate line"
+        values={educations}
+        onChange={v => { setEducations(v); setSaved(false) }}
+        placeholder="e.g. M.A. Applied Linguistics — University of Miami"
+        maxEntries={4}
+      />
+
+      <MultiEntryField
+        label="Certifications"
+        hint="e.g. CELTA, TEFL, DELTA — add each separately"
+        values={certifications}
+        onChange={v => { setCertifications(v); setSaved(false) }}
+        placeholder="e.g. CELTA"
+        maxEntries={5}
+      />
 
       <SaveBanner saved={saved} onSave={() => { setSaved(true); setTimeout(() => setSaved(false), 3000) }} />
     </div>
