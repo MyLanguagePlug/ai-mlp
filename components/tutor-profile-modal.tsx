@@ -89,7 +89,7 @@ export function TutorProfileModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         {/* Hero banner */}
         <div className="relative h-36 w-full bg-gradient-to-br from-[#042230] to-[#0a4a6e]">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.4)_0%,transparent_60%)]" />
@@ -109,7 +109,7 @@ export function TutorProfileModal({
             </div>
             {/* Price + CTAs */}
             <div className="flex flex-col items-end gap-2 pb-1">
-              <div className="text-right">
+              <div className="text-right whitespace-nowrap">
                 <span className="text-2xl font-bold text-[#042230]">${tutor.hourlyRate}</span>
                 <span className="text-sm text-muted-foreground"> / hour</span>
               </div>
