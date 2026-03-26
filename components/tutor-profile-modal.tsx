@@ -110,8 +110,8 @@ export function TutorProfileModal({
             {/* Price + CTAs */}
             <div className="flex flex-col items-end gap-2 pb-1">
               <div className="text-right whitespace-nowrap">
-                <span className="text-2xl font-bold text-[#042230]">${tutor.hourlyRate}</span>
-                <span className="text-sm text-muted-foreground"> / hour</span>
+                <span className="text-2xl font-bold text-white">${tutor.hourlyRate}</span>
+                <span className="text-sm text-white/75"> / hour</span>
               </div>
               <div className="flex gap-2">
                 {onMessage && (
