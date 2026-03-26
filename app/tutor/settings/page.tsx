@@ -36,6 +36,11 @@ interface Tab {
   icon: React.ElementType
 }
 
+interface LangEntry {
+  language: string
+  price: string
+}
+
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const TABS: Tab[] = [
@@ -285,26 +290,37 @@ function TeachingTab() {
 
 // 3. Pricing and Rates
 function PricingTab() {
-  const LANGUAGES = ["English", "Portuguese", "Spanish", "French", "German", "Italian", "Japanese", "Mandarin", "Arabic", "Korean"]
+  const ALL_LANG_OPTIONS = ["English", "Portuguese", "Spanish", "French", "German", "Italian", "Japanese", "Mandarin", "Arabic", "Korean"]
 
   const [form, setForm] = useState({ trial: "15", regular: "40", currency: "USD", minNotice: "24", maxAdvance: "30" })
   const [saved, setSaved] = useState(false)
-  // Language-based pricing: map from language → price per hr
-  const [langPrices, setLangPrices] = useState<Record<string, string>>({
-    English:    "40",
-    Portuguese: "35",
-    Spanish:    "38",
-  })
-  const [selectedLang, setSelectedLang] = useState<string>("English")
+  // Language-based pricing: one entry per language taught, pre-populated from teaching languages
+  const [langEntries, setLangEntries] = useState<LangEntry[]>([
+    { language: "English",    price: "40" },
+    { language: "Portuguese", price: "35" },
+    { language: "Spanish",    price: "38" },
+  ])
 
   const update = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSaved(false)
     setForm(p => ({ ...p, [e.target.name]: e.target.value }))
   }
 
-  const updateLangPrice = (price: string) => {
+  const updateLangEntry = (i: number, key: keyof LangEntry, val: string) => {
     setSaved(false)
-    setLangPrices(p => ({ ...p, [selectedLang]: price }))
+    setLangEntries(prev => prev.map((e, idx) => idx === i ? { ...e, [key]: val } : e))
+  }
+
+  const removeLangEntry = (i: number) => {
+    setSaved(false)
+    setLangEntries(prev => prev.filter((_, idx) => idx !== i))
+  }
+
+  const addLangEntry = () => {
+    setSaved(false)
+    const used = new Set(langEntries.map(e => e.language))
+    const next = ALL_LANG_OPTIONS.find(l => !used.has(l))
+    if (next) setLangEntries(prev => [...prev, { language: next, price: "" }])
   }
 
   const rate = (label: string, name: keyof typeof form, hint: string) => (
@@ -343,48 +359,60 @@ function PricingTab() {
       <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
         <p className="mb-1 text-sm font-semibold text-[#042230]">Price by language taught</p>
         <p className="mb-4 text-xs text-muted-foreground">Set a different hourly rate for each language you teach.</p>
-        <div className="flex items-end gap-3">
-          <div className="flex-1 flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#042230]">Language</label>
-            <select
-              value={selectedLang}
-              onChange={e => setSelectedLang(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {LANGUAGES.map(l => <option key={l}>{l}</option>)}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#042230]">Price per hour ($)</label>
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-medium text-muted-foreground">$</span>
-              <input
-                type="number"
-                min="1"
-                value={langPrices[selectedLang] ?? ""}
-                onChange={e => updateLangPrice(e.target.value)}
-                placeholder="0"
-                className="w-24 rounded-md border border-input bg-background px-3 py-1.5 text-sm font-semibold text-[#042230] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
-              />
-              <span className="text-xs text-muted-foreground">/ hr</span>
-            </div>
-          </div>
+        <div className="mb-2 flex items-center gap-3 px-0.5">
+          <p className="flex-1 text-xs font-medium text-[#042230]">Language</p>
+          <p className="w-40 text-xs font-medium text-[#042230]">Price per hour ($)</p>
+          <div className="w-9" />
         </div>
-        {/* Preview of all set prices */}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {Object.entries(langPrices).map(([lang, price]) => Number(price) > 0 ? (
-            <span
-              key={lang}
-              className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium ${
-                lang === selectedLang
-                  ? "border-[#354d73] bg-[#354d73] text-white"
-                  : "border-border bg-[#F7F9FB] text-[#042230]"
-              }`}
-            >
-              {lang} · ${price}/hr
-            </span>
-          ) : null)}
+        <div className="flex flex-col gap-2">
+          {langEntries.map((entry, i) => {
+            const used = new Set(langEntries.map(e => e.language))
+            const options = ALL_LANG_OPTIONS.filter(l => l === entry.language || !used.has(l))
+            return (
+              <div key={i} className="flex items-center gap-3">
+                <select
+                  value={entry.language}
+                  onChange={e => updateLangEntry(i, "language", e.target.value)}
+                  className="flex-1 h-9 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {options.map(l => <option key={l}>{l}</option>)}
+                </select>
+                <div className="flex w-40 items-center gap-1.5">
+                  <span className="text-sm font-medium text-muted-foreground">$</span>
+                  <input
+                    type="number"
+                    min="1"
+                    value={entry.price}
+                    onChange={e => updateLangEntry(i, "price", e.target.value)}
+                    placeholder="0"
+                    className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm font-semibold text-[#042230] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+                  />
+                  <span className="text-xs text-muted-foreground">/ hr</span>
+                </div>
+                {langEntries.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeLangEntry(i)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground hover:border-red-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+                    aria-label="Remove language"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            )
+          })}
         </div>
+        {langEntries.length < ALL_LANG_OPTIONS.length && (
+          <button
+            type="button"
+            onClick={addLangEntry}
+            className="mt-3 flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add language
+          </button>
+        )}
       </div>
 
       {/* Booking window */}
