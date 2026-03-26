@@ -287,10 +287,19 @@ export default function TutorProfilePage() {
               </h2>
               <p className="mt-0.5 text-sm text-muted-foreground">{form.tagline}</p>
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-                <Badge variant="secondary" className="gap-1 text-xs">
-                  <Globe className="h-3 w-3" />
-                  {languages[0]}
-                </Badge>
+                {languages.length > 0 ? (
+                  languages.map((lang, i) => (
+                    <Badge key={`${lang}-${i}`} variant="secondary" className="gap-1 text-xs">
+                      {i === 0 && <Globe className="h-3 w-3" />}
+                      {lang}
+                    </Badge>
+                  ))
+                ) : (
+                  <Badge variant="secondary" className="gap-1 text-xs">
+                    <Globe className="h-3 w-3" />
+                    No languages selected
+                  </Badge>
+                )}
                 <Badge variant="secondary" className="gap-1 text-xs">
                   <MapPin className="h-3 w-3" />
                   {form.city}
