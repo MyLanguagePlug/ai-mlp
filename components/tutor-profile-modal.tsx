@@ -89,53 +89,26 @@ export function TutorProfileModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
         {/* Hero banner */}
-        <div className="relative h-32 w-full bg-gradient-to-br from-[#042230] to-[#0a4a6e]">
+        <div className="relative h-36 w-full bg-gradient-to-br from-[#042230] to-[#0a4a6e]">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.4)_0%,transparent_60%)]" />
         </div>
 
         {/* Avatar + core info */}
-        <div className="px-6 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-10 mb-4">
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-4 border-white shadow-lg">
+        <div className="px-8 pb-6">
+          {/* Top row: avatar left, price+CTAs right */}
+          <div className="flex items-end justify-between -mt-12 mb-4">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border-4 border-white shadow-lg">
               <Image src={tutor.image} alt={tutor.name} fill className="object-cover" />
               {tutor.isVerified && (
                 <div className="absolute bottom-1 right-1 rounded-full bg-white p-0.5 shadow">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-[#042230]" />
+                  <CheckCircle2 className="h-4 w-4 text-[#042230]" />
                 </div>
               )}
             </div>
-            <div className="flex-1 min-w-0 pt-4 sm:pt-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl font-bold text-[#042230]">{tutor.name}</h2>
-                {tutor.isNativeSpeaker && (
-                  <Badge variant="secondary" className="text-xs">Native Speaker</Badge>
-                )}
-                {tutor.offersTrialLesson && (
-                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
-                    Trial Available
-                  </Badge>
-                )}
-              </div>
-              <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Globe className="h-3.5 w-3.5" />
-                  {tutor.country}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                  <strong className="text-foreground">{tutor.rating.toFixed(1)}</strong>
-                  <span>({tutor.reviews} reviews)</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
-                  {tutor.lessonsCompleted.toLocaleString()} lessons
-                </span>
-              </div>
-            </div>
             {/* Price + CTAs */}
-            <div className="flex flex-col items-end gap-2 shrink-0">
+            <div className="flex flex-col items-end gap-2 pb-1">
               <div className="text-right">
                 <span className="text-2xl font-bold text-[#042230]">${tutor.hourlyRate}</span>
                 <span className="text-sm text-muted-foreground"> / hour</span>
@@ -143,16 +116,46 @@ export function TutorProfileModal({
               <div className="flex gap-2">
                 {onMessage && (
                   <Button variant="outline" size="sm" onClick={onMessage}>
-                    <MessageCircle className="mr-1 h-4 w-4" />
+                    <MessageCircle className="mr-1.5 h-4 w-4" />
                     Message
                   </Button>
                 )}
                 {onBookTrial && (
-                  <Button size="sm" className="bg-[#042230] hover:bg-[#042230]/90" onClick={onBookTrial}>
+                  <Button size="sm" className="bg-[#042230] hover:bg-[#042230]/90 px-5" onClick={onBookTrial}>
                     Book Trial
                   </Button>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Name + badges + meta */}
+          <div className="mb-4">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <h2 className="text-2xl font-bold text-[#042230]">{tutor.name}</h2>
+              {tutor.isNativeSpeaker && (
+                <Badge variant="secondary" className="text-xs">Native Speaker</Badge>
+              )}
+              {tutor.offersTrialLesson && (
+                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+                  Trial Available
+                </Badge>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Globe className="h-3.5 w-3.5" />
+                {tutor.country}
+              </span>
+              <span className="flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <strong className="text-foreground">{tutor.rating.toFixed(1)}</strong>
+                <span>({tutor.reviews} reviews)</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                {tutor.lessonsCompleted.toLocaleString()} lessons
+              </span>
             </div>
           </div>
 
