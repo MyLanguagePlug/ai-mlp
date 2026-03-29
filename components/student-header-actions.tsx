@@ -276,14 +276,14 @@ export function StudentHeaderActions() {
 
               {/* Footer */}
               <div className="border-t border-border px-4 py-3">
-                <button
-                  type="button"
+                <Link
+                  href="/student/notifications"
                   onClick={() => setNotifOpen(false)}
                   className="flex w-full items-center justify-center gap-1.5 text-sm font-medium text-[#354d73] hover:underline"
                 >
                   <Bell className="h-3.5 w-3.5" />
                   View all notifications
-                </button>
+                </Link>
               </div>
             </div>
           </>

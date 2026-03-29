@@ -105,7 +105,7 @@ export function TutorHeaderActions() {
             </DropdownMenuItem>
           </div>
           <div className="border-t border-border px-4 py-2">
-            <Link href="/tutor" className="text-xs font-medium text-[#354d73] hover:underline">
+            <Link href="/tutor/notifications" className="text-xs font-medium text-[#354d73] hover:underline">
               View all notifications
             </Link>
           </div>
