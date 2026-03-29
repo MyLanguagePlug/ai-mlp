@@ -591,11 +591,11 @@ function MessagesPanel() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden" style={{ height: "calc(100vh - 14rem)" }}>
+    <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden" style={{ height: "calc(100dvh - 14rem)", minHeight: 420 }}>
       <div className="flex h-full">
         {/* Conversation list */}
         <div className={`${mobileChatOpen ? "hidden" : "flex"} md:flex w-full md:w-72 shrink-0 border-r border-border flex-col`}>
-          <div className="border-b border-border px-4 py-3">
+          <div className="border-b border-border px-4 py-3 flex items-center justify-between">
             <h2 className="text-base font-semibold text-[#042230]">
               Messages
               {totalUnread > 0 && (
@@ -604,6 +604,7 @@ function MessagesPanel() {
                 </span>
               )}
             </h2>
+            <span className="text-[11px] text-muted-foreground" aria-live="polite">{totalUnread > 0 ? `${totalUnread} unread` : "All read"}</span>
           </div>
           <div className="flex-1 overflow-y-auto divide-y divide-border">
             {DEMO_CONVERSATIONS.map(c => (
@@ -611,24 +612,25 @@ function MessagesPanel() {
                 key={c.id}
                 type="button"
                 onClick={() => openConversation(c.id)}
-                className={`w-full px-4 py-3 text-left hover:bg-[#F0F6FA] transition-colors ${activeConv === c.id ? "bg-[#F0F6FA]" : ""}`}
+                className={`w-full px-4 py-3.5 text-left transition-colors border-l-[3px] ${activeConv === c.id ? "bg-[#F0F6FA] border-[#354d73]" : "hover:bg-[#F0F6FA] border-transparent"}`}
               >
-                <div className="flex items-start gap-3">
-                  <div className="relative">
-                    <img src={c.avatar} alt={c.student} className="h-10 w-10 rounded-full object-cover" />
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <img src={c.avatar} alt={c.student} className="h-11 w-11 rounded-full object-cover" />
                     {c.online && (
                       <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="truncate text-sm font-semibold text-[#042230]">{c.student}</p>
-                      <span className="shrink-0 text-[10px] text-muted-foreground">{c.time}</span>
+                    <div className="flex items-center justify-between mb-0.5">
+                      <p className={`truncate text-sm ${activeConv === c.id ? "font-bold text-[#354d73]" : c.unread > 0 ? "font-bold text-[#042230]" : "font-semibold text-[#042230]"}`}>{c.student}</p>
+                      <span className="shrink-0 text-[11px] text-muted-foreground">{c.time}</span>
                     </div>
-                    <p className="truncate text-xs text-muted-foreground">{c.lastMessage}</p>
+                    <p className="text-[11px] font-medium text-[#354d73] mb-0.5">{c.language}</p>
+                    <p className={`truncate text-xs ${c.unread > 0 ? "font-medium text-[#042230]" : "text-muted-foreground"}`}>{c.lastMessage}</p>
                   </div>
                   {c.unread > 0 && (
-                    <span className="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#354d73] text-[9px] font-bold text-white">
+                    <span className="shrink-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#354d73] text-[10px] font-bold text-white px-1">
                       {c.unread}
                     </span>
                   )}
@@ -643,38 +645,38 @@ function MessagesPanel() {
           {conv ? (
             <>
               {/* Chat header */}
-              <div className="flex items-center gap-3 border-b border-border px-5 py-3">
+              <div className="flex items-center gap-3 border-b border-border px-4 py-3">
                 <button
                   type="button"
                   onClick={() => setMobileChatOpen(false)}
-                  className="md:hidden mr-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA]"
+                  className="md:hidden -ml-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA]"
                   aria-label="Back to conversations"
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
                 <img src={conv.avatar} alt={conv.student} className="h-9 w-9 rounded-full object-cover" />
-                <div>
-                  <p className="text-sm font-semibold text-[#042230]">{conv.student}</p>
-                  <p className="text-xs text-muted-foreground">🇬🇧 {conv.language}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-[#042230] truncate">{conv.student}</p>
+                  <p className="text-xs text-muted-foreground">🇬🇧 {conv.language} · <span className={conv.online ? "text-emerald-500" : ""}>{conv.online ? "Online now" : "Offline"}</span></p>
                 </div>
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
                 {messages.map(msg => (
                   <div
                     key={msg.id}
                     className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-sm ${
+                      className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm ${
                         msg.from === "me"
-                          ? "bg-[#354d73] text-white"
-                          : "bg-[#F0F6FA] text-[#042230]"
+                          ? "bg-[#354d73] text-white rounded-br-sm"
+                          : "bg-[#F0F6FA] text-[#042230] rounded-bl-sm"
                       }`}
                     >
                       <p>{msg.text}</p>
-                      <p className={`mt-0.5 text-[10px] ${msg.from === "me" ? "text-white/60" : "text-muted-foreground"}`}>
+                      <p className={`mt-0.5 text-[10px] ${msg.from === "me" ? "text-white/60 text-right" : "text-muted-foreground"}`}>
                         {msg.time}
                       </p>
                     </div>

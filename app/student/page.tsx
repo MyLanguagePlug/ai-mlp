@@ -35,6 +35,7 @@ import {
   Trash2,
   ChevronRight,
   ChevronLeft,
+  ArrowLeft,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -784,6 +785,7 @@ function StudentDashboardInner() {
   const [chatThreads, setChatThreads] = useState<ChatThread[]>(DEMO_CHAT_THREADS)
   const [menuSubject, setMenuSubject] = useState<string | null>(null)
   const [menuClass, setMenuClass] = useState<string | null>(null)
+  const [mobileChatOpen, setMobileChatOpen] = useState(false)
   const [copiedCode, setCopiedCode] = useState(false)
   const [search, setSearch] = useState("")
   const [helpSearch, setHelpSearch] = useState("")
@@ -887,6 +889,14 @@ function StudentDashboardInner() {
   // ── Chat helpers ──────────────────────────────────────────────────────────
   const activeThread = chatThreads.find(t => t.convId === activeChatId)
   const activeConv   = conversations.find(c => c.id === activeChatId)
+  const totalUnread  = conversations.reduce((s, c) => s + c.unread, 0)
+
+  function openConversation(id: number) {
+    setActiveChatId(id)
+    setMobileChatOpen(true)
+    setMenuSubject(null)
+    setMenuClass(null)
+  }
 
   function sendChatMessage(prefixText?: string) {
     const text = (prefixText ?? chatInput).trim()
@@ -1247,17 +1257,23 @@ function StudentDashboardInner() {
         {/* ════════════════ MESSAGES tab ════════════════ */}
         {activeTab === "messages" && (
           <div>
-            <div className="mb-6">
+            {/* Header – hidden when mobile chat is open to maximise screen space */}
+            <div className={`mb-4 ${mobileChatOpen ? "hidden sm:block" : ""}`}>
               <h1 className="text-2xl font-bold text-[#042230] sm:text-3xl">Messages</h1>
               <p className="mt-1 text-muted-foreground">Your conversations with tutors</p>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm" style={{ minHeight: 520 }}>
-              <div className="flex h-full" style={{ minHeight: 520 }}>
 
-                {/* Conversation list */}
-                <div className="w-72 shrink-0 border-r border-border flex flex-col">
-                  <div className="px-4 py-3 border-b border-border">
+            <div
+              className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm"
+              style={{ height: "calc(100dvh - 13rem)", minHeight: 420 }}
+            >
+              <div className="flex h-full">
+
+                {/* ── Conversation list (full-width on mobile, fixed sidebar on md+) ── */}
+                <div className={`${mobileChatOpen ? "hidden" : "flex"} md:flex w-full md:w-72 shrink-0 border-r border-border flex-col`}>
+                  <div className="px-4 py-3 border-b border-border flex items-center justify-between">
                     <p className="text-xs font-bold uppercase tracking-wider text-[#354d73]">Conversations</p>
+                    <span className="text-[11px] text-muted-foreground" aria-live="polite">{totalUnread > 0 ? `${totalUnread} unread` : "All read"}</span>
                   </div>
                   <div className="flex-1 overflow-y-auto divide-y divide-border">
                     {conversations.map(conv => {
@@ -1266,28 +1282,28 @@ function StudentDashboardInner() {
                         <button
                           key={conv.id}
                           type="button"
-                          onClick={() => setActiveChatId(conv.id)}
-                          className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors ${isActive ? "bg-[#354d73]/8 border-l-2 border-[#354d73]" : "hover:bg-[#F0F6FA]"}`}
+                          onClick={() => openConversation(conv.id)}
+                          className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors ${isActive ? "bg-[#354d73]/8 border-l-[3px] border-[#354d73]" : "hover:bg-[#F0F6FA] border-l-[3px] border-transparent"}`}
                         >
-                          <div className="relative mt-0.5 shrink-0">
+                          <div className="relative shrink-0">
                             <img
                               src={conv.avatar}
                               alt={conv.tutor}
-                              className="h-10 w-10 rounded-full object-cover bg-[#F0F6FA]"
+                              className="h-11 w-11 rounded-full object-cover bg-[#F0F6FA]"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
                             />
                             {conv.online && <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-400" />}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-1">
-                              <p className={`text-sm leading-tight ${isActive ? "font-bold text-[#354d73]" : conv.unread > 0 ? "font-bold text-[#042230]" : "font-medium text-[#042230]"}`}>{conv.tutor}</p>
-                              <span className="shrink-0 text-[10px] text-muted-foreground">{conv.time}</span>
+                            <div className="flex items-center justify-between gap-1 mb-0.5">
+                              <p className={`text-sm leading-tight truncate ${isActive ? "font-bold text-[#354d73]" : conv.unread > 0 ? "font-bold text-[#042230]" : "font-medium text-[#042230]"}`}>{conv.tutor}</p>
+                              <span className="shrink-0 text-[11px] text-muted-foreground">{conv.time}</span>
                             </div>
-                            <p className="text-[10px] text-[#354d73]">{conv.language}</p>
-                            <p className={`mt-0.5 truncate text-xs ${conv.unread > 0 ? "font-medium text-foreground" : "text-muted-foreground"}`}>{conv.lastMessage}</p>
+                            <p className="text-[11px] font-medium text-[#354d73] mb-0.5">{conv.language}</p>
+                            <p className={`truncate text-xs ${conv.unread > 0 ? "font-medium text-[#042230]" : "text-muted-foreground"}`}>{conv.lastMessage}</p>
                           </div>
                           {conv.unread > 0 && (
-                            <span className="mt-1 shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#354d73] text-[10px] font-bold text-white">{conv.unread}</span>
+                            <span className="shrink-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#354d73] text-[10px] font-bold text-white px-1">{conv.unread}</span>
                           )}
                         </button>
                       )
@@ -1295,11 +1311,20 @@ function StudentDashboardInner() {
                   </div>
                 </div>
 
-                {/* Chat area */}
-                <div className="flex flex-1 flex-col">
+                {/* ── Chat area (full-screen on mobile when open, flex-1 on md+) ── */}
+                <div className={`${mobileChatOpen ? "flex" : "hidden"} md:flex flex-1 flex-col min-w-0`}>
                   {/* Chat header */}
-                  {activeConv && (
-                    <div className="flex items-center gap-3 border-b border-border px-5 py-3">
+                  {activeConv ? (
+                    <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+                      {/* Back button – mobile only */}
+                      <button
+                        type="button"
+                        onClick={() => setMobileChatOpen(false)}
+                        className="md:hidden -ml-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA]"
+                        aria-label="Back to conversations"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </button>
                       <div className="relative shrink-0">
                         <img
                           src={activeConv.avatar}
@@ -1309,11 +1334,11 @@ function StudentDashboardInner() {
                         />
                         {activeConv.online && <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-white bg-emerald-400" />}
                       </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-bold text-[#042230]">{activeConv.tutor}</p>
-                        <p className="text-xs text-muted-foreground">{activeConv.language} · {activeConv.online ? "Online now" : "Offline"}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-[#042230] truncate">{activeConv.tutor}</p>
+                        <p className="text-xs text-muted-foreground">{activeConv.language} · <span className={activeConv.online ? "text-emerald-500" : ""}>{activeConv.online ? "Online now" : "Offline"}</span></p>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 shrink-0">
                         <button type="button" className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA] hover:text-[#354d73]" aria-label="Video call">
                           <Video className="h-4 w-4" />
                         </button>
@@ -1322,13 +1347,24 @@ function StudentDashboardInner() {
                         </button>
                       </div>
                     </div>
+                  ) : (
+                    <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+                      <button
+                        type="button"
+                        onClick={() => setMobileChatOpen(false)}
+                        className="md:hidden -ml-1 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-[#F0F6FA]"
+                        aria-label="Back to conversations"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </button>
+                    </div>
                   )}
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto space-y-4 px-5 py-4" style={{ maxHeight: 360 }}>
+                  <div className="flex-1 overflow-y-auto space-y-3 px-4 py-4">
                     {(activeThread?.messages ?? []).map(msg => (
                       <div key={msg.id} className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[70%] rounded-2xl px-4 py-2 ${msg.from === "me" ? "bg-[#354d73] text-white rounded-br-sm" : "bg-[#F0F6FA] text-[#042230] rounded-bl-sm"}`}>
+                        <div className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 ${msg.from === "me" ? "bg-[#354d73] text-white rounded-br-sm" : "bg-[#F0F6FA] text-[#042230] rounded-bl-sm"}`}>
                           <p className="text-sm leading-relaxed">{msg.text}</p>
                           <p className={`mt-1 text-[10px] ${msg.from === "me" ? "text-white/60 text-right" : "text-muted-foreground"}`}>{msg.time}</p>
                         </div>
@@ -1349,7 +1385,7 @@ function StudentDashboardInner() {
                               key={item.subject}
                               type="button"
                               onClick={() => { setMenuSubject(item.subject); setMenuClass(null) }}
-                              className="rounded-full border border-[#354d73] px-3 py-1 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors"
+                              className="rounded-full border border-[#354d73] px-3 py-1.5 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors active:bg-[#354d73] active:text-white"
                             >
                               {item.subject}
                             </button>
@@ -1363,14 +1399,14 @@ function StudentDashboardInner() {
                       if (!subjectItem) return null
                       return (
                         <div>
-                          <div className="mb-2 flex items-center gap-1">
+                          <div className="mb-2 flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => setMenuSubject(null)}
-                              className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
+                              className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
                               aria-label="Back to subjects"
                             >
-                              <ChevronLeft className="h-3.5 w-3.5 text-[#354d73]" />
+                              <ChevronLeft className="h-4 w-4 text-[#354d73]" />
                             </button>
                             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               {menuSubject} – choose a class
@@ -1382,7 +1418,7 @@ function StudentDashboardInner() {
                                 key={cls.name}
                                 type="button"
                                 onClick={() => setMenuClass(cls.name)}
-                                className="rounded-full border border-[#354d73] px-3 py-1 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors"
+                                className="rounded-full border border-[#354d73] px-3 py-1.5 text-xs font-medium text-[#354d73] hover:bg-[#354d73] hover:text-white transition-colors active:bg-[#354d73] active:text-white"
                               >
                                 {cls.name}
                               </button>
@@ -1398,26 +1434,26 @@ function StudentDashboardInner() {
                       if (!subjectItem || !classItem) return null
                       return (
                         <div>
-                          <div className="mb-2 flex items-center gap-1">
+                          <div className="mb-2 flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => setMenuClass(null)}
-                              className="flex h-5 w-5 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
+                              className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-[#F0F6FA]"
                               aria-label="Back to classes"
                             >
-                              <ChevronLeft className="h-3.5 w-3.5 text-[#354d73]" />
+                              <ChevronLeft className="h-4 w-4 text-[#354d73]" />
                             </button>
                             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               {menuSubject} › {menuClass}
                             </p>
                           </div>
-                          <div className="flex flex-col gap-1">
+                          <div className="flex flex-col gap-1.5">
                             {classItem.prefixes.map(prefix => (
                               <button
                                 key={prefix}
                                 type="button"
                                 onClick={() => sendChatMessage(prefix)}
-                                className="w-full rounded-lg border border-border bg-[#F0F6FA] px-3 py-2 text-left text-xs text-[#042230] hover:border-[#354d73] hover:bg-[#354d73]/10 transition-colors"
+                                className="w-full rounded-xl border border-border bg-[#F0F6FA] px-4 py-2.5 text-left text-sm text-[#042230] hover:border-[#354d73] hover:bg-[#354d73]/10 active:bg-[#354d73]/15 transition-colors"
                               >
                                 {prefix}
                               </button>
