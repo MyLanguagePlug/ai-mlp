@@ -73,7 +73,7 @@ export function TutorCard({
                   type="button"
                   onClick={() => onToggleSave(id)}
                   aria-label={isSaved ? "Remove from saved tutors" : "Save tutor"}
-                  className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow transition-colors hover:bg-white"
+                  className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/50 shadow transition-colors hover:bg-white/70"
                 >
                   <Heart
                     className={`h-4 w-4 transition-colors ${
