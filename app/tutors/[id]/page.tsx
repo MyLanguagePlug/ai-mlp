@@ -383,7 +383,7 @@ export default function TutorProfilePage() {
             <section className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
               <div className="px-5 pt-5 pb-3">
                 <h2 className="text-lg font-semibold text-[#042230]">Introduction Video</h2>
-                <p className="text-sm text-muted-foreground">Watch {tutor.name.split(" ")[0]}'s intro to get a feel for their teaching style.</p>
+                <p className="text-sm text-muted-foreground">Watch {tutor.name}'s intro to get a feel for their teaching style.</p>
               </div>
               <div className="relative aspect-video w-full bg-[#042230]">
                 {tutor.videoThumb && !videoPlaying && (
