@@ -916,6 +916,32 @@ function StudentDashboardInner() {
     setSavedTutors(prev => prev.filter(t => t.id !== id))
   }
 
+  function toggleSavedTutor(id: string) {
+    const tutor = tutors.find(t => t.id === id)
+    if (!tutor) return
+    setSavedTutors(prev => {
+      const alreadySaved = prev.some(t => t.id === id)
+      if (alreadySaved) {
+        return prev.filter(t => t.id !== id)
+      }
+      return [
+        ...prev,
+        {
+          id: tutor.id,
+          name: tutor.name,
+          image: tutor.image,
+          languages: tutor.languages,
+          rating: tutor.rating,
+          reviews: tutor.reviews,
+          hourlyRate: tutor.hourlyRate,
+          isVerified: tutor.isVerified,
+          specialties: tutor.specialties,
+          savedAt: "Just saved",
+        },
+      ]
+    })
+  }
+
   // ── Referral helpers ──────────────────────────────────────────────────────
   function copyReferralCode() {
     navigator.clipboard.writeText(REFERRAL_CODE).then(() => {
@@ -1237,6 +1263,8 @@ function StudentDashboardInner() {
                       <TutorCard
                         key={tutor.id}
                         {...tutor}
+                        isSaved={savedTutors.some(s => s.id === tutor.id)}
+                        onToggleSave={toggleSavedTutor}
                         onBookTrial={(id) => {
                           const t = tutors.find(x => x.id === id) ?? null
                           setBookTrialTutor(t)

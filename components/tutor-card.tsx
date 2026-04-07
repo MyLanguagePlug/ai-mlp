@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Star, Globe, Clock, CheckCircle2 } from "lucide-react"
+import { Star, Globe, Clock, CheckCircle2, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -21,6 +21,8 @@ export interface TutorCardProps {
   isNativeSpeaker?: boolean
   bio: string
   offersTrialLesson?: boolean
+  isSaved?: boolean
+  onToggleSave?: (id: string) => void
   onBookTrial?: (id: string) => void
   onViewProfile?: (id: string) => void
 }
@@ -40,6 +42,8 @@ export function TutorCard({
   isNativeSpeaker = false,
   bio,
   offersTrialLesson,
+  isSaved = false,
+  onToggleSave,
   onBookTrial,
   onViewProfile,
 }: TutorCardProps) {
@@ -62,6 +66,21 @@ export function TutorCard({
                   <CheckCircle2 className="h-3 w-3" />
                   Verified
                 </div>
+              )}
+              {/* Favourite button */}
+              {onToggleSave && (
+                <button
+                  type="button"
+                  onClick={() => onToggleSave(id)}
+                  aria-label={isSaved ? "Remove from saved tutors" : "Save tutor"}
+                  className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow transition-colors hover:bg-white"
+                >
+                  <Heart
+                    className={`h-4 w-4 transition-colors ${
+                      isSaved ? "fill-rose-500 text-rose-500" : "text-muted-foreground"
+                    }`}
+                  />
+                </button>
               )}
             </div>
 

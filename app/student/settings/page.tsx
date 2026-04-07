@@ -25,6 +25,7 @@ import {
   ShieldCheck,
   BellOff,
   X,
+  Heart,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -35,6 +36,7 @@ const sidebarItems = [
   { id: "account", label: "Account", icon: User },
   { id: "password", label: "Password", icon: Lock },
   { id: "email", label: "Email", icon: Mail },
+  { id: "saved-tutors", label: "Saved tutors", icon: Heart },
   { id: "payment-methods", label: "Payment methods", icon: CreditCard },
   { id: "payment-history", label: "Payment history", icon: Clock },
   { id: "calendar", label: "Calendar", icon: CalendarDays },
@@ -1138,6 +1140,122 @@ function DeleteSection() {
   )
 }
 
+// ─── Saved tutors demo data ────────────────────────────────────────────────────
+
+type SavedTutorItem = {
+  id: string
+  name: string
+  image: string
+  languages: string[]
+  rating: number
+  reviews: number
+  hourlyRate: number
+  isVerified: boolean
+  specialties: string[]
+  savedAt: string
+}
+
+const DEMO_SAVED_TUTORS: SavedTutorItem[] = [
+  { id: "1", name: "Maria Santos",  image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop", languages: ["Spanish", "English"],    rating: 4.9, reviews: 234, hourlyRate: 25, isVerified: true, specialties: ["Conversational", "DELE Prep"],    savedAt: "Saved 2 days ago" },
+  { id: "3", name: "Yuki Tanaka",   image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop", languages: ["Japanese", "English"],   rating: 5.0, reviews: 156, hourlyRate: 35, isVerified: true, specialties: ["JLPT Prep", "Beginner Friendly"], savedAt: "Saved 5 days ago" },
+  { id: "5", name: "Ana Silva",     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop", languages: ["Portuguese", "Spanish"], rating: 4.8, reviews: 142, hourlyRate: 22, isVerified: true, specialties: ["Conversational", "Travel"],       savedAt: "Saved 1 week ago" },
+  { id: "6", name: "Wei Zhang",     image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop", languages: ["Mandarin", "English"],   rating: 4.9, reviews: 178, hourlyRate: 32, isVerified: true, specialties: ["HSK Prep", "Pronunciation"],      savedAt: "Saved 2 weeks ago" },
+]
+
+function SavedTutorsSection() {
+  const [savedTutors, setSavedTutors] = useState<SavedTutorItem[]>(DEMO_SAVED_TUTORS)
+
+  function removeTutor(id: string) {
+    setSavedTutors(prev => prev.filter(t => t.id !== id))
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h2 className="text-2xl font-bold text-[#042230]">Saved Tutors</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {savedTutors.length} tutor{savedTutors.length !== 1 ? "s" : ""} saved
+        </p>
+      </div>
+
+      {savedTutors.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-[#F0F6FA] px-6 py-12 text-center">
+          <Heart className="mx-auto mb-3 h-8 w-8 text-muted-foreground/40" />
+          <p className="text-sm font-semibold text-[#042230]">No saved tutors yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">Browse tutors and tap the heart icon to save your favourites.</p>
+          <Link
+            href="/student"
+            className="mt-5 inline-block rounded-lg bg-[#354d73] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+          >
+            Find Tutors
+          </Link>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {savedTutors.map(tutor => (
+            <div
+              key={tutor.id}
+              className="group relative overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md"
+            >
+              {/* Remove button */}
+              <button
+                type="button"
+                onClick={() => removeTutor(tutor.id)}
+                className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-rose-400 shadow hover:bg-white hover:text-rose-600 transition-colors"
+                aria-label="Remove from saved tutors"
+              >
+                <Heart className="h-3.5 w-3.5 fill-rose-400" />
+              </button>
+
+              {/* Avatar */}
+              <div className="relative h-32 bg-gradient-to-br from-[#354d73]/10 to-[#354d73]/5">
+                <img
+                  src={tutor.image}
+                  alt={tutor.name}
+                  className="h-full w-full object-cover object-top"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
+                />
+              </div>
+
+              {/* Details */}
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-bold text-[#042230]">{tutor.name}</p>
+                    <p className="text-xs text-muted-foreground">{tutor.languages.join(" · ")}</p>
+                  </div>
+                  <span className="shrink-0 text-sm font-bold text-[#354d73]">${tutor.hourlyRate}/hr</span>
+                </div>
+
+                <div className="mt-2 flex items-center gap-1">
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                  <span className="text-xs font-semibold text-[#042230]">{tutor.rating}</span>
+                  <span className="text-xs text-muted-foreground">({tutor.reviews} reviews)</span>
+                </div>
+
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {tutor.specialties.slice(0, 2).map(s => (
+                    <span key={s} className="rounded-full bg-[#354d73]/8 px-2 py-0.5 text-[10px] font-medium text-[#354d73]">{s}</span>
+                  ))}
+                </div>
+
+                <p className="mt-2 text-[10px] text-muted-foreground">{tutor.savedAt}</p>
+
+                <Link
+                  href="/student"
+                  className="mt-3 block w-full rounded-lg bg-[#354d73] py-2 text-center text-sm font-semibold text-white hover:bg-[#2a3d5e] transition-colors"
+                >
+                  Book a Lesson
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function StudentSettings() {
   const [active, setActive] = useState("account")
   const [saved, setSaved] = useState(false)
@@ -1188,6 +1306,7 @@ export default function StudentSettings() {
             {active === "account" && <AccountSection saved={saved} onSave={handleSave} />}
             {active === "password" && <PasswordSection />}
             {active === "email" && <EmailSection />}
+            {active === "saved-tutors" && <SavedTutorsSection />}
             {active === "payment-methods" && <PaymentMethodsSection />}
             {active === "payment-history" && <PaymentHistorySection />}
             {active === "calendar" && <CalendarSection />}
