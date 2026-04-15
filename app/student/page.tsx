@@ -615,7 +615,7 @@ type TabId = "home" | "messages" | "lessons" | "saved" | "refer" | "help"
 
 // ─── Lesson action types & constants ─────────────────────────────────────────
 
-type LessonModalType = "cancel" | "reschedule" | "rebook" | "unschedule" | "review" | null
+type LessonModalType = "cancel" | "reschedule" | "rebook" | "unschedule" | "review" | "join" | null
 type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number; reviewed?: boolean; reviewComment?: string }
 
 const INIT_UPCOMING_LESSONS: LessonEntry[] = [
@@ -978,6 +978,11 @@ function StudentDashboardInner() {
     setUpcomingLessons(prev => prev.filter(l => l.id !== selectedLesson.id))
     setUnscheduledLessons(prev => [...prev, { id: selectedLesson.id, tutor: selectedLesson.tutor, subject: selectedLesson.subject, credits: 1 }])
     setLessonActionDone(true)
+  }
+  function handleJoinLesson() {
+    if (!selectedLesson) return
+    window.open(`https://call.ai-mlp.com/lesson/${selectedLesson.id}`, "_blank")
+    closeLessonModal()
   }
   function handleReviewSubmit() {
     if (!selectedLesson || reviewRating === 0) return
@@ -1429,10 +1434,17 @@ function StudentDashboardInner() {
                                 <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#354d73]/10">
                                   <Calendar className="h-3.5 w-3.5 text-[#354d73]" />
                                 </div>
-                                <div>
+                                <div className="flex-1 min-w-0">
                                   <p className="text-sm font-semibold leading-tight text-[#042230]">{lesson.tutor}</p>
                                   <p className="text-xs text-muted-foreground">{lesson.subject} · {lesson.date}</p>
                                   <p className="text-xs text-muted-foreground">{lesson.time}</p>
+                                  <button
+                                    type="button"
+                                    onClick={() => openLessonModal("join", lesson)}
+                                    className="mt-1 flex items-center gap-1 text-xs font-semibold text-[#354d73] hover:underline"
+                                  >
+                                    <Video className="h-3 w-3" /> Join lesson
+                                  </button>
                                 </div>
                               </div>
                             ))}
@@ -1746,7 +1758,7 @@ function StudentDashboardInner() {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Confirmed</span>
-                        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
+                        <button type="button" onClick={() => openLessonModal("join", lesson)} className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
                           <Video className="h-3.5 w-3.5" /> Join lesson
                         </button>
                         <button
@@ -2122,6 +2134,68 @@ function StudentDashboardInner() {
                     </button>
                   </div>
                 )}
+              </DialogContent>
+            </Dialog>
+
+            {/* ── Join lesson modal ─────────────────────────────────────────────── */}
+            <Dialog open={lessonModalType === "join"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">Join Lesson</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-5">
+                  {/* Lesson details */}
+                  <div className="flex items-start gap-3 rounded-xl bg-[#354d73]/8 border border-[#354d73]/20 p-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#354d73]/10">
+                      <Video className="h-5 w-5 text-[#354d73]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-[#042230]">{selectedLesson?.tutor}</p>
+                      <p className="text-sm text-muted-foreground">{selectedLesson?.subject}</p>
+                      {(selectedLesson?.date || selectedLesson?.time) && (
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {selectedLesson?.date}{selectedLesson?.date && selectedLesson?.time ? " at " : ""}{selectedLesson?.time}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Readiness checklist */}
+                  <div>
+                    <p className="mb-2 text-sm font-semibold text-[#042230]">Before you join</p>
+                    <ul className="space-y-2">
+                      {[
+                        { icon: "🎤", text: "Check your microphone is working" },
+                        { icon: "📷", text: "Ensure your camera is on and well-lit" },
+                        { icon: "🔇", text: "Find a quiet space free from distractions" },
+                        { icon: "📝", text: "Have any notes or materials ready" },
+                      ].map(item => (
+                        <li key={item.text} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                          <span className="text-base leading-none">{item.icon}</span>
+                          {item.text}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                    >
+                      Not now
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleJoinLesson}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      <Video className="h-4 w-4" /> Start Video Call
+                    </button>
+                  </div>
+                </div>
               </DialogContent>
             </Dialog>
 
