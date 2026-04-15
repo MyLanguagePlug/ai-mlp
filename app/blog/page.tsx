@@ -180,7 +180,12 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <CTASection />
+      <CTASection
+        title="Ready to Start Learning?"
+        description="Find the perfect language tutor and begin your journey to fluency today."
+        primaryCTA={{ label: "Find a Tutor", href: "/tutors" }}
+        secondaryCTA={{ label: "Become a Tutor", href: "/teach" }}
+      />
     </div>
   )
 }
