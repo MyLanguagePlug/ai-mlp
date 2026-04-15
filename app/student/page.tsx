@@ -129,9 +129,20 @@ const FAQ_DATA = [
 
 type FaqChatMessage = { role: "user" | "bot"; text: string }
 
+// Scoring weights for FAQ keyword matching
+const MIN_WORD_LENGTH = 2
+const SCORE_CONTENT_MATCH = 1
+const SCORE_QUESTION_MATCH = 1.5
+const SCORE_KEYWORD_MATCH = 2
+const MIN_MATCH_SCORE = 2
+
+// Bot response delay range (ms) – slight variance feels more natural
+const BOT_RESPONSE_DELAY_BASE = 900
+const BOT_RESPONSE_DELAY_VARIANCE = 600
+
 function getFaqBotResponse(question: string): string {
   const q = question.toLowerCase()
-  const inputWords = q.split(/\W+/).filter(w => w.length > 2)
+  const inputWords = q.split(/\W+/).filter(w => w.length > MIN_WORD_LENGTH)
 
   let bestScore = 0
   let bestAnswer = ""
@@ -141,9 +152,9 @@ function getFaqBotResponse(question: string): string {
     let score = 0
 
     for (const word of inputWords) {
-      if (targetText.includes(word)) score += 1
-      if (faq.q.toLowerCase().includes(word)) score += 1.5
-      if (faq.keywords.includes(word)) score += 2
+      if (targetText.includes(word)) score += SCORE_CONTENT_MATCH
+      if (faq.q.toLowerCase().includes(word)) score += SCORE_QUESTION_MATCH
+      if (faq.keywords.includes(word)) score += SCORE_KEYWORD_MATCH
     }
 
     if (score > bestScore) {
@@ -152,7 +163,7 @@ function getFaqBotResponse(question: string): string {
     }
   }
 
-  if (bestScore >= 2) return bestAnswer
+  if (bestScore >= MIN_MATCH_SCORE) return bestAnswer
 
   return "I'm sorry, I couldn't find a specific answer to that question. Please try rephrasing, or use the search bar above to browse help topics. You can also reach our support team directly using the options below."
 }
@@ -1045,7 +1056,7 @@ function StudentDashboardInner() {
       const response = getFaqBotResponse(trimmed)
       setFaqChatMessages(prev => [...prev, { role: "bot", text: response }])
       setFaqChatTyping(false)
-    }, 900 + Math.random() * 600)
+    }, BOT_RESPONSE_DELAY_BASE + Math.random() * BOT_RESPONSE_DELAY_VARIANCE)
   }
 
   function handleFaqChatSubmit(e: React.FormEvent) {
