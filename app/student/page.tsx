@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import {
@@ -39,6 +39,8 @@ import {
   AlertTriangle,
   Ban,
   CalendarClock,
+  Bot,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -60,6 +62,100 @@ import { TutorCard } from "@/components/tutor-card"
 import { BookTrialModal } from "@/components/book-trial-modal"
 
 const ALL_LANGUAGES = "All languages"
+
+// ── FAQ data (shared between the FAQ list and the AI chatbot) ─────────────
+const FAQ_DATA = [
+  {
+    q: "How do I book a trial lesson?",
+    a: "Find a tutor you like, click their profile and select \"Book a trial lesson\". Trial lessons are typically 25–30 minutes and discounted. Your first trial lesson always gets 30% off automatically.",
+    keywords: ["book", "trial", "lesson", "schedule", "first", "new", "start"],
+  },
+  {
+    q: "Can I cancel or reschedule a lesson?",
+    a: "Yes. Go to My Lessons, find the upcoming lesson and click \"Reschedule\". Cancellations made more than 24 hours before the start time are free. Late cancellations may incur a fee as per the tutor's policy.",
+    keywords: ["cancel", "reschedule", "change", "lesson", "upcoming", "refund", "policy", "late"],
+  },
+  {
+    q: "How does the payment process work?",
+    a: "You purchase lesson credits which are stored in your account. Credits are deducted when you book a lesson. Unused credits are fully refundable within 30 days.",
+    keywords: ["payment", "pay", "credits", "billing", "refund", "charge", "money", "cost", "price"],
+  },
+  {
+    q: "What if I'm unhappy with my tutor?",
+    a: "We offer a satisfaction guarantee on trial lessons. If you're not happy, contact support within 72 hours and we'll issue a full credit. For regular lessons, credits are handled on a case-by-case basis.",
+    keywords: ["unhappy", "unsatisfied", "tutor", "bad", "refund", "guarantee", "satisfaction", "complaint"],
+  },
+  {
+    q: "How do I change my subscription plan?",
+    a: "Go to Settings → Billing to view or upgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
+    keywords: ["subscription", "plan", "upgrade", "downgrade", "billing", "settings", "change", "account"],
+  },
+  {
+    q: "How do I find a tutor?",
+    a: "Use the Home tab to browse tutors. You can filter by language, price, country, availability, and more. Click on any tutor card to view their full profile, video introduction, reviews, and pricing.",
+    keywords: ["find", "search", "tutor", "browse", "filter", "language", "available"],
+  },
+  {
+    q: "How do I message a tutor?",
+    a: "Go to the Messages tab and click \"New message\" to start a conversation with any tutor. You can discuss your goals, schedule, and learning preferences before booking.",
+    keywords: ["message", "chat", "contact", "tutor", "talk", "communicate", "inbox"],
+  },
+  {
+    q: "Are lessons conducted via video call?",
+    a: "Yes, all lessons are held via video call directly on the AI-MLP platform. You'll receive a link 15 minutes before your lesson starts. Ensure your camera and microphone are working beforehand.",
+    keywords: ["video", "call", "online", "zoom", "platform", "link", "camera", "microphone", "how"],
+  },
+  {
+    q: "How do I leave a review for my tutor?",
+    a: "After a lesson is complete, you'll see a \"Leave a review\" prompt in your Past Lessons section. Ratings help other students find great tutors.",
+    keywords: ["review", "rating", "rate", "feedback", "stars", "comment", "past"],
+  },
+  {
+    q: "What languages can I learn?",
+    a: "AI-MLP offers tutors for Spanish, French, German, Japanese, Mandarin Chinese, Portuguese, Italian, Arabic, Korean, and many more. Use the language filter on the Home tab to explore.",
+    keywords: ["language", "learn", "spanish", "french", "german", "japanese", "mandarin", "chinese", "portuguese", "italian", "arabic", "korean"],
+  },
+  {
+    q: "How do I refer a friend?",
+    a: "Go to the Refer tab in your dashboard. Share your unique referral link and earn credits when friends sign up and book their first lesson.",
+    keywords: ["refer", "referral", "friend", "invite", "share", "earn", "credits", "bonus"],
+  },
+  {
+    q: "How do I update my profile?",
+    a: "Click on your avatar in the top-right corner and select Settings. From there you can update your name, email, photo, language preferences, and notification settings.",
+    keywords: ["profile", "update", "settings", "name", "email", "photo", "avatar", "edit", "account"],
+  },
+]
+
+type FaqChatMessage = { role: "user" | "bot"; text: string }
+
+function getFaqBotResponse(question: string): string {
+  const q = question.toLowerCase()
+  const inputWords = q.split(/\W+/).filter(w => w.length > 2)
+
+  let bestScore = 0
+  let bestAnswer = ""
+
+  for (const faq of FAQ_DATA) {
+    const targetText = (faq.q + " " + faq.a).toLowerCase()
+    let score = 0
+
+    for (const word of inputWords) {
+      if (targetText.includes(word)) score += 1
+      if (faq.q.toLowerCase().includes(word)) score += 1.5
+      if (faq.keywords.includes(word)) score += 2
+    }
+
+    if (score > bestScore) {
+      bestScore = score
+      bestAnswer = faq.a
+    }
+  }
+
+  if (bestScore >= 2) return bestAnswer
+
+  return "I'm sorry, I couldn't find a specific answer to that question. Please try rephrasing, or use the search bar above to browse help topics. You can also reach our support team directly using the options below."
+}
 
 const specialties = [
   "Exam Prep",
@@ -815,6 +911,12 @@ function StudentDashboardInner() {
   const [copiedCode, setCopiedCode] = useState(false)
   const [search, setSearch] = useState("")
   const [helpSearch, setHelpSearch] = useState("")
+  const [faqChatMessages, setFaqChatMessages] = useState<FaqChatMessage[]>([
+    { role: "bot", text: "Hi! I'm your AI assistant 👋 Ask me anything about AI-MLP — lessons, payments, tutors, scheduling, and more!" },
+  ])
+  const [faqChatInput, setFaqChatInput] = useState("")
+  const [faqChatTyping, setFaqChatTyping] = useState(false)
+  const faqChatEndRef = useRef<HTMLDivElement>(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
@@ -931,6 +1033,29 @@ function StudentDashboardInner() {
   function goToTab(tab: TabId) {
     setActiveTab(tab)
   }
+
+  // ── FAQ AI chatbot helpers ────────────────────────────────────────────────
+  function submitFaqChat(text: string) {
+    const trimmed = text.trim()
+    if (!trimmed || faqChatTyping) return
+    setFaqChatMessages(prev => [...prev, { role: "user", text: trimmed }])
+    setFaqChatInput("")
+    setFaqChatTyping(true)
+    setTimeout(() => {
+      const response = getFaqBotResponse(trimmed)
+      setFaqChatMessages(prev => [...prev, { role: "bot", text: response }])
+      setFaqChatTyping(false)
+    }, 900 + Math.random() * 600)
+  }
+
+  function handleFaqChatSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    submitFaqChat(faqChatInput)
+  }
+
+  useEffect(() => {
+    faqChatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [faqChatMessages, faqChatTyping])
 
   // ── Chat helpers ──────────────────────────────────────────────────────────
   const activeThread = chatThreads.find(t => t.convId === activeChatId)
@@ -2161,29 +2286,7 @@ function StudentDashboardInner() {
             <div className="mb-8">
               <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-[#354d73]">Frequently Asked Questions</h2>
               {(() => {
-                const faqs = [
-                  {
-                    q: "How do I book a trial lesson?",
-                    a: "Find a tutor you like, click their profile and select \"Book a trial lesson\". Trial lessons are typically 25–30 minutes and discounted. Your first trial lesson always gets 30% off automatically.",
-                  },
-                  {
-                    q: "Can I cancel or reschedule a lesson?",
-                    a: "Yes. Go to My Lessons, find the upcoming lesson and click \"Reschedule\". Cancellations made more than 24 hours before the start time are free. Late cancellations may incur a fee as per the tutor's policy.",
-                  },
-                  {
-                    q: "How does the payment process work?",
-                    a: "You purchase lesson credits which are stored in your account. Credits are deducted when you book a lesson. Unused credits are fully refundable within 30 days.",
-                  },
-                  {
-                    q: "What if I'm unhappy with my tutor?",
-                    a: "We offer a satisfaction guarantee on trial lessons. If you're not happy, contact support within 72 hours and we'll issue a full credit. For regular lessons, credits are handled on a case-by-case basis.",
-                  },
-                  {
-                    q: "How do I change my subscription plan?",
-                    a: "Go to Settings → Billing to view or upgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
-                  },
-                ]
-                const filtered = faqs.filter(item =>
+                const filtered = FAQ_DATA.filter(item =>
                   !helpSearch ||
                   item.q.toLowerCase().includes(helpSearch.toLowerCase()) ||
                   item.a.toLowerCase().includes(helpSearch.toLowerCase())
@@ -2198,10 +2301,115 @@ function StudentDashboardInner() {
                   <div className="rounded-xl border border-border bg-white p-6 text-center">
                     <HelpCircle className="mx-auto mb-2 h-8 w-8 text-muted-foreground/40" />
                     <p className="text-sm font-medium text-[#042230]">No results for &ldquo;{helpSearch}&rdquo;</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Try different keywords or contact support below.</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Try different keywords or ask the AI assistant below.</p>
                   </div>
                 )
               })()}
+            </div>
+
+            {/* AI Chat Assistant */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[#354d73]">AI Support Assistant</h2>
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#354d73]/10 px-2 py-0.5 text-xs font-semibold text-[#354d73]">
+                  <Sparkles className="h-3 w-3" />
+                  AI-powered
+                </span>
+              </div>
+              <div className="overflow-hidden rounded-2xl border border-[#354d73]/20 bg-white shadow-sm">
+                {/* Chat header */}
+                <div className="flex items-center gap-3 bg-gradient-to-r from-[#354d73] to-[#2a3d5e] px-5 py-4">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+                    <Bot className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-bold text-white text-sm">Ask AI anything</p>
+                    <p className="text-xs text-white/70 truncate">Answers based on our FAQ &amp; help docs</p>
+                  </div>
+                  <div className="ml-auto flex shrink-0 items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                    <span className="text-xs text-white/70">Online</span>
+                  </div>
+                </div>
+
+                {/* Messages area */}
+                <div className="h-72 overflow-y-auto bg-[#F8FAFC] p-4 space-y-3">
+                  {faqChatMessages.map((msg, i) => (
+                    <div key={i} className={`flex items-end gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                      {msg.role === "bot" && (
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#354d73]">
+                          <Bot className="h-3.5 w-3.5 text-white" />
+                        </div>
+                      )}
+                      <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                        msg.role === "user"
+                          ? "rounded-br-sm bg-[#354d73] text-white"
+                          : "rounded-bl-sm border border-[#354d73]/15 bg-white text-[#042230] shadow-sm"
+                      }`}>
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))}
+                  {faqChatTyping && (
+                    <div className="flex items-end gap-2">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#354d73]">
+                        <Bot className="h-3.5 w-3.5 text-white" />
+                      </div>
+                      <div className="rounded-2xl rounded-bl-sm border border-[#354d73]/15 bg-white px-4 py-3 shadow-sm">
+                        <div className="flex gap-1">
+                          <span className="h-2 w-2 rounded-full bg-[#354d73]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="h-2 w-2 rounded-full bg-[#354d73]/50 animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="h-2 w-2 rounded-full bg-[#354d73]/50 animate-bounce" style={{ animationDelay: "300ms" }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={faqChatEndRef} />
+                </div>
+
+                {/* Suggested questions (only shown at the start) */}
+                {faqChatMessages.length === 1 && !faqChatTyping && (
+                  <div className="border-t border-[#354d73]/10 bg-white px-4 py-3">
+                    <p className="mb-2 text-xs text-muted-foreground">Try asking:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        "How do I book a trial lesson?",
+                        "Can I cancel a lesson?",
+                        "How does payment work?",
+                        "How do I find a tutor?",
+                      ].map(q => (
+                        <button
+                          key={q}
+                          type="button"
+                          onClick={() => submitFaqChat(q)}
+                          className="rounded-full border border-[#354d73]/25 bg-[#F0F6FA] px-3 py-1 text-xs text-[#354d73] transition-colors hover:bg-[#354d73]/10"
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Input */}
+                <form onSubmit={handleFaqChatSubmit} className="flex items-center gap-2 border-t border-[#354d73]/15 bg-white px-4 py-3">
+                  <input
+                    type="text"
+                    value={faqChatInput}
+                    onChange={e => setFaqChatInput(e.target.value)}
+                    placeholder="Ask a question about AI-MLP…"
+                    disabled={faqChatTyping}
+                    className="flex-1 rounded-xl border border-[#354d73]/20 bg-[#F8FAFC] px-4 py-2.5 text-sm text-[#042230] outline-none placeholder:text-muted-foreground focus:border-[#354d73] focus:ring-2 focus:ring-[#354d73]/20 disabled:opacity-50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!faqChatInput.trim() || faqChatTyping}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#354d73] text-white transition-colors hover:bg-[#2a3d5e] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
+                </form>
+              </div>
             </div>
 
             {/* Contact support */}
