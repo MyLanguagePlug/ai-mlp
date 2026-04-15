@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
 interface CTASectionProps {
-  title: string
-  description: string
-  primaryCTA: {
+  title?: string
+  description?: string
+  primaryCTA?: {
     label: string
     href: string
   }
@@ -17,9 +17,9 @@ interface CTASectionProps {
 }
 
 export function CTASection({
-  title,
-  description,
-  primaryCTA,
+  title = "Ready to Start Learning?",
+  description = "Find the perfect language tutor and begin your journey to fluency today.",
+  primaryCTA = { label: "Find a Tutor", href: "/tutors" },
   secondaryCTA,
   variant = "default",
 }: CTASectionProps) {
