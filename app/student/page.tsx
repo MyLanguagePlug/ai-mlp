@@ -646,6 +646,7 @@ const LESSON_TIME_SLOTS = [
   "16:00", "16:30", "17:00", "17:30", "18:00", "19:00",
 ]
 const CANCEL_REASONS = ["Schedule conflict", "Feeling unwell", "Personal emergency", "Tutor request", "Other"]
+const UNSCHEDULE_REASONS = ["Need to reschedule", "Schedule conflict", "Personal emergency", "Change of plans", "Other"]
 
 // ─── Messages demo data ───────────────────────────────────────────────────────
 
@@ -954,6 +955,7 @@ function StudentDashboardInner() {
   const [rescheduleTime, setRescheduleTime] = useState<string>("")
   const [reviewRating, setReviewRating] = useState(0)
   const [reviewText, setReviewText] = useState("")
+  const [unscheduleReason, setUnscheduleReason] = useState("")
   function openLessonModal(type: LessonModalType, lesson: LessonEntry) {
     setSelectedLesson(lesson)
     setLessonModalType(type)
@@ -963,11 +965,13 @@ function StudentDashboardInner() {
     setRescheduleTime("")
     setReviewRating(0)
     setReviewText("")
+    setUnscheduleReason("")
   }
   function closeLessonModal() {
     setLessonModalType(null)
     setSelectedLesson(null)
     setLessonActionDone(false)
+    setUnscheduleReason("")
   }
   function handleUnschedule() {
     if (!selectedLesson) return
@@ -2143,6 +2147,21 @@ function StudentDashboardInner() {
                         <p className="mt-1 text-xs text-amber-600">The lesson will be moved to your unscheduled lessons and can be rescheduled at any time.</p>
                       </div>
                     </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Reason for unscheduling</p>
+                      <div className="space-y-2">
+                        {UNSCHEDULE_REASONS.map(reason => (
+                          <button
+                            key={reason}
+                            type="button"
+                            onClick={() => setUnscheduleReason(reason)}
+                            className={`w-full rounded-xl border px-4 py-2.5 text-left text-sm transition-colors ${unscheduleReason === reason ? "border-amber-500 bg-amber-500/5 font-semibold text-amber-700" : "border-border text-muted-foreground hover:border-amber-400/40 hover:bg-[#F0F6FA]"}`}
+                          >
+                            {reason}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     <div className="flex gap-3 pt-1">
                       <button
                         type="button"
@@ -2153,8 +2172,9 @@ function StudentDashboardInner() {
                       </button>
                       <button
                         type="button"
+                        disabled={!unscheduleReason}
                         onClick={handleUnschedule}
-                        className="flex-1 rounded-xl bg-amber-500 py-2.5 text-sm font-semibold text-white hover:bg-amber-600"
+                        className="flex-1 rounded-xl bg-amber-500 py-2.5 text-sm font-semibold text-white hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         Unschedule
                       </button>
