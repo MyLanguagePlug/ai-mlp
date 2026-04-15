@@ -17,7 +17,7 @@ const stories = [
     yearsOnPlatform: "2 years",
     quote:
       "Before joining My Language Plug, I was teaching at a local school with a fixed salary and no flexibility. Now I work from home on my own schedule, earning three times what I used to. The platform handles all the admin, so I can focus on what I love — teaching.",
-    highlights: ["Left full-time school teaching", "Built a 45-student roster in 8 months", "Now earns £3,200/month on her own schedule"],
+    highlights: ["Left full-time school teaching", "Built a 45-student roster in 8 months", "Now earns $3,200/month on her own schedule"],
   },
   {
     id: 2,
