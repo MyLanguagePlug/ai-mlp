@@ -523,6 +523,18 @@ const unscheduledLessons = [
   { id: 2, tutor: "Wei Zhang",    subject: "Mandarin",   credits: 1 },
 ]
 
+// ─── Lesson action types & constants ─────────────────────────────────────────
+
+type LessonModalType = "cancel" | "reschedule" | "rebook" | null
+type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number }
+
+const LESSON_TIME_SLOTS = [
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "12:30", "14:00", "14:30", "15:00", "15:30",
+  "16:00", "16:30", "17:00", "17:30", "18:00", "19:00",
+]
+const CANCEL_REASONS = ["Schedule conflict", "Feeling unwell", "Personal emergency", "Tutor request", "Other"]
+
 // ─── Messages demo data ───────────────────────────────────────────────────────
 
 type ConversationItem = {
@@ -807,16 +819,12 @@ function StudentDashboardInner() {
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
   // ── Lesson action modal state ─────────────────────────────────────────────
-  type LessonModalType = "cancel" | "reschedule" | "rebook" | null
-  type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number }
   const [lessonModalType, setLessonModalType] = useState<LessonModalType>(null)
   const [selectedLesson, setSelectedLesson] = useState<LessonEntry | null>(null)
   const [lessonActionDone, setLessonActionDone] = useState(false)
   const [cancelReason, setCancelReason] = useState("")
   const [rescheduleDate, setRescheduleDate] = useState<string>("")
   const [rescheduleTime, setRescheduleTime] = useState<string>("")
-  const LESSON_TIME_SLOTS = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "19:00"]
-  const CANCEL_REASONS = ["Schedule conflict", "Feeling unwell", "Personal emergency", "Tutor request", "Other"]
   function openLessonModal(type: LessonModalType, lesson: LessonEntry) {
     setSelectedLesson(lesson)
     setLessonModalType(type)
@@ -1802,7 +1810,7 @@ function StudentDashboardInner() {
                       <p className="text-base font-semibold text-[#042230]">Lesson {selectedLesson?.date ? "rescheduled" : "scheduled"}!</p>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {selectedLesson?.tutor} · {selectedLesson?.subject}<br />
-                        {new Date(rescheduleDate).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} at {rescheduleTime}
+                        {rescheduleDate && new Date(rescheduleDate).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} at {rescheduleTime}
                       </p>
                     </div>
                     <button
