@@ -616,7 +616,7 @@ type TabId = "home" | "messages" | "lessons" | "saved" | "refer" | "help"
 // ─── Lesson action types & constants ─────────────────────────────────────────
 
 type LessonModalType = "cancel" | "reschedule" | "rebook" | "unschedule" | "review" | null
-type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number; reviewed?: boolean }
+type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number; reviewed?: boolean; reviewComment?: string }
 
 const INIT_UPCOMING_LESSONS: LessonEntry[] = [
   { id: 1, tutor: "Maria Santos",       subject: "Spanish",  date: "Thu, Mar 19", time: "10:00 AM" },
@@ -977,7 +977,7 @@ function StudentDashboardInner() {
   }
   function handleReviewSubmit() {
     if (!selectedLesson || reviewRating === 0) return
-    setPastLessons(prev => prev.map(l => l.id === selectedLesson.id ? { ...l, reviewed: true, rating: reviewRating } : l))
+    setPastLessons(prev => prev.map(l => l.id === selectedLesson.id ? { ...l, reviewed: true, rating: reviewRating, reviewComment: reviewText || undefined } : l))
     setLessonActionDone(true)
   }
 
@@ -2204,7 +2204,7 @@ function StudentDashboardInner() {
                             type="button"
                             onClick={() => setReviewRating(i + 1)}
                             className="focus:outline-none"
-                            aria-label={`Rate ${i + 1} star${i + 1 !== 1 ? "s" : ""}`}
+                            aria-label={`Rate ${selectedLesson?.tutor ?? "lesson"}: ${i + 1} star${i + 1 !== 1 ? "s" : ""}`}
                           >
                             <Star className={`h-8 w-8 transition-colors ${i < reviewRating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted hover:fill-amber-200 hover:text-amber-200"}`} />
                           </button>
