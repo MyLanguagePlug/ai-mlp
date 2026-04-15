@@ -981,7 +981,9 @@ function StudentDashboardInner() {
   }
   function handleJoinLesson() {
     if (!selectedLesson) return
-    window.open(`https://call.ai-mlp.com/lesson/${selectedLesson.id}`, "_blank")
+    const id = Number(selectedLesson.id)
+    if (!Number.isInteger(id) || id <= 0) return
+    window.open(`https://call.ai-mlp.com/lesson/${id}`, "_blank")
     closeLessonModal()
   }
   function handleReviewSubmit() {
@@ -2165,13 +2167,13 @@ function StudentDashboardInner() {
                     <p className="mb-2 text-sm font-semibold text-[#042230]">Before you join</p>
                     <ul className="space-y-2">
                       {[
-                        { icon: "🎤", text: "Check your microphone is working" },
-                        { icon: "📷", text: "Ensure your camera is on and well-lit" },
-                        { icon: "🔇", text: "Find a quiet space free from distractions" },
-                        { icon: "📝", text: "Have any notes or materials ready" },
+                        { icon: "🎤", label: "Microphone", text: "Check your microphone is working" },
+                        { icon: "📷", label: "Camera", text: "Ensure your camera is on and well-lit" },
+                        { icon: "🔇", label: "Quiet environment", text: "Find a quiet space free from distractions" },
+                        { icon: "📝", label: "Materials", text: "Have any notes or materials ready" },
                       ].map(item => (
                         <li key={item.text} className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                          <span className="text-base leading-none">{item.icon}</span>
+                          <span className="text-base leading-none" aria-label={item.label}>{item.icon}</span>
                           {item.text}
                         </li>
                       ))}
