@@ -36,6 +36,9 @@ import {
   ChevronRight,
   ChevronLeft,
   ArrowLeft,
+  AlertTriangle,
+  Ban,
+  CalendarClock,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -47,6 +50,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { TutorCard } from "@/components/tutor-card"
 import { BookTrialModal } from "@/components/book-trial-modal"
 
@@ -509,6 +518,11 @@ const pastLessons = [
   { id: 3, tutor: "Hans Mueller",  subject: "German",   date: "Mon, Mar 17", rating: 5 },
 ]
 
+const unscheduledLessons = [
+  { id: 1, tutor: "Ana Silva",    subject: "Portuguese", credits: 1 },
+  { id: 2, tutor: "Wei Zhang",    subject: "Mandarin",   credits: 1 },
+]
+
 // ─── Messages demo data ───────────────────────────────────────────────────────
 
 type ConversationItem = {
@@ -791,6 +805,31 @@ function StudentDashboardInner() {
   const [helpSearch, setHelpSearch] = useState("")
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
+
+  // ── Lesson action modal state ─────────────────────────────────────────────
+  type LessonModalType = "cancel" | "reschedule" | "rebook" | null
+  type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number }
+  const [lessonModalType, setLessonModalType] = useState<LessonModalType>(null)
+  const [selectedLesson, setSelectedLesson] = useState<LessonEntry | null>(null)
+  const [lessonActionDone, setLessonActionDone] = useState(false)
+  const [cancelReason, setCancelReason] = useState("")
+  const [rescheduleDate, setRescheduleDate] = useState<string>("")
+  const [rescheduleTime, setRescheduleTime] = useState<string>("")
+  const LESSON_TIME_SLOTS = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "19:00"]
+  const CANCEL_REASONS = ["Schedule conflict", "Feeling unwell", "Personal emergency", "Tutor request", "Other"]
+  function openLessonModal(type: LessonModalType, lesson: LessonEntry) {
+    setSelectedLesson(lesson)
+    setLessonModalType(type)
+    setLessonActionDone(false)
+    setCancelReason("")
+    setRescheduleDate("")
+    setRescheduleTime("")
+  }
+  function closeLessonModal() {
+    setLessonModalType(null)
+    setSelectedLesson(null)
+    setLessonActionDone(false)
+  }
 
   // ── Tutor modal state ─────────────────────────────────────────────────────
   const [bookTrialTutor, setBookTrialTutor] = useState<typeof tutors[0] | null>(null)
@@ -1530,8 +1569,54 @@ function StudentDashboardInner() {
                       <button type="button" className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
                         <Video className="h-3.5 w-3.5" /> Join lesson
                       </button>
-                      <button type="button" className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-[#F0F6FA]">
+                      <button
+                        type="button"
+                        onClick={() => openLessonModal("reschedule", lesson)}
+                        className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
                         <RotateCcw className="h-3.5 w-3.5" /> Reschedule
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openLessonModal("cancel", lesson)}
+                        className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
+                      >
+                        <Ban className="h-3.5 w-3.5" /> Cancel
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Unscheduled lessons */}
+            <section className="mb-8">
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-amber-600">Un-scheduled Lessons</h2>
+              <div className="space-y-4">
+                {unscheduledLessons.map(lesson => (
+                  <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-amber-200 bg-amber-50/40 p-5 shadow-sm sm:flex-row sm:items-center">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+                      <CalendarClock className="h-6 w-6 text-amber-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-[#042230]">{lesson.tutor}</p>
+                      <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.credits} lesson credit{lesson.credits !== 1 ? "s" : ""} remaining</p>
+                      <span className="mt-1 inline-block rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">Awaiting schedule</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => openLessonModal("reschedule", lesson)}
+                        className="flex items-center gap-1.5 rounded-lg bg-[#354d73] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#2a3d5e]"
+                      >
+                        <Calendar className="h-3.5 w-3.5" /> Schedule now
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openLessonModal("cancel", lesson)}
+                        className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
+                      >
+                        <Ban className="h-3.5 w-3.5" /> Cancel
                       </button>
                     </div>
                   </div>
@@ -1545,8 +1630,8 @@ function StudentDashboardInner() {
               <div className="space-y-4">
                 {[
                   ...pastLessons,
-                  { id: 4, tutor: "Wei Zhang",    subject: "Mandarin", date: "Mon, Mar 10", rating: 5 },
-                  { id: 5, tutor: "Ana Silva",    subject: "Portuguese", date: "Fri, Mar 7", rating: 4 },
+                  { id: 4, tutor: "Wei Zhang",    subject: "Mandarin",   date: "Mon, Mar 10", rating: 5 },
+                  { id: 5, tutor: "Ana Silva",    subject: "Portuguese", date: "Fri, Mar 7",  rating: 4 },
                 ].map(lesson => (
                   <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-muted">
@@ -1563,7 +1648,11 @@ function StudentDashboardInner() {
                       </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <button type="button" className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
+                      <button
+                        type="button"
+                        onClick={() => openLessonModal("rebook", lesson)}
+                        className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]"
+                      >
                         <RotateCcw className="h-3.5 w-3.5" /> Book again
                       </button>
                     </div>
@@ -1571,6 +1660,243 @@ function StudentDashboardInner() {
                 ))}
               </div>
             </section>
+
+            {/* ── Cancel lesson modal ─────────────────────────────────────────── */}
+            <Dialog open={lessonModalType === "cancel"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">
+                    {lessonActionDone ? "Lesson Cancelled" : "Cancel Lesson"}
+                  </DialogTitle>
+                </DialogHeader>
+                {!lessonActionDone ? (
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-3 rounded-xl bg-rose-50 p-4">
+                      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
+                      <div>
+                        <p className="text-sm font-semibold text-rose-700">Are you sure you want to cancel?</p>
+                        <p className="mt-0.5 text-xs text-rose-600">
+                          {selectedLesson?.tutor} — {selectedLesson?.subject}
+                          {selectedLesson?.date ? ` · ${selectedLesson.date}` : ""}
+                          {selectedLesson?.time ? ` at ${selectedLesson.time}` : ""}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Reason for cancellation</p>
+                      <div className="space-y-2">
+                        {CANCEL_REASONS.map(reason => (
+                          <button
+                            key={reason}
+                            type="button"
+                            onClick={() => setCancelReason(reason)}
+                            className={`w-full rounded-xl border px-4 py-2.5 text-left text-sm transition-colors ${cancelReason === reason ? "border-[#354d73] bg-[#354d73]/5 font-semibold text-[#354d73]" : "border-border text-muted-foreground hover:border-[#354d73]/40 hover:bg-[#F0F6FA]"}`}
+                          >
+                            {reason}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeLessonModal}
+                        className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
+                        Keep lesson
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!cancelReason}
+                        onClick={() => setLessonActionDone(true)}
+                        className="flex-1 rounded-xl bg-rose-500 py-2.5 text-sm font-semibold text-white hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Confirm cancellation
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                      <Check className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#042230]">Lesson cancelled successfully</p>
+                      <p className="mt-1 text-sm text-muted-foreground">Your lesson credit has been returned to your account.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="w-full rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
+            {/* ── Reschedule / Schedule lesson modal ──────────────────────────── */}
+            <Dialog open={lessonModalType === "reschedule"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">
+                    {lessonActionDone ? "Lesson Scheduled!" : (selectedLesson?.date ? "Reschedule Lesson" : "Schedule Lesson")}
+                  </DialogTitle>
+                </DialogHeader>
+                {!lessonActionDone ? (
+                  <div className="space-y-5">
+                    <div className="rounded-xl border border-border bg-[#F0F6FA] p-3">
+                      <p className="text-sm font-semibold text-[#042230]">{selectedLesson?.tutor}</p>
+                      <p className="text-xs text-muted-foreground">{selectedLesson?.subject}{selectedLesson?.date ? ` · currently ${selectedLesson.date} at ${selectedLesson.time}` : ""}</p>
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Pick a new date</p>
+                      <Input
+                        type="date"
+                        value={rescheduleDate}
+                        onChange={e => setRescheduleDate(e.target.value)}
+                        min={new Date().toISOString().split("T")[0]}
+                        className="w-full rounded-xl border-border"
+                      />
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Pick a time</p>
+                      <div className="grid grid-cols-4 gap-2">
+                        {LESSON_TIME_SLOTS.map(slot => (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => setRescheduleTime(slot)}
+                            className={`rounded-lg border py-1.5 text-xs font-medium transition-colors ${rescheduleTime === slot ? "border-[#354d73] bg-[#354d73] text-white" : "border-border text-muted-foreground hover:border-[#354d73]/40 hover:bg-[#F0F6FA]"}`}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeLessonModal}
+                        className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!rescheduleDate || !rescheduleTime}
+                        onClick={() => setLessonActionDone(true)}
+                        className="flex-1 rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                      <Check className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#042230]">Lesson {selectedLesson?.date ? "rescheduled" : "scheduled"}!</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {selectedLesson?.tutor} · {selectedLesson?.subject}<br />
+                        {new Date(rescheduleDate).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} at {rescheduleTime}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="w-full rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
+            {/* ── Re-book lesson modal ─────────────────────────────────────────── */}
+            <Dialog open={lessonModalType === "rebook"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">
+                    {lessonActionDone ? "Lesson Booked!" : "Book Again"}
+                  </DialogTitle>
+                </DialogHeader>
+                {!lessonActionDone ? (
+                  <div className="space-y-5">
+                    <div className="rounded-xl border border-border bg-[#F0F6FA] p-3">
+                      <p className="text-sm font-semibold text-[#042230]">{selectedLesson?.tutor}</p>
+                      <p className="text-xs text-muted-foreground">{selectedLesson?.subject}{selectedLesson?.date ? ` · last lesson ${selectedLesson.date}` : ""}</p>
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Pick a date</p>
+                      <Input
+                        type="date"
+                        value={rescheduleDate}
+                        onChange={e => setRescheduleDate(e.target.value)}
+                        min={new Date().toISOString().split("T")[0]}
+                        className="w-full rounded-xl border-border"
+                      />
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Pick a time</p>
+                      <div className="grid grid-cols-4 gap-2">
+                        {LESSON_TIME_SLOTS.map(slot => (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => setRescheduleTime(slot)}
+                            className={`rounded-lg border py-1.5 text-xs font-medium transition-colors ${rescheduleTime === slot ? "border-[#354d73] bg-[#354d73] text-white" : "border-border text-muted-foreground hover:border-[#354d73]/40 hover:bg-[#F0F6FA]"}`}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeLessonModal}
+                        className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!rescheduleDate || !rescheduleTime}
+                        onClick={() => setLessonActionDone(true)}
+                        className="flex-1 rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Book lesson
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                      <Check className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#042230]">Lesson booked!</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {selectedLesson?.tutor} · {selectedLesson?.subject}<br />
+                        {rescheduleDate && new Date(rescheduleDate).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} at {rescheduleTime}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="w-full rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
           </div>
         )}
 
