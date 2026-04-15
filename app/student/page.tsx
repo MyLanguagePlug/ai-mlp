@@ -613,27 +613,32 @@ const tutors = [
 
 type TabId = "home" | "messages" | "lessons" | "saved" | "refer" | "help"
 
-const upcomingLessons = [
+// ─── Lesson action types & constants ─────────────────────────────────────────
+
+type LessonModalType = "cancel" | "reschedule" | "rebook" | "unschedule" | "review" | null
+type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number; reviewed?: boolean }
+
+const INIT_UPCOMING_LESSONS: LessonEntry[] = [
   { id: 1, tutor: "Maria Santos",       subject: "Spanish",  date: "Thu, Mar 19", time: "10:00 AM" },
   { id: 2, tutor: "Yuki Tanaka",        subject: "Japanese", date: "Sat, Mar 21", time: "2:00 PM"  },
   { id: 3, tutor: "Jean-Pierre Dubois", subject: "French",   date: "Mon, Mar 24", time: "11:00 AM" },
 ]
 
-const pastLessons = [
-  { id: 1, tutor: "Maria Santos",  subject: "Spanish",  date: "Wed, Mar 12", rating: 5 },
-  { id: 2, tutor: "Yuki Tanaka",   subject: "Japanese", date: "Fri, Mar 14", rating: 4 },
-  { id: 3, tutor: "Hans Mueller",  subject: "German",   date: "Mon, Mar 17", rating: 5 },
+const INIT_PAST_LESSONS: LessonEntry[] = [
+  { id: 1,  tutor: "Maria Santos",       subject: "Spanish",    date: "Wed, Mar 12", rating: 5, reviewed: true  },
+  { id: 2,  tutor: "Yuki Tanaka",        subject: "Japanese",   date: "Fri, Mar 14", rating: 4, reviewed: true  },
+  { id: 3,  tutor: "Hans Mueller",       subject: "German",     date: "Mon, Mar 17", rating: 5, reviewed: true  },
+  { id: 4,  tutor: "Wei Zhang",          subject: "Mandarin",   date: "Mon, Mar 10", rating: 5, reviewed: true  },
+  { id: 5,  tutor: "Ana Silva",          subject: "Portuguese", date: "Fri, Mar 7",  rating: 4, reviewed: true  },
+  { id: 6,  tutor: "Jean-Pierre Dubois", subject: "French",     date: "Mon, Mar 3",  reviewed: false },
+  { id: 7,  tutor: "Maria Santos",       subject: "Spanish",    date: "Wed, Feb 26", reviewed: false },
+  { id: 8,  tutor: "Yuki Tanaka",        subject: "Japanese",   date: "Fri, Feb 21", reviewed: false },
 ]
 
-const unscheduledLessons = [
+const INIT_UNSCHEDULED_LESSONS: LessonEntry[] = [
   { id: 1, tutor: "Ana Silva",    subject: "Portuguese", credits: 1 },
   { id: 2, tutor: "Wei Zhang",    subject: "Mandarin",   credits: 1 },
 ]
-
-// ─── Lesson action types & constants ─────────────────────────────────────────
-
-type LessonModalType = "cancel" | "reschedule" | "rebook" | null
-type LessonEntry = { id: number; tutor: string; subject: string; date?: string; time?: string; rating?: number; credits?: number }
 
 const LESSON_TIME_SLOTS = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -931,6 +936,15 @@ function StudentDashboardInner() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [lessonsOpen, setLessonsOpen] = useState(true)
 
+  // ── Lesson lists state ────────────────────────────────────────────────────
+  const [upcomingLessons, setUpcomingLessons] = useState<LessonEntry[]>(INIT_UPCOMING_LESSONS)
+  const [unscheduledLessons, setUnscheduledLessons] = useState<LessonEntry[]>(INIT_UNSCHEDULED_LESSONS)
+  const [pastLessons, setPastLessons] = useState<LessonEntry[]>(INIT_PAST_LESSONS)
+  const PAST_PER_PAGE = 3
+  const [pastLessonsPage, setPastLessonsPage] = useState(1)
+  const pastLessonsTotalPages = Math.ceil(pastLessons.length / PAST_PER_PAGE)
+  const pagedPastLessons = pastLessons.slice((pastLessonsPage - 1) * PAST_PER_PAGE, pastLessonsPage * PAST_PER_PAGE)
+
   // ── Lesson action modal state ─────────────────────────────────────────────
   const [lessonModalType, setLessonModalType] = useState<LessonModalType>(null)
   const [selectedLesson, setSelectedLesson] = useState<LessonEntry | null>(null)
@@ -938,6 +952,8 @@ function StudentDashboardInner() {
   const [cancelReason, setCancelReason] = useState("")
   const [rescheduleDate, setRescheduleDate] = useState<string>("")
   const [rescheduleTime, setRescheduleTime] = useState<string>("")
+  const [reviewRating, setReviewRating] = useState(0)
+  const [reviewText, setReviewText] = useState("")
   function openLessonModal(type: LessonModalType, lesson: LessonEntry) {
     setSelectedLesson(lesson)
     setLessonModalType(type)
@@ -945,11 +961,24 @@ function StudentDashboardInner() {
     setCancelReason("")
     setRescheduleDate("")
     setRescheduleTime("")
+    setReviewRating(0)
+    setReviewText("")
   }
   function closeLessonModal() {
     setLessonModalType(null)
     setSelectedLesson(null)
     setLessonActionDone(false)
+  }
+  function handleUnschedule() {
+    if (!selectedLesson) return
+    setUpcomingLessons(prev => prev.filter(l => l.id !== selectedLesson.id))
+    setUnscheduledLessons(prev => [...prev, { id: selectedLesson.id, tutor: selectedLesson.tutor, subject: selectedLesson.subject, credits: 1 }])
+    setLessonActionDone(true)
+  }
+  function handleReviewSubmit() {
+    if (!selectedLesson || reviewRating === 0) return
+    setPastLessons(prev => prev.map(l => l.id === selectedLesson.id ? { ...l, reviewed: true, rating: reviewRating } : l))
+    setLessonActionDone(true)
   }
 
   // ── Tutor modal state ─────────────────────────────────────────────────────
@@ -1418,7 +1447,7 @@ function StudentDashboardInner() {
                                   <p className="text-xs text-muted-foreground">{lesson.subject} · {lesson.date}</p>
                                   <div className="mt-0.5 flex items-center gap-0.5">
                                     {Array.from({ length: 5 }).map((_, i) => (
-                                      <Star key={i} className={`h-3.5 w-3.5 ${i < lesson.rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
+                                      <Star key={i} className={`h-3.5 w-3.5 ${i < (lesson.rating ?? 0) ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
                                     ))}
                                   </div>
                                 </div>
@@ -1698,85 +1727,96 @@ function StudentDashboardInner() {
             {/* Upcoming lessons */}
             <section className="mb-8">
               <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-[#354d73]">Upcoming Lessons</h2>
-              <div className="space-y-4">
-                {upcomingLessons.map(lesson => (
-                  <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#354d73]/10">
-                      <Calendar className="h-6 w-6 text-[#354d73]" />
+              {upcomingLessons.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No upcoming lessons.</p>
+              ) : (
+                <div className="space-y-4">
+                  {upcomingLessons.map(lesson => (
+                    <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#354d73]/10">
+                        <Calendar className="h-6 w-6 text-[#354d73]" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-[#042230]">{lesson.tutor}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.date} at {lesson.time}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Confirmed</span>
+                        <button type="button" className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
+                          <Video className="h-3.5 w-3.5" /> Join lesson
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("reschedule", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-[#F0F6FA]"
+                        >
+                          <RotateCcw className="h-3.5 w-3.5" /> Reschedule
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("unschedule", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg border border-amber-300 px-3 py-1.5 text-xs text-amber-700 hover:bg-amber-50"
+                        >
+                          <CalendarClock className="h-3.5 w-3.5" /> Unschedule
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("cancel", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
+                        >
+                          <Ban className="h-3.5 w-3.5" /> Cancel
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-bold text-[#042230]">{lesson.tutor}</p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.date} at {lesson.time}</p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Confirmed</span>
-                      <button type="button" className="flex items-center gap-1.5 rounded-lg border border-[#354d73] px-3 py-1.5 text-xs font-semibold text-[#354d73] hover:bg-[#F0F6FA]">
-                        <Video className="h-3.5 w-3.5" /> Join lesson
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openLessonModal("reschedule", lesson)}
-                        className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-[#F0F6FA]"
-                      >
-                        <RotateCcw className="h-3.5 w-3.5" /> Reschedule
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openLessonModal("cancel", lesson)}
-                        className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
-                      >
-                        <Ban className="h-3.5 w-3.5" /> Cancel
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </section>
 
             {/* Unscheduled lessons */}
             <section className="mb-8">
               <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-amber-600">Un-scheduled Lessons</h2>
-              <div className="space-y-4">
-                {unscheduledLessons.map(lesson => (
-                  <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-amber-200 bg-amber-50/40 p-5 shadow-sm sm:flex-row sm:items-center">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100">
-                      <CalendarClock className="h-6 w-6 text-amber-600" />
+              {unscheduledLessons.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No unscheduled lessons.</p>
+              ) : (
+                <div className="space-y-4">
+                  {unscheduledLessons.map(lesson => (
+                    <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-amber-200 bg-amber-50/40 p-5 shadow-sm sm:flex-row sm:items-center">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+                        <CalendarClock className="h-6 w-6 text-amber-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-bold text-[#042230]">{lesson.tutor}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.credits} lesson credit{lesson.credits !== 1 ? "s" : ""} remaining</p>
+                        <span className="mt-1 inline-block rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">Awaiting schedule</span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("reschedule", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg bg-[#354d73] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#2a3d5e]"
+                        >
+                          <Calendar className="h-3.5 w-3.5" /> Schedule now
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("cancel", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
+                        >
+                          <Ban className="h-3.5 w-3.5" /> Cancel
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-bold text-[#042230]">{lesson.tutor}</p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.credits} lesson credit{lesson.credits !== 1 ? "s" : ""} remaining</p>
-                      <span className="mt-1 inline-block rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">Awaiting schedule</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => openLessonModal("reschedule", lesson)}
-                        className="flex items-center gap-1.5 rounded-lg bg-[#354d73] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#2a3d5e]"
-                      >
-                        <Calendar className="h-3.5 w-3.5" /> Schedule now
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openLessonModal("cancel", lesson)}
-                        className="flex items-center gap-1.5 rounded-lg border border-rose-200 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50"
-                      >
-                        <Ban className="h-3.5 w-3.5" /> Cancel
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </section>
 
             {/* Past lessons */}
             <section>
               <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-muted-foreground">Past Lessons</h2>
               <div className="space-y-4">
-                {[
-                  ...pastLessons,
-                  { id: 4, tutor: "Wei Zhang",    subject: "Mandarin",   date: "Mon, Mar 10", rating: 5 },
-                  { id: 5, tutor: "Ana Silva",    subject: "Portuguese", date: "Fri, Mar 7",  rating: 4 },
-                ].map(lesson => (
+                {pagedPastLessons.map(lesson => (
                   <div key={lesson.id} className="flex flex-col gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-muted">
                       <BookOpen className="h-6 w-6 text-muted-foreground" />
@@ -1784,14 +1824,27 @@ function StudentDashboardInner() {
                     <div className="flex-1">
                       <p className="font-bold text-[#042230]">{lesson.tutor}</p>
                       <p className="mt-0.5 text-sm text-muted-foreground">{lesson.subject} · {lesson.date}</p>
-                      <div className="mt-1 flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} className={`h-4 w-4 ${i < lesson.rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
-                        ))}
-                        <span className="ml-1.5 text-xs text-muted-foreground">{lesson.rating}/5</span>
-                      </div>
+                      {lesson.reviewed ? (
+                        <div className="mt-1 flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star key={i} className={`h-4 w-4 ${i < (lesson.rating ?? 0) ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`} />
+                          ))}
+                          <span className="ml-1.5 text-xs text-muted-foreground">{lesson.rating}/5</span>
+                        </div>
+                      ) : (
+                        <span className="mt-1 inline-block rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">Review pending</span>
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
+                      {!lesson.reviewed && (
+                        <button
+                          type="button"
+                          onClick={() => openLessonModal("review", lesson)}
+                          className="flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-600"
+                        >
+                          <Star className="h-3.5 w-3.5" /> Leave Review
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => openLessonModal("rebook", lesson)}
@@ -1803,6 +1856,32 @@ function StudentDashboardInner() {
                   </div>
                 ))}
               </div>
+              {/* Pagination */}
+              {pastLessonsTotalPages > 1 && (
+                <div className="mt-6 flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground">
+                    Page {pastLessonsPage} of {pastLessonsTotalPages}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={pastLessonsPage === 1}
+                      onClick={() => setPastLessonsPage(p => p - 1)}
+                      className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-[#F0F6FA] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" /> Previous
+                    </button>
+                    <button
+                      type="button"
+                      disabled={pastLessonsPage === pastLessonsTotalPages}
+                      onClick={() => setPastLessonsPage(p => p + 1)}
+                      className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-[#F0F6FA] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Next <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* ── Cancel lesson modal ─────────────────────────────────────────── */}
@@ -2041,10 +2120,150 @@ function StudentDashboardInner() {
                 )}
               </DialogContent>
             </Dialog>
+
+            {/* ── Unschedule lesson modal ──────────────────────────────────────── */}
+            <Dialog open={lessonModalType === "unschedule"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">
+                    {lessonActionDone ? "Lesson Unscheduled" : "Unschedule Lesson"}
+                  </DialogTitle>
+                </DialogHeader>
+                {!lessonActionDone ? (
+                  <div className="space-y-5">
+                    <div className="flex items-start gap-3 rounded-xl bg-amber-50 p-4">
+                      <CalendarClock className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
+                      <div>
+                        <p className="text-sm font-semibold text-amber-700">Remove this lesson from your schedule?</p>
+                        <p className="mt-0.5 text-xs text-amber-600">
+                          {selectedLesson?.tutor} — {selectedLesson?.subject}
+                          {selectedLesson?.date ? ` · ${selectedLesson.date}` : ""}
+                          {selectedLesson?.time ? ` at ${selectedLesson.time}` : ""}
+                        </p>
+                        <p className="mt-1 text-xs text-amber-600">The lesson will be moved to your unscheduled lessons and can be rescheduled at any time.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeLessonModal}
+                        className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
+                        Keep lesson
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleUnschedule}
+                        className="flex-1 rounded-xl bg-amber-500 py-2.5 text-sm font-semibold text-white hover:bg-amber-600"
+                      >
+                        Unschedule
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
+                      <Check className="h-8 w-8 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#042230]">Lesson unscheduled</p>
+                      <p className="mt-1 text-sm text-muted-foreground">The lesson has been moved to your unscheduled lessons. You can schedule it again whenever you&apos;re ready.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="w-full rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
+            {/* ── Leave Review modal ───────────────────────────────────────────── */}
+            <Dialog open={lessonModalType === "review"} onOpenChange={open => { if (!open) closeLessonModal() }}>
+              <DialogContent className="max-w-md rounded-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-[#042230]">
+                    {lessonActionDone ? "Review Submitted!" : "Leave a Review"}
+                  </DialogTitle>
+                </DialogHeader>
+                {!lessonActionDone ? (
+                  <div className="space-y-5">
+                    <div className="rounded-xl border border-border bg-[#F0F6FA] p-3">
+                      <p className="text-sm font-semibold text-[#042230]">{selectedLesson?.tutor}</p>
+                      <p className="text-xs text-muted-foreground">{selectedLesson?.subject}{selectedLesson?.date ? ` · ${selectedLesson.date}` : ""}</p>
+                    </div>
+                    <div>
+                      <p className="mb-3 text-sm font-semibold text-[#042230]">Your rating</p>
+                      <div className="flex items-center gap-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setReviewRating(i + 1)}
+                            className="focus:outline-none"
+                            aria-label={`Rate ${i + 1} star${i + 1 !== 1 ? "s" : ""}`}
+                          >
+                            <Star className={`h-8 w-8 transition-colors ${i < reviewRating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted hover:fill-amber-200 hover:text-amber-200"}`} />
+                          </button>
+                        ))}
+                        {reviewRating > 0 && (
+                          <span className="ml-1 text-sm font-semibold text-[#042230]">{reviewRating}/5</span>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#042230]">Comments <span className="font-normal text-muted-foreground">(optional)</span></p>
+                      <textarea
+                        value={reviewText}
+                        onChange={e => setReviewText(e.target.value)}
+                        placeholder="Share your experience with this tutor..."
+                        rows={3}
+                        className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-[#042230] placeholder:text-muted-foreground focus:border-[#354d73] focus:outline-none focus:ring-1 focus:ring-[#354d73] resize-none"
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={closeLessonModal}
+                        className="flex-1 rounded-xl border border-border py-2.5 text-sm font-semibold text-muted-foreground hover:bg-[#F0F6FA]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={reviewRating === 0}
+                        onClick={handleReviewSubmit}
+                        className="flex-1 rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Submit Review
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+                      <Check className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-base font-semibold text-[#042230]">Thank you for your review!</p>
+                      <p className="mt-1 text-sm text-muted-foreground">Your feedback helps other students find great tutors.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeLessonModal}
+                      className="w-full rounded-xl bg-[#354d73] py-2.5 text-sm font-semibold text-white hover:bg-[#2a3d5e]"
+                    >
+                      Done
+                    </button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
           </div>
         )}
-
-        {/* ════════════════ SAVED TUTORS tab ════════════════ */}
         {activeTab === "saved" && (
           <div>
             <div className="mb-6 flex items-center justify-between">
