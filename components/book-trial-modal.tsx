@@ -26,6 +26,7 @@ import {
   XCircle,
   Loader2,
   CalendarClock,
+  Globe,
 } from "lucide-react"
 
 export interface BookTrialTutor {
@@ -86,6 +87,7 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
   const [confirmed, setConfirmed] = useState(false)
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(tutor?.languages[0] ?? "")
 
   function reset() {
     setStep("lesson-type")
@@ -96,6 +98,7 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
     setConfirmed(false)
     setPaymentFailed(false)
     setIsProcessing(false)
+    setSelectedLanguage(tutor?.languages[0] ?? "")
   }
 
   function handleClose(v: boolean) {
@@ -152,6 +155,32 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
       <p className="text-sm text-muted-foreground">
         Choose the type of lesson you'd like to book with {tutor.name}
       </p>
+
+      {/* Language selector — only shown when tutor teaches more than one language */}
+      {tutor.languages.length > 1 && (
+        <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-2">
+          <div className="flex items-center gap-1.5">
+            <Globe className="h-4 w-4 text-[#354d73]" />
+            <p className="text-sm font-medium text-[#042230]">Select language</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {tutor.languages.map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setSelectedLanguage(lang)}
+                className={cn(
+                  "rounded-full border-2 px-3 py-1 text-sm font-medium transition-all",
+                  selectedLanguage === lang
+                    ? "border-[#042230] bg-[#042230] text-white"
+                    : "border-border hover:border-[#042230]/50 text-[#042230]"
+                )}
+              >
+                {lang}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="space-y-3">
         {lessonOptions.map((opt) => (
           <button
@@ -354,6 +383,7 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
           "------------------------------------------------",
           `Tutor:     ${tutor?.name ?? ""}`,
           `Type:      ${lessonTypeLabel()}`,
+          ...(selectedLanguage ? [`Language:  ${selectedLanguage}`] : []),
           `Date:      ${date}`,
           `Time:      ${selectedTime ?? ""}`,
           `Duration:  ${lessonType === "trial" ? "20 minutes" : "50 minutes"}`,
@@ -385,6 +415,9 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
           <div className="w-full rounded-xl border border-border bg-muted/30 p-4 text-left space-y-2">
             <BookingSummaryLine label="Tutor" value={tutor.name} />
             <BookingSummaryLine label="Type" value={lessonTypeLabel()} />
+            {selectedLanguage && (
+              <BookingSummaryLine label="Language" value={selectedLanguage} />
+            )}
             <BookingSummaryLine
               label="Date"
               value={selectedDate?.toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric" }) ?? ""}
@@ -461,6 +494,9 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
         {/* Booking details */}
         <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-2.5">
           <BookingSummaryLine label="Lesson type" value={lessonTypeLabel()} />
+          {selectedLanguage && (
+            <BookingSummaryLine label="Language" value={selectedLanguage} />
+          )}
           <BookingSummaryLine
             label="Date"
             value={selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) ?? ""}
