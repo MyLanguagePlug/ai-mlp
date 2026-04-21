@@ -322,7 +322,7 @@ export default function BecomeTutorPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-4 text-center font-serif text-3xl font-bold text-(--navy) sm:text-4xl">How to Sign Up</h2>
-          <p className="mb-12 mx-auto text-center text-muted-foreground max-w-2xl">
+          <p className="mx-auto mb-12 max-w-2xl text-center text-muted-foreground">
             Getting started as a tutor takes just a few minutes. Here&apos;s exactly what the process looks like.
           </p>
 
