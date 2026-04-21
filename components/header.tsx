@@ -90,7 +90,7 @@ export function Header({ variant }: HeaderProps = {}) {
             </DropdownMenuContent>
           </DropdownMenu>
           <Link 
-            href="/tutors" 
+            href={isStudent ? "/student" : "/tutors"}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Find Tutors
@@ -240,7 +240,7 @@ export function Header({ variant }: HeaderProps = {}) {
         <div className="border-t border-border bg-background md:hidden">
           <nav className="flex flex-col gap-1 p-4">
             <Link 
-              href="/tutors" 
+              href={isStudent ? "/student" : "/tutors"}
               className="rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted"
               onClick={() => setMobileMenuOpen(false)}
             >
