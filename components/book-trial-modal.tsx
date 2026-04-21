@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import {
   Dialog,
@@ -89,6 +89,11 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
   const [isProcessing, setIsProcessing] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState<string>(tutor?.languages[0] ?? "")
 
+  // Sync selected language when a different tutor opens the modal
+  useEffect(() => {
+    if (tutor) setSelectedLanguage(tutor.languages[0] ?? "")
+  }, [tutor])
+
   function reset() {
     setStep("lesson-type")
     setLessonType("trial")
@@ -163,10 +168,16 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
             <Globe className="h-4 w-4 text-[#354d73]" />
             <p className="text-sm font-medium text-[#042230]">Select language</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div
+            className="flex flex-wrap gap-2"
+            role="radiogroup"
+            aria-label="Select lesson language"
+          >
             {tutor.languages.map((lang) => (
               <button
                 key={lang}
+                role="radio"
+                aria-checked={selectedLanguage === lang}
                 onClick={() => setSelectedLanguage(lang)}
                 className={cn(
                   "rounded-full border-2 px-3 py-1 text-sm font-medium transition-all",
