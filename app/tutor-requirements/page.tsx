@@ -60,12 +60,24 @@ const notRequired = [
   "To be a citizen of any specific country",
 ]
 
-const steps = [
-  { number: "01", title: "Apply Online", description: "Fill out our tutor application with your background, qualifications, and teaching experience." },
-  { number: "02", title: "Interview", description: "Have a short video interview with our team to assess your communication skills and enthusiasm." },
-  { number: "03", title: "Trial Lesson", description: "Conduct a demo lesson so we can evaluate your teaching style and methodology." },
-  { number: "04", title: "Profile Setup", description: "Once approved, set up your tutor profile, availability, and lesson pricing." },
-  { number: "05", title: "Start Teaching", description: "Go live and start accepting students. Our support team is always here to help." },
+const SITE_DOMAIN = "ai-mlp.com"
+
+const signupSteps = [
+  {
+    number: "01",
+    title: "Create Your Account",
+    description: "Sign up and choose your role. Select 'I want to teach' to start your tutor journey on My Language Plug.",
+  },
+  {
+    number: "02",
+    title: "Build Your Profile",
+    description: "Add your photo, languages, specialties, certifications, and set your availability and lesson pricing.",
+  },
+  {
+    number: "03",
+    title: "Go Live & Teach",
+    description: "Once approved, your profile goes live. Students can find and book you — start earning right away.",
+  },
 ]
 
 export default function TutorRequirementsPage() {
@@ -163,22 +175,177 @@ export default function TutorRequirementsPage() {
       {/* Application Steps */}
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-12 text-center text-3xl font-bold text-(--navy)">The Application Process</h2>
-          <div className="mx-auto max-w-3xl space-y-6">
-            {steps.map((step) => (
-              <div key={step.number} className="flex gap-6">
-                <div className="flex-shrink-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                    {step.number}
+          <h2 className="mb-4 text-center text-3xl font-bold text-(--navy)">How to Sign Up</h2>
+          <p className="mb-12 text-center text-muted-foreground max-w-2xl mx-auto">
+            Getting started as a tutor takes just a few minutes. Here&apos;s exactly what the process looks like.
+          </p>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {/* Step 1 – Create Your Account */}
+            <div className="flex flex-col">
+              {/* Browser mockup */}
+              <div className="rounded-2xl border bg-white shadow-md overflow-hidden mb-5">
+                {/* Chrome bar */}
+                <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <div className="flex-1 bg-white rounded-md px-2 py-0.5 text-[10px] text-muted-foreground border truncate">
+                    {SITE_DOMAIN}/signup
                   </div>
                 </div>
-                <div className="pt-1">
-                  <h3 className="font-semibold text-(--navy)">{step.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{step.description}</p>
+                {/* Page */}
+                <div className="bg-[#F0F6FA] px-4 pt-4 pb-5 select-none">
+                  <p className="text-center text-[11px] font-bold text-[#042230] mb-1">My Language Plug</p>
+                  <p className="text-center text-[9px] text-muted-foreground mb-3">
+                    Welcome! Let&apos;s get you started 👋
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    {/* Student card – muted */}
+                    <div className="rounded-xl border-2 border-gray-200 bg-white p-2.5 text-center opacity-50">
+                      <div className="text-xl mb-1">🎓</div>
+                      <div className="text-[9px] font-semibold text-gray-600">I want to learn</div>
+                    </div>
+                    {/* Tutor card – selected */}
+                    <div className="relative rounded-xl border-2 border-[#5A8DA5] bg-[#5A8DA5] p-2.5 text-center shadow-md">
+                      <div className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white">
+                        <span className="text-[#5A8DA5] text-[8px] font-bold">✓</span>
+                      </div>
+                      <div className="text-xl mb-1">🧑‍🏫</div>
+                      <div className="text-[9px] font-bold text-white">I want to teach</div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg bg-[#5A8DA5] py-1.5 text-center text-[9px] font-semibold text-white">
+                    Continue as Tutor →
+                  </div>
                 </div>
               </div>
-            ))}
+              {/* Step info */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">
+                  {signupSteps[0].number}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-(--navy)">{signupSteps[0].title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{signupSteps[0].description}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 – Build Your Profile */}
+            <div className="flex flex-col">
+              <div className="rounded-2xl border bg-white shadow-md overflow-hidden mb-5">
+                <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <div className="flex-1 bg-white rounded-md px-2 py-0.5 text-[10px] text-muted-foreground border truncate">
+                    {SITE_DOMAIN}/tutor/profile
+                  </div>
+                </div>
+                <div className="bg-white px-4 pt-4 pb-5 select-none">
+                  {/* Avatar + name row */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="h-10 w-10 rounded-full bg-[#5A8DA5]/20 flex items-center justify-center text-lg flex-shrink-0">
+                      🧑‍🏫
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-2.5 w-24 rounded bg-gray-200 mb-1.5" />
+                      <div className="h-2 w-16 rounded bg-gray-100" />
+                    </div>
+                  </div>
+                  {/* Language badges */}
+                  <p className="text-[9px] font-semibold text-[#354d73] mb-1">Languages I teach</p>
+                  <div className="flex gap-1 mb-3 flex-wrap">
+                    {["🇬🇧 English", "🇵🇹 Portuguese", "🇪🇸 Spanish"].map((l) => (
+                      <span key={l} className="rounded-full bg-[#354d73]/10 px-2 py-0.5 text-[8px] text-[#354d73] font-medium">
+                        {l}
+                      </span>
+                    ))}
+                  </div>
+                  {/* Bio field */}
+                  <p className="text-[9px] font-semibold text-[#354d73] mb-1">About me</p>
+                  <div className="rounded-md border bg-gray-50 p-2 mb-3 space-y-1">
+                    <div className="h-1.5 w-full rounded bg-gray-200" />
+                    <div className="h-1.5 w-5/6 rounded bg-gray-200" />
+                    <div className="h-1.5 w-4/6 rounded bg-gray-200" />
+                  </div>
+                  {/* Save button */}
+                  <div className="rounded-lg bg-[#354d73] py-1.5 text-center text-[9px] font-semibold text-white">
+                    Save Profile
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">
+                  {signupSteps[1].number}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-(--navy)">{signupSteps[1].title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{signupSteps[1].description}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 – Go Live & Teach */}
+            <div className="flex flex-col">
+              <div className="rounded-2xl border bg-white shadow-md overflow-hidden mb-5">
+                <div className="bg-gray-100 px-3 py-2 flex items-center gap-2 border-b">
+                  <div className="flex gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <div className="flex-1 bg-white rounded-md px-2 py-0.5 text-[10px] text-muted-foreground border truncate">
+                    {SITE_DOMAIN}/tutor
+                  </div>
+                </div>
+                <div className="bg-[#F0F6FA] px-4 pt-4 pb-5 select-none">
+                  {/* Welcome banner */}
+                  <div className="rounded-xl bg-[#354d73] p-3 mb-3 text-white">
+                    <p className="text-[10px] font-bold mb-0.5">Welcome back, Maria 👋</p>
+                    <p className="text-[8px] text-white/70">You&apos;re live! Students can now book lessons with you.</p>
+                  </div>
+                  {/* Stats row */}
+                  <div className="grid grid-cols-3 gap-1.5 mb-3">
+                    {[["3", "Upcoming"], ["214", "Students"], ["4.9★", "Rating"]].map(([val, label]) => (
+                      <div key={label} className="rounded-lg bg-white border p-2 text-center">
+                        <div className="text-[11px] font-bold text-[#354d73]">{val}</div>
+                        <div className="text-[8px] text-muted-foreground">{label}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Lesson row */}
+                  <div className="rounded-lg bg-white border p-2 flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-full bg-[#5A8DA5]/20 flex items-center justify-center text-xs flex-shrink-0">
+                      📅
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-2 w-20 rounded bg-gray-200 mb-1" />
+                      <div className="h-1.5 w-14 rounded bg-gray-100" />
+                    </div>
+                    <div className="rounded-md bg-green-100 px-1.5 py-0.5 text-[8px] font-medium text-green-700 flex-shrink-0">
+                      Join
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs">
+                  {signupSteps[2].number}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-(--navy)">{signupSteps[2].title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{signupSteps[2].description}</p>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="mt-12 text-center">
             <Button size="lg" asChild>
               <Link href="/become-tutor">
