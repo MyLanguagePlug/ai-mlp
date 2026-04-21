@@ -16,7 +16,7 @@ export function HeaderController() {
   let variant: "minimal" | "student" | "tutor" | undefined
   if (pathname === "/login" || pathname === "/tutor/login") variant = "minimal"
   else if (pathname.startsWith("/student")) variant = "student"
-  else if (pathname.startsWith("/tutor")) variant = "tutor"
+  else if (pathname === "/tutor" || pathname.startsWith("/tutor/")) variant = "tutor"
 
   return <Header variant={variant} />
 }

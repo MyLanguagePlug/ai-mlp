@@ -22,6 +22,10 @@ import {
   BookOpen,
   Package,
   Check,
+  Download,
+  XCircle,
+  Loader2,
+  CalendarClock,
 } from "lucide-react"
 
 export interface BookTrialTutor {
@@ -69,6 +73,10 @@ const PACKAGES = [
   { count: 20, discount: 15,   label: "20 lessons" },
 ]
 
+// Demo-only constants — not used in production payment flow
+const MOCK_PAYMENT_PROCESSING_DELAY = 1500
+const MOCK_PAYMENT_FAILURE_RATE = 0.2
+
 export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProps) {
   const [step, setStep] = useState<Step>("lesson-type")
   const [lessonType, setLessonType] = useState<"trial" | "single" | "package">("trial")
@@ -76,6 +84,8 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
+  const [paymentFailed, setPaymentFailed] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   function reset() {
     setStep("lesson-type")
@@ -84,6 +94,8 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
     setSelectedDate(undefined)
     setSelectedTime(null)
     setConfirmed(false)
+    setPaymentFailed(false)
+    setIsProcessing(false)
   }
 
   function handleClose(v: boolean) {
@@ -281,7 +293,84 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
 
   // ── Step: confirm ──────────────────────────────────────────────────────────
   const renderConfirm = () => {
+    // ── Payment failed screen ──────────────────────────────────────────────
+    if (paymentFailed) {
+      return (
+        <div className="flex flex-col items-center gap-4 py-6 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+            <XCircle className="h-8 w-8 text-red-600" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-[#042230]">Payment Failed</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              We couldn't process your payment. Please check your card details and try again.
+            </p>
+          </div>
+          <div className="w-full rounded-xl border border-red-100 bg-red-50 p-4 text-left space-y-2">
+            <p className="text-sm font-medium text-red-700">Possible reasons:</p>
+            <ul className="space-y-1 text-sm text-red-600 list-disc list-inside">
+              <li>Insufficient funds</li>
+              <li>Card declined by issuing bank</li>
+              <li>Incorrect card details</li>
+              <li>Card expired or blocked for online use</li>
+            </ul>
+          </div>
+          <div className="w-full space-y-2">
+            <Button
+              className="w-full bg-[#042230] hover:bg-[#042230]/90"
+              onClick={() => { setPaymentFailed(false) }}
+            >
+              Try Again
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => handleClose(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Need help?{" "}
+            <a href="/help" className="underline hover:text-[#042230]">Contact support</a>
+          </p>
+        </div>
+      )
+    }
+
+    // ── Booking confirmed screen ───────────────────────────────────────────
     if (confirmed) {
+      const remainingLessons = lessonType === "package" ? selectedPackage.count - 1 : 0
+
+      function downloadInvoice() {
+        const invoiceId = `MLP-${Date.now()}`
+        const date = selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) ?? ""
+        const invoiceLines = [
+          "================================================",
+          "         MY LANGUAGE PLUG — INVOICE",
+          "================================================",
+          `Invoice #: ${invoiceId}`,
+          `Date:      ${new Date().toLocaleDateString()}`,
+          "------------------------------------------------",
+          `Tutor:     ${tutor?.name ?? ""}`,
+          `Type:      ${lessonTypeLabel()}`,
+          `Date:      ${date}`,
+          `Time:      ${selectedTime ?? ""}`,
+          `Duration:  ${lessonType === "trial" ? "20 minutes" : "50 minutes"}`,
+          "------------------------------------------------",
+          `TOTAL:     ${totalPrice()}`,
+          "================================================",
+          "Thank you for booking with My Language Plug!",
+        ].join("\n")
+        const blob = new Blob([invoiceLines], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `${invoiceId}.txt`
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+
       return (
         <div className="flex flex-col items-center gap-4 py-6 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
@@ -303,9 +392,49 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
             <BookingSummaryLine label="Time" value={selectedTime ?? ""} />
             <BookingSummaryLine label="Total" value={totalPrice()} bold />
           </div>
-          <Button className="w-full bg-[#042230] hover:bg-[#042230]/90" onClick={() => handleClose(false)}>
-            Done
-          </Button>
+
+          {/* Package remaining-lessons notice */}
+          {lessonType === "package" && remainingLessons > 0 && (
+            <div className="w-full flex items-start gap-2 rounded-xl border border-[#354d73]/20 bg-[#354d73]/5 p-3 text-left">
+              <CalendarClock className="h-4 w-4 text-[#354d73] mt-0.5 shrink-0" />
+              <p className="text-xs text-[#354d73]">
+                <span className="font-semibold">
+                  {remainingLessons} remaining lesson{remainingLessons !== 1 ? "s" : ""} added to Unscheduled Lessons.
+                </span>{" "}
+                Head to <span className="font-semibold">My Lessons → Unscheduled</span> to schedule them at your convenience.
+              </p>
+            </div>
+          )}
+
+          <div className="flex w-full gap-2">
+            <Button
+              variant="outline"
+              className="flex-1 gap-1.5"
+              onClick={downloadInvoice}
+            >
+              <Download className="h-4 w-4" />
+              Download Invoice
+            </Button>
+            <Button
+              className="flex-1 bg-[#042230] hover:bg-[#042230]/90"
+              onClick={() => handleClose(false)}
+            >
+              Done
+            </Button>
+          </div>
+        </div>
+      )
+    }
+
+    // ── Processing payment screen ──────────────────────────────────────────
+    if (isProcessing) {
+      return (
+        <div className="flex flex-col items-center gap-4 py-10 text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-[#354d73]" />
+          <div>
+            <h3 className="text-lg font-bold text-[#042230]">Processing Payment…</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Please wait while we confirm your booking.</p>
+          </div>
         </div>
       )
     }
@@ -346,6 +475,21 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
           </div>
         </div>
 
+        {/* Package unscheduled-lessons notice */}
+        {lessonType === "package" && selectedPackage.count > 1 && (
+          <div className="flex items-start gap-2 rounded-lg border border-[#354d73]/20 bg-[#354d73]/5 p-3">
+            <CalendarClock className="h-4 w-4 text-[#354d73] mt-0.5 shrink-0" />
+            <p className="text-xs text-[#354d73]">
+              You are booking 1 lesson now.{" "}
+              <span className="font-semibold">
+                The remaining {selectedPackage.count - 1} lesson{selectedPackage.count - 1 !== 1 ? "s" : ""} will be added to
+                your Unscheduled Lessons
+              </span>{" "}
+              and can be scheduled at any time from your dashboard.
+            </p>
+          </div>
+        )}
+
         {/* Mock payment note */}
         <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-100 p-3">
           <Clock className="h-4 w-4 text-blue-500 mt-0.5 shrink-0" />
@@ -361,7 +505,18 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
           </Button>
           <Button
             className="flex-1 bg-[#042230] hover:bg-[#042230]/90"
-            onClick={() => setConfirmed(true)}
+            onClick={() => {
+              setIsProcessing(true)
+              setTimeout(() => {
+                setIsProcessing(false)
+                // Simulate ~20% payment failure rate for demo
+                if (Math.random() < MOCK_PAYMENT_FAILURE_RATE) {
+                  setPaymentFailed(true)
+                } else {
+                  setConfirmed(true)
+                }
+              }, MOCK_PAYMENT_PROCESSING_DELAY)
+            }}
           >
             <Check className="mr-1 h-4 w-4" />
             Confirm Booking
