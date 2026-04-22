@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FaqChatbox } from "@/components/faq-chatbox"
 
 const faqSections = [
   {
@@ -187,6 +188,11 @@ export default function FAQPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* AI Chatbox */}
+          <div className="mt-14">
+            <FaqChatbox />
           </div>
 
           {/* Still need help */}

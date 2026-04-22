@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Search, MessageSquare, BookOpen, Video, ArrowRight, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { FaqChatbox } from "@/components/faq-chatbox"
 
 const helpCategories = [
   {
@@ -148,6 +149,13 @@ export default function HelpPage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* AI Chatbox */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <FaqChatbox />
         </div>
       </section>
 
