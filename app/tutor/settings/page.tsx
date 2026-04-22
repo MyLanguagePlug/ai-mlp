@@ -21,15 +21,20 @@ import {
   AlertTriangle,
   Plus,
   X,
+  Wallet,
+  TrendingUp,
+  ArrowDownToLine,
+  Clock,
+  Download,
 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type TabId = "profile" | "teaching" | "pricing" | "notifications" | "account"
+type TabId = "profile" | "teaching" | "pricing" | "wallet" | "notifications" | "account"
 
 interface Tab {
   id: TabId
@@ -48,6 +53,7 @@ const TABS: Tab[] = [
   { id: "profile",       label: "Profile Information",  icon: User        },
   { id: "teaching",      label: "Teaching Preferences", icon: BookOpen    },
   { id: "pricing",       label: "Pricing and Rates",    icon: DollarSign  },
+  { id: "wallet",        label: "Wallet & Earnings",    icon: Wallet      },
   { id: "notifications", label: "Notifications",         icon: Bell        },
   { id: "account",       label: "Account and Security", icon: Shield      },
 ]
@@ -463,7 +469,255 @@ function PricingTab() {
   )
 }
 
-// 4. Notifications
+// 4. Wallet & Earnings
+type EarningTransaction = {
+  id: string
+  date: string
+  student: string
+  language: string
+  lessonType: "Trial" | "Regular" | "Group"
+  duration: string
+  gross: number
+  fee: number
+  net: number
+  status: "paid" | "pending" | "held"
+}
+
+type Payout = {
+  id: string
+  date: string
+  amount: number
+  method: string
+  status: "completed" | "processing" | "failed"
+  ref: string
+}
+
+const DEMO_EARNINGS: EarningTransaction[] = [
+  { id: "e1",  date: "2026-04-18", student: "James Liu",        language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "paid"    },
+  { id: "e2",  date: "2026-04-17", student: "Sofia Rodrigues",  language: "Portuguese", lessonType: "Trial",   duration: "30 min", gross: 20, fee: 4,  net: 16, status: "paid"    },
+  { id: "e3",  date: "2026-04-15", student: "Emma Johnson",     language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "paid"    },
+  { id: "e4",  date: "2026-04-12", student: "Luca Ferrari",     language: "Spanish",    lessonType: "Regular", duration: "60 min", gross: 38, fee: 7.60, net: 30.40, status: "paid" },
+  { id: "e5",  date: "2026-04-10", student: "Priya Nair",       language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "paid"    },
+  { id: "e6",  date: "2026-04-08", student: "Carlos Mendez",    language: "Spanish",    lessonType: "Trial",   duration: "30 min", gross: 20, fee: 4,  net: 16, status: "paid"    },
+  { id: "e7",  date: "2026-04-05", student: "Yuna Park",        language: "English",    lessonType: "Regular", duration: "90 min", gross: 60, fee: 12, net: 48, status: "paid"    },
+  { id: "e8",  date: "2026-04-03", student: "Marco Bianchi",    language: "Portuguese", lessonType: "Regular", duration: "60 min", gross: 35, fee: 7,  net: 28, status: "paid"    },
+  { id: "e9",  date: "2026-04-01", student: "Ana Ferreira",     language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "paid"    },
+  { id: "e10", date: "2026-03-28", student: "David Chen",       language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "paid"    },
+  { id: "e11", date: "2026-03-25", student: "Isabella Costa",   language: "Spanish",    lessonType: "Regular", duration: "60 min", gross: 38, fee: 7.60, net: 30.40, status: "paid" },
+  { id: "e12", date: "2026-03-21", student: "Thomas Weber",     language: "Portuguese", lessonType: "Trial",   duration: "30 min", gross: 20, fee: 4,  net: 16, status: "paid"    },
+  { id: "e13", date: "2026-04-19", student: "Ria Sharma",       language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "pending" },
+  { id: "e14", date: "2026-04-20", student: "Omar Hassan",      language: "English",    lessonType: "Regular", duration: "60 min", gross: 40, fee: 8,  net: 32, status: "pending" },
+]
+
+const DEMO_PAYOUTS: Payout[] = [
+  { id: "p1", date: "2026-04-18", amount: 192.40, method: "PayPal", status: "completed", ref: "PP-4821-WXYZ" },
+  { id: "p2", date: "2026-04-11", amount: 158.00, method: "PayPal", status: "completed", ref: "PP-4720-ABCD" },
+  { id: "p3", date: "2026-04-04", amount: 188.00, method: "PayPal", status: "completed", ref: "PP-4614-EFGH" },
+  { id: "p4", date: "2026-03-28", amount: 128.80, method: "PayPal", status: "completed", ref: "PP-4510-IJKL" },
+  { id: "p5", date: "2026-03-21", amount: 176.40, method: "PayPal", status: "completed", ref: "PP-4410-MNOP" },
+]
+
+function WalletTab() {
+  const [earningsPage, setEarningsPage] = useState(0)
+  const PAGE_SIZE = 5
+
+  const totalEarned   = DEMO_EARNINGS.filter(e => e.status === "paid").reduce((s, e) => s + e.net, 0)
+  const pendingAmount = DEMO_EARNINGS.filter(e => e.status === "pending").reduce((s, e) => s + e.net, 0)
+  const thisMonth     = DEMO_EARNINGS.filter(e => e.status === "paid" && e.date.startsWith("2026-04")).reduce((s, e) => s + e.net, 0)
+  const lastPayout    = DEMO_PAYOUTS[0]?.amount ?? 0
+
+  const totalPages  = Math.ceil(DEMO_EARNINGS.length / PAGE_SIZE)
+  const pageEarnings = DEMO_EARNINGS.slice(earningsPage * PAGE_SIZE, (earningsPage + 1) * PAGE_SIZE)
+
+  const statusBadge = (status: EarningTransaction["status"]) => {
+    const map: Record<EarningTransaction["status"], { label: string; cls: string }> = {
+      paid:    { label: "Paid",    cls: "bg-emerald-50 text-emerald-700" },
+      pending: { label: "Pending", cls: "bg-amber-50 text-amber-700"    },
+      held:    { label: "Held",    cls: "bg-rose-50 text-rose-700"      },
+    }
+    const { label, cls } = map[status]
+    return <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${cls}`}>{label}</span>
+  }
+
+  const payoutStatusBadge = (status: Payout["status"]) => {
+    const map: Record<Payout["status"], { label: string; cls: string }> = {
+      completed:  { label: "Completed",  cls: "bg-emerald-50 text-emerald-700" },
+      processing: { label: "Processing", cls: "bg-blue-50 text-blue-700"       },
+      failed:     { label: "Failed",     cls: "bg-rose-50 text-rose-700"       },
+    }
+    const { label, cls } = map[status]
+    return <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${cls}`}>{label}</span>
+  }
+
+  return (
+    <div className="space-y-6">
+
+      {/* Summary cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { icon: TrendingUp,        label: "Total Earned",    value: `$${totalEarned.toFixed(2)}`,   sub: "All time (after fees)",    color: "text-emerald-600", bg: "bg-emerald-50" },
+          { icon: DollarSign,        label: "This Month",      value: `$${thisMonth.toFixed(2)}`,     sub: "April 2026",               color: "text-[#354d73]",   bg: "bg-[#354d73]/10" },
+          { icon: Clock,             label: "Pending",         value: `$${pendingAmount.toFixed(2)}`, sub: "Awaiting completion",      color: "text-amber-600",   bg: "bg-amber-50" },
+          { icon: ArrowDownToLine,   label: "Last Payout",     value: `$${lastPayout.toFixed(2)}`,    sub: "Fri 18 Apr 2026",          color: "text-[#354d73]",   bg: "bg-[#354d73]/10" },
+        ].map(({ icon: Icon, label, value, sub, color, bg }) => (
+          <div key={label} className="rounded-xl border border-border bg-white p-5 shadow-sm">
+            <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${bg}`}>
+              <Icon className={`h-4 w-4 ${color}`} />
+            </div>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+            <p className={`mt-1 text-2xl font-bold ${color}`}>{value}</p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">{sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Platform fee note */}
+      <div className="rounded-xl border border-[#354d73]/20 bg-[#354d73]/5 px-4 py-3 text-sm text-[#354d73]">
+        <strong>Platform fee:</strong> 20% is deducted from each lesson. As you complete more lessons your fee decreases as part of our loyalty programme.
+      </div>
+
+      {/* Payout method */}
+      <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm font-semibold text-[#042230]">Payout method</p>
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+            <CreditCard className="h-3.5 w-3.5" />
+            Manage
+          </Button>
+        </div>
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-[#F7F9FB] px-4 py-3">
+          <CreditCard className="h-4 w-4 text-[#354d73] shrink-0" />
+          <div className="flex-1">
+            <p className="text-xs font-medium text-[#042230]">PayPal — brazil.james@email.com</p>
+            <p className="text-[11px] text-muted-foreground">Connected · Payouts every Friday</p>
+          </div>
+          <Badge variant="secondary" className="text-emerald-700 bg-emerald-50 shrink-0">Active</Badge>
+        </div>
+      </div>
+
+      {/* Payout history */}
+      <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <p className="text-sm font-semibold text-[#042230]">Payout History</p>
+          <button
+            type="button"
+            className="flex items-center gap-1.5 text-xs text-[#354d73] hover:underline"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-[#F7F9FB] border-b border-border">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Date</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Amount</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Method</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Reference</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {DEMO_PAYOUTS.map(p => (
+                <tr key={p.id} className="hover:bg-[#F7F9FB] transition-colors">
+                  <td className="px-5 py-3.5 text-xs text-[#042230] font-medium">{new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</td>
+                  <td className="px-5 py-3.5 text-sm font-bold text-[#042230]">${p.amount.toFixed(2)}</td>
+                  <td className="px-5 py-3.5 text-xs text-muted-foreground">{p.method}</td>
+                  <td className="px-5 py-3.5 text-xs font-mono text-muted-foreground">{p.ref}</td>
+                  <td className="px-5 py-3.5">{payoutStatusBadge(p.status)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Lesson earnings breakdown */}
+      <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <p className="text-sm font-semibold text-[#042230]">Lesson Earnings</p>
+          <span className="text-[11px] text-muted-foreground">{DEMO_EARNINGS.length} lessons</span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-[#F7F9FB] border-b border-border">
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Date</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Student</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Language</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Type</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Gross</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Fee</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Net</th>
+                <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {pageEarnings.map(e => (
+                <tr key={e.id} className="hover:bg-[#F7F9FB] transition-colors">
+                  <td className="px-5 py-3.5 text-xs text-[#042230] font-medium whitespace-nowrap">{new Date(e.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</td>
+                  <td className="px-5 py-3.5 text-xs text-[#042230]">{e.student}</td>
+                  <td className="px-5 py-3.5 text-xs text-muted-foreground">{e.language}</td>
+                  <td className="px-5 py-3.5">
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground">{e.lessonType}</span>
+                  </td>
+                  <td className="px-5 py-3.5 text-xs text-right text-[#042230]">${e.gross.toFixed(2)}</td>
+                  <td className="px-5 py-3.5 text-xs text-right text-rose-500">−${e.fee.toFixed(2)}</td>
+                  <td className="px-5 py-3.5 text-xs text-right font-bold text-[#042230]">${e.net.toFixed(2)}</td>
+                  <td className="px-5 py-3.5">{statusBadge(e.status)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border px-5 py-3">
+            <p className="text-xs text-muted-foreground">
+              Showing {earningsPage * PAGE_SIZE + 1}–{Math.min((earningsPage + 1) * PAGE_SIZE, DEMO_EARNINGS.length)} of {DEMO_EARNINGS.length}
+            </p>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                disabled={earningsPage === 0}
+                onClick={() => setEarningsPage(p => p - 1)}
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-[#354d73] hover:text-[#354d73] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                ‹
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setEarningsPage(i)}
+                  className={`flex h-7 w-7 items-center justify-center rounded-md border text-xs font-medium transition-colors ${
+                    earningsPage === i
+                      ? "border-[#354d73] bg-[#354d73] text-white"
+                      : "border-border text-muted-foreground hover:border-[#354d73] hover:text-[#354d73]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                type="button"
+                disabled={earningsPage === totalPages - 1}
+                onClick={() => setEarningsPage(p => p + 1)}
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-[#354d73] hover:text-[#354d73] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// 5. Notifications
 function NotificationsTab() {
   const [email, setEmail] = useState({ bookings: true,  messages: true,  reviews: true,  reminders: true,  marketing: false })
   const [push,  setPush]  = useState({ bookings: true,  messages: true,  reviews: false, reminders: true,  marketing: false })
@@ -517,7 +771,7 @@ function NotificationsTab() {
   )
 }
 
-// 5. Account and Security
+// 6. Account and Security
 function AccountTab() {
   const [showOld, setShowOld] = useState(false)
   const [showNew, setShowNew] = useState(false)
@@ -686,6 +940,7 @@ const TAB_CONTENT: Record<TabId, React.ReactNode> = {
   profile:       <ProfileTab />,
   teaching:      <TeachingTab />,
   pricing:       <PricingTab />,
+  wallet:        <WalletTab />,
   notifications: <NotificationsTab />,
   account:       <AccountTab />,
 }

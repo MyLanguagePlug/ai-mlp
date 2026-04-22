@@ -30,7 +30,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 
 const sidebarItems = [
   { id: "account", label: "Account", icon: User },
@@ -1094,37 +1093,9 @@ function NotificationsSection() {
 
 
 function DeleteSection() {
-  const [accountActive, setAccountActive] = useState(true)
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl font-bold text-[#042230]">Delete Account</h2>
-
-      {/* Account Status */}
-      <div className="rounded-xl border border-orange-200 bg-orange-50 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-orange-800">Account Status</p>
-            <p className="mt-1 text-xs text-orange-700">
-              {accountActive
-                ? "Your account is active and visible to tutors."
-                : "Your account is inactive and hidden from tutors."}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className={`text-xs font-medium ${accountActive ? "text-orange-400" : "text-orange-700"}`}>
-              Inactive
-            </span>
-            <Switch
-              checked={accountActive}
-              onCheckedChange={setAccountActive}
-              className="data-[state=checked]:bg-orange-500"
-            />
-            <span className={`text-xs font-medium ${accountActive ? "text-orange-700" : "text-orange-400"}`}>
-              Active
-            </span>
-          </div>
-        </div>
-      </div>
 
       <div className="rounded-xl border border-rose-200 bg-rose-50 p-6">
         <p className="font-medium text-rose-700">Warning: this action is permanent.</p>
