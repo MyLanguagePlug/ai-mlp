@@ -52,10 +52,10 @@ interface LangEntry {
 const TABS: Tab[] = [
   { id: "profile",       label: "Profile Information",  icon: User        },
   { id: "teaching",      label: "Teaching Preferences", icon: BookOpen    },
-  { id: "pricing",       label: "Pricing and Rates",    icon: DollarSign  },
+  { id: "pricing",       label: "Pricing & Rates",      icon: DollarSign  },
   { id: "wallet",        label: "Wallet & Earnings",    icon: Wallet      },
   { id: "notifications", label: "Notifications",         icon: Bell        },
-  { id: "account",       label: "Account and Security", icon: Shield      },
+  { id: "account",       label: "Account & Security",   icon: Shield      },
 ]
 
 // ── Save banner ──────────────────────────────────────────────────────────────
@@ -510,24 +510,54 @@ const DEMO_EARNINGS: EarningTransaction[] = [
 ]
 
 const DEMO_PAYOUTS: Payout[] = [
-  { id: "p1", date: "2026-04-18", amount: 192.40, method: "PayPal", status: "completed", ref: "PP-4821-WXYZ" },
-  { id: "p2", date: "2026-04-11", amount: 158.00, method: "PayPal", status: "completed", ref: "PP-4720-ABCD" },
-  { id: "p3", date: "2026-04-04", amount: 188.00, method: "PayPal", status: "completed", ref: "PP-4614-EFGH" },
-  { id: "p4", date: "2026-03-28", amount: 128.80, method: "PayPal", status: "completed", ref: "PP-4510-IJKL" },
-  { id: "p5", date: "2026-03-21", amount: 176.40, method: "PayPal", status: "completed", ref: "PP-4410-MNOP" },
+  { id: "p1",  date: "2026-04-18", amount: 192.40, method: "PayPal", status: "completed",  ref: "PP-4821-WXYZ" },
+  { id: "p2",  date: "2026-04-11", amount: 158.00, method: "PayPal", status: "completed",  ref: "PP-4720-ABCD" },
+  { id: "p3",  date: "2026-04-04", amount: 188.00, method: "PayPal", status: "completed",  ref: "PP-4614-EFGH" },
+  { id: "p4",  date: "2026-03-28", amount: 128.80, method: "PayPal", status: "completed",  ref: "PP-4510-IJKL" },
+  { id: "p5",  date: "2026-03-21", amount: 176.40, method: "PayPal", status: "completed",  ref: "PP-4410-MNOP" },
+  { id: "p6",  date: "2026-03-14", amount: 144.00, method: "PayPal", status: "completed",  ref: "PP-4311-QRST" },
+  { id: "p7",  date: "2026-03-07", amount: 160.00, method: "PayPal", status: "completed",  ref: "PP-4207-UVWX" },
+  { id: "p8",  date: "2026-02-28", amount: 136.00, method: "PayPal", status: "completed",  ref: "PP-4103-YZA1" },
+  { id: "p9",  date: "2026-02-21", amount: 112.00, method: "PayPal", status: "completed",  ref: "PP-3998-B2C3" },
+  { id: "p10", date: "2026-02-14", amount: 152.80, method: "PayPal", status: "completed",  ref: "PP-3892-D4E5" },
+  { id: "p11", date: "2026-02-07", amount: 96.00,  method: "PayPal", status: "completed",  ref: "PP-3789-F6G7" },
+  { id: "p12", date: "2026-01-31", amount: 184.00, method: "PayPal", status: "completed",  ref: "PP-3682-H8I9" },
 ]
 
 function WalletTab() {
   const [earningsPage, setEarningsPage] = useState(0)
+  const [payoutsPage, setPayoutsPage] = useState(0)
+  const [showPayoutEditor, setShowPayoutEditor] = useState(false)
+  const [payoutMethod, setPayoutMethod] = useState<"paypal" | "bank" | "wise" | "stripe">("paypal")
+  const [payoutEmail, setPayoutEmail] = useState("brazil.james@email.com")
+  const [payoutSaved, setPayoutSaved] = useState(false)
   const PAGE_SIZE = 5
+  const PAYOUT_PAGE_SIZE = 5
 
   const totalEarned   = DEMO_EARNINGS.filter(e => e.status === "paid").reduce((s, e) => s + e.net, 0)
   const pendingAmount = DEMO_EARNINGS.filter(e => e.status === "pending").reduce((s, e) => s + e.net, 0)
   const thisMonth     = DEMO_EARNINGS.filter(e => e.status === "paid" && e.date.startsWith("2026-04")).reduce((s, e) => s + e.net, 0)
   const lastPayout    = DEMO_PAYOUTS[0]?.amount ?? 0
 
-  const totalPages  = Math.ceil(DEMO_EARNINGS.length / PAGE_SIZE)
-  const pageEarnings = DEMO_EARNINGS.slice(earningsPage * PAGE_SIZE, (earningsPage + 1) * PAGE_SIZE)
+  const totalPages        = Math.ceil(DEMO_EARNINGS.length / PAGE_SIZE)
+  const pageEarnings      = DEMO_EARNINGS.slice(earningsPage * PAGE_SIZE, (earningsPage + 1) * PAGE_SIZE)
+  const totalPayoutPages  = Math.ceil(DEMO_PAYOUTS.length / PAYOUT_PAGE_SIZE)
+  const pagePayouts       = DEMO_PAYOUTS.slice(payoutsPage * PAYOUT_PAGE_SIZE, (payoutsPage + 1) * PAYOUT_PAGE_SIZE)
+
+  const PAYOUT_METHOD_OPTIONS = [
+    { id: "paypal",  label: "PayPal",         desc: "Transfer to your PayPal account",        icon: "💳" },
+    { id: "bank",    label: "Bank Transfer",   desc: "Direct deposit to your bank account",    icon: "🏦" },
+    { id: "wise",    label: "Wise",            desc: "Multi-currency transfer via Wise",        icon: "🌍" },
+    { id: "stripe",  label: "Stripe",          desc: "Transfer via Stripe Connect",             icon: "⚡" },
+  ] as const
+
+  const currentMethod = PAYOUT_METHOD_OPTIONS.find(m => m.id === payoutMethod) ?? PAYOUT_METHOD_OPTIONS[0]
+
+  function handleSavePayoutMethod() {
+    setPayoutSaved(true)
+    setShowPayoutEditor(false)
+    setTimeout(() => setPayoutSaved(false), 3000)
+  }
 
   const statusBadge = (status: EarningTransaction["status"]) => {
     const map: Record<EarningTransaction["status"], { label: string; cls: string }> = {
@@ -580,19 +610,98 @@ function WalletTab() {
       <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-semibold text-[#042230]">Payout method</p>
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <button
+            type="button"
+            onClick={() => setShowPayoutEditor(v => !v)}
+            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+          >
             <CreditCard className="h-3.5 w-3.5" />
-            Manage
-          </Button>
+            {showPayoutEditor ? "Cancel" : "Change method"}
+          </button>
         </div>
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-[#F7F9FB] px-4 py-3">
+
+        {/* Current method display */}
+        <button
+          type="button"
+          onClick={() => setShowPayoutEditor(v => !v)}
+          className="w-full text-left flex items-center gap-3 rounded-lg border border-border bg-[#F7F9FB] px-4 py-3 hover:border-[#354d73] hover:bg-[#F0F6FA] transition-colors"
+        >
           <CreditCard className="h-4 w-4 text-[#354d73] shrink-0" />
           <div className="flex-1">
-            <p className="text-xs font-medium text-[#042230]">PayPal — brazil.james@email.com</p>
+            <p className="text-xs font-medium text-[#042230]">{currentMethod.label} — {payoutEmail}</p>
             <p className="text-[11px] text-muted-foreground">Connected · Payouts every Friday</p>
           </div>
           <Badge variant="secondary" className="text-emerald-700 bg-emerald-50 shrink-0">Active</Badge>
-        </div>
+        </button>
+
+        {payoutSaved && (
+          <div className="mt-3 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+            <Check className="h-3.5 w-3.5 shrink-0" />
+            Payout method updated successfully.
+          </div>
+        )}
+
+        {/* Payout method editor */}
+        {showPayoutEditor && (
+          <div className="mt-4 rounded-xl border border-[#354d73]/20 bg-[#F7F9FB] p-4 space-y-4">
+            <p className="text-xs font-semibold text-[#042230]">Choose a payout method</p>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              {PAYOUT_METHOD_OPTIONS.map(opt => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setPayoutMethod(opt.id)}
+                  className={`flex items-start gap-3 rounded-lg border p-3 text-left transition-colors ${
+                    payoutMethod === opt.id
+                      ? "border-[#354d73] bg-[#354d73]/5"
+                      : "border-border bg-white hover:border-[#354d73]/50"
+                  }`}
+                >
+                  <span className="text-lg leading-none">{opt.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-[#042230]">{opt.label}</p>
+                    <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">{opt.desc}</p>
+                  </div>
+                  {payoutMethod === opt.id && (
+                    <Check className="h-3.5 w-3.5 text-[#354d73] shrink-0 mt-0.5" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-[#042230]">
+                {payoutMethod === "bank" ? "Account / IBAN" : payoutMethod === "wise" ? "Wise email or account" : "Email address"}
+              </label>
+              <Input
+                value={payoutEmail}
+                onChange={e => setPayoutEmail(e.target.value)}
+                placeholder={payoutMethod === "bank" ? "IBAN or account number" : "email@example.com"}
+                className="text-sm"
+              />
+            </div>
+
+            <div className="flex items-center gap-3 pt-1">
+              <Button
+                type="button"
+                onClick={handleSavePayoutMethod}
+                className="gap-1.5 bg-[#354d73] hover:bg-[#2a3d5c] text-white text-xs"
+                size="sm"
+              >
+                <Save className="h-3.5 w-3.5" />
+                Save payout method
+              </Button>
+              <button
+                type="button"
+                onClick={() => setShowPayoutEditor(false)}
+                className="text-xs text-muted-foreground hover:text-[#042230] transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Payout history */}
@@ -619,7 +728,7 @@ function WalletTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {DEMO_PAYOUTS.map(p => (
+              {pagePayouts.map(p => (
                 <tr key={p.id} className="hover:bg-[#F7F9FB] transition-colors">
                   <td className="px-5 py-3.5 text-xs text-[#042230] font-medium">{new Date(p.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</td>
                   <td className="px-5 py-3.5 text-sm font-bold text-[#042230]">${p.amount.toFixed(2)}</td>
@@ -631,6 +740,47 @@ function WalletTab() {
             </tbody>
           </table>
         </div>
+
+        {/* Payout history pagination */}
+        {totalPayoutPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border px-5 py-3">
+            <p className="text-xs text-muted-foreground">
+              Showing {payoutsPage * PAYOUT_PAGE_SIZE + 1}–{Math.min((payoutsPage + 1) * PAYOUT_PAGE_SIZE, DEMO_PAYOUTS.length)} of {DEMO_PAYOUTS.length}
+            </p>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                disabled={payoutsPage === 0}
+                onClick={() => setPayoutsPage(p => p - 1)}
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-[#354d73] hover:text-[#354d73] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                ‹
+              </button>
+              {Array.from({ length: totalPayoutPages }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setPayoutsPage(i)}
+                  className={`flex h-7 w-7 items-center justify-center rounded-md border text-xs font-medium transition-colors ${
+                    payoutsPage === i
+                      ? "border-[#354d73] bg-[#354d73] text-white"
+                      : "border-border text-muted-foreground hover:border-[#354d73] hover:text-[#354d73]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                type="button"
+                disabled={payoutsPage === totalPayoutPages - 1}
+                onClick={() => setPayoutsPage(p => p + 1)}
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-[#354d73] hover:text-[#354d73] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Lesson earnings breakdown */}

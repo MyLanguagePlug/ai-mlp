@@ -40,7 +40,6 @@ const sidebarItems = [
   { id: "payment-history", label: "Payment history", icon: Clock },
   { id: "calendar", label: "Calendar", icon: CalendarDays },
   { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "delete-account", label: "Delete account", icon: Trash2 },
 ]
 
 const timezones = [
@@ -1282,7 +1281,6 @@ export default function StudentSettings() {
             {active === "payment-history" && <PaymentHistorySection />}
             {active === "calendar" && <CalendarSection />}
             {active === "notifications" && <NotificationsSection />}
-            {active === "delete-account" && <DeleteSection />}
           </div>
         </div>
       </div>
