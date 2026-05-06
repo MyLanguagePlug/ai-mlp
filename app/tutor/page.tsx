@@ -829,7 +829,7 @@ function WalletPanel() {
         </div>
 
         {/* Right: earnings line chart */}
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm flex flex-col">
+        <div className="flex flex-col rounded-xl border border-border bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm font-semibold text-[#042230]">Earnings over time</p>
             <span className="text-[11px] text-muted-foreground">Last 6 months</span>
