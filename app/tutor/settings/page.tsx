@@ -358,6 +358,9 @@ function PricingTab() {
       </div>
 
       <div className="space-y-3">
+        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+          ℹ️ <span className="font-semibold">Trial lesson pricing:</span> We recommend setting your trial lesson price at roughly <span className="font-semibold">50% of your regular lesson rate</span>. All trial lessons are capped at <span className="font-semibold">20 minutes</span>.
+        </div>
         {rate("Trial lesson",   "trial",   "First lesson with a new student")}
         {rate("Regular lesson", "regular", "Standard 1-hour session")}
       </div>
