@@ -810,7 +810,7 @@ function WalletPanel() {
       <div className="grid gap-4 lg:grid-cols-2">
 
         {/* Left: balance cards */}
-        <div className="flex flex-col gap-4 h-full">
+        <div className="flex flex-col gap-4">
           <div className="flex-1 flex flex-col rounded-xl border border-border bg-[#354d73] p-5 text-white shadow-sm">
             <p className="text-xs font-medium text-white/70">Available Balance</p>
             <p className="mt-1 text-3xl font-bold">$0.00</p>
