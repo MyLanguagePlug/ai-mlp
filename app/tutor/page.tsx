@@ -856,7 +856,7 @@ function WalletPanel() {
                   labelStyle={{ color: "#042230", fontWeight: 600 }}
                 />
                 <Line
-                  type="monotone"
+                  type="linear"
                   dataKey="earnings"
                   stroke="#354d73"
                   strokeWidth={2}
@@ -882,14 +882,29 @@ function WalletPanel() {
         <div className="border-b border-border px-5 py-4">
           <h2 className="text-base font-semibold text-[#042230]">Recent Transactions</h2>
         </div>
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-[#F0F6FA]">
-            <DollarSign className="h-8 w-8 text-[#354d73]/40" />
-          </div>
-          <p className="text-sm font-semibold text-[#354d73]">No transactions yet</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Your earnings will appear here after completed lessons
-          </p>
+        <div className="divide-y divide-border">
+          {[
+            { date: "Apr 28, 2025", description: "Lesson – María García (Spanish, 60 min)", amount: "+$40.00", status: "Paid", statusColor: "text-emerald-600 bg-emerald-50" },
+            { date: "Apr 25, 2025", description: "Lesson – James Okafor (French, 45 min)",  amount: "+$30.00", status: "Paid", statusColor: "text-emerald-600 bg-emerald-50" },
+            { date: "Apr 22, 2025", description: "Lesson – Yuki Tanaka (Japanese, 60 min)", amount: "+$40.00", status: "Paid", statusColor: "text-emerald-600 bg-emerald-50" },
+            { date: "Apr 18, 2025", description: "Lesson – Sofia Rossi (Italian, 30 min)",  amount: "+$20.00", status: "Paid", statusColor: "text-emerald-600 bg-emerald-50" },
+            { date: "Apr 14, 2025", description: "Payout to PayPal",                        amount: "-$120.00", status: "Transferred", statusColor: "text-blue-600 bg-blue-50" },
+            { date: "Apr 10, 2025", description: "Lesson – Lena Müller (German, 60 min)",   amount: "+$40.00", status: "Paid", statusColor: "text-emerald-600 bg-emerald-50" },
+          ].map((tx, i) => (
+            <div key={i} className="flex items-center gap-4 px-5 py-3.5">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F0F6FA]">
+                <DollarSign className="h-4 w-4 text-[#354d73]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="truncate text-sm font-medium text-[#042230]">{tx.description}</p>
+                <p className="text-xs text-muted-foreground">{tx.date}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${tx.statusColor}`}>{tx.status}</span>
+                <span className={`text-sm font-semibold ${tx.amount.startsWith("+") ? "text-emerald-600" : "text-[#042230]"}`}>{tx.amount}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
