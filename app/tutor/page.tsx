@@ -36,6 +36,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
 
@@ -779,30 +788,91 @@ function ReviewsPanel() {
 
 // ── Wallet panel ──────────────────────────────────────────────────────────────
 
+const WALLET_EARNINGS_DATA = [
+  { month: "Nov", earnings: 320 },
+  { month: "Dec", earnings: 480 },
+  { month: "Jan", earnings: 560 },
+  { month: "Feb", earnings: 420 },
+  { month: "Mar", earnings: 640 },
+  { month: "Apr", earnings: 280 },
+]
+
 function WalletPanel() {
   return (
     <div className="space-y-4">
-      {/* Balance cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-border bg-[#354d73] p-5 text-white shadow-sm">
-          <p className="text-xs font-medium text-white/70">Available Balance</p>
-          <p className="mt-1 text-3xl font-bold">$0.00</p>
-          <p className="mt-1 text-xs text-white/60">USD</p>
-          <Button
-            size="sm"
-            variant="secondary"
-            className="mt-4 bg-white text-[#354d73] hover:bg-white/90"
-          >
-            Withdraw Funds
-          </Button>
+      {/* Split view: balance cards + earnings chart */}
+      <div className="grid gap-4 lg:grid-cols-2">
+
+        {/* Left: balance cards */}
+        <div className="space-y-4">
+          <div className="rounded-xl border border-border bg-[#354d73] p-5 text-white shadow-sm">
+            <p className="text-xs font-medium text-white/70">Available Balance</p>
+            <p className="mt-1 text-3xl font-bold">$0.00</p>
+            <p className="mt-1 text-xs text-white/60">USD</p>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="mt-4 bg-white text-[#354d73] hover:bg-white/90"
+            >
+              Withdraw Funds
+            </Button>
+          </div>
+          <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium text-muted-foreground">Total Earned</p>
+            <p className="mt-1 text-3xl font-bold text-[#042230]">$0.00</p>
+            <p className="mt-1 text-xs text-muted-foreground">All time</p>
+            <div className="mt-4 flex items-center gap-1.5">
+              <TrendingUp className="h-4 w-4 text-emerald-500" />
+              <span className="text-xs text-emerald-600">$0 this month</span>
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
-          <p className="text-xs font-medium text-muted-foreground">Total Earned</p>
-          <p className="mt-1 text-3xl font-bold text-[#042230]">$0.00</p>
-          <p className="mt-1 text-xs text-muted-foreground">All time</p>
-          <div className="mt-4 flex items-center gap-1.5">
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
-            <span className="text-xs text-emerald-600">$0 this month</span>
+
+        {/* Right: earnings line chart */}
+        <div className="rounded-xl border border-border bg-white p-5 shadow-sm flex flex-col">
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#042230]">Earnings over time</p>
+            <span className="text-[11px] text-muted-foreground">Last 6 months</span>
+          </div>
+          <div className="flex-1 min-h-[180px]">
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={WALLET_EARNINGS_DATA} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: "#6B7280" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "#6B7280" }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => `$${v}`}
+                />
+                <Tooltip
+                  formatter={(value: number) => [`$${value}`, "Earnings"]}
+                  contentStyle={{ borderRadius: "8px", border: "1px solid #E5E7EB", fontSize: 12 }}
+                  labelStyle={{ color: "#042230", fontWeight: 600 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="earnings"
+                  stroke="#354d73"
+                  strokeWidth={2}
+                  dot={{ fill: "#354d73", r: 3 }}
+                  activeDot={{ r: 5 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 flex justify-end">
+            <Link href="/tutor/settings?tab=wallet">
+              <Button size="sm" className="bg-[#354d73] hover:bg-[#2a3d5c] text-white text-xs gap-1.5">
+                <TrendingUp className="h-3.5 w-3.5" />
+                More information
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -927,7 +997,7 @@ function SettingsPanel() {
         { label: "Teaching Preferences", desc: "Set your languages, specialties, and lesson types", href: "/tutor/settings?tab=teaching" },
         { label: "Pricing & Rates",      desc: "Set your hourly rate and trial lesson pricing",  href: "/tutor/settings?tab=pricing" },
         { label: "Notifications",        desc: "Manage email and push notification preferences",  href: "/tutor/settings?tab=notifications" },
-        { label: "Account & Security",   desc: "Change your password and account settings",       href: "/tutor/settings?tab=account" },
+        { label: "Account & security",   desc: "Change your password and account settings",       href: "/tutor/settings?tab=account" },
       ].map(item => (
         <Link
           key={item.label}

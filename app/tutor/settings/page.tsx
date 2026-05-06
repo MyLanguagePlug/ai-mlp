@@ -55,7 +55,7 @@ const TABS: Tab[] = [
   { id: "pricing",       label: "Pricing & Rates",      icon: DollarSign  },
   { id: "wallet",        label: "Wallet & Earnings",    icon: Wallet      },
   { id: "notifications", label: "Notifications",         icon: Bell        },
-  { id: "account",       label: "Account & Security",   icon: Shield      },
+  { id: "account",       label: "Account & security",   icon: Shield      },
 ]
 
 // ── Save banner ──────────────────────────────────────────────────────────────
