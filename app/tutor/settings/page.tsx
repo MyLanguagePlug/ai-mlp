@@ -262,25 +262,25 @@ function ProfileTab() {
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file && file.type.startsWith("image/")) {
-      if (photoPreview) URL.revokeObjectURL(photoPreview)
-      const url = URL.createObjectURL(file)
-      // Only accept blob: URLs produced by the browser — never external sources
-      if (url.startsWith("blob:")) setPhotoPreview(url)
+    if (!file || !file.type.startsWith("image/")) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === "string") setPhotoPreview(reader.result)
     }
+    reader.readAsDataURL(file)
   }
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file && file.type.startsWith("video/")) {
-      if (videoPreview) URL.revokeObjectURL(videoPreview)
-      const url = URL.createObjectURL(file)
-      // Only accept blob: URLs produced by the browser — never external sources
-      if (url.startsWith("blob:")) {
-        setVideoPreview(url)
+    if (!file || !file.type.startsWith("video/")) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setVideoPreview(reader.result)
         setVideoName(file.name)
       }
     }
+    reader.readAsDataURL(file)
   }
 
   const FLabel = ({ children }: { children: React.ReactNode }) => (
