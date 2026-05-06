@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState, useEffect, Suspense } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import React, { useState, useEffect, useRef, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
   ChevronLeft,
@@ -26,6 +26,15 @@ import {
   ArrowDownToLine,
   Clock,
   Download,
+  Camera,
+  Video,
+  Globe,
+  MapPin,
+  Star,
+  Users,
+  Sparkles,
+  Upload,
+  Play,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -210,16 +219,237 @@ function MultiEntryField({
 
 // ── TABS ─────────────────────────────────────────────────────────────────────
 
-// 1. Profile Information — redirects to the full profile page
-function ProfileTab() {
-  const router = useRouter()
-  useEffect(() => {
-    router.replace("/tutor/profile")
-  }, [router])
+// ── Profile stat card ─────────────────────────────────────────────────────────
+
+function StatCard({ icon: Icon, value, label }: { icon: React.ElementType; value: string | number; label: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 gap-3">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#354d73] border-t-transparent" />
-      <p className="text-sm text-muted-foreground">Redirecting to your profile…</p>
+    <div className="flex flex-col items-center gap-1 rounded-xl border border-border bg-[#F7F9FB] p-4 text-center shadow-sm">
+      <Icon className="h-5 w-5 text-[#354d73]" />
+      <p className="text-xl font-bold text-[#042230]">{value}</p>
+      <p className="text-xs text-muted-foreground">{label}</p>
+    </div>
+  )
+}
+
+const FUN_PROMPTS = [
+  "What's your most memorable lesson?",
+  "What inspired you to become a tutor?",
+  "Share a fun fact about the language you teach!",
+  "What's your teaching superpower?",
+]
+
+// 1. Profile Information — inline form (no redirect)
+function ProfileTab() {
+  const [form, setForm] = useState({
+    firstName: "Brazil", lastName: "James", displayName: "Brazil J.",
+    email: "brazil.james@email.com", phone: "+1 (555) 234-5678",
+    city: "Miami, FL", country: "United States", timezone: "EST (UTC-5)",
+    tagline: "Passionate language educator with 8+ years of experience",
+    bio: "I'm a dedicated language tutor specialising in English and Portuguese. My lessons are designed around your goals — whether that's conversational fluency, business communication, or exam preparation. I use a communicative approach that keeps things engaging and practical from day one.",
+  })
+  const [saved, setSaved] = useState(false)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const [videoPreview, setVideoPreview] = useState<string | null>(null)
+  const [videoName, setVideoName] = useState<string | null>(null)
+  const [funPrompt, setFunPrompt] = useState(0)
+  const photoInputRef = useRef<HTMLInputElement>(null)
+  const videoInputRef = useRef<HTMLInputElement>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSaved(false)
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (photoPreview) URL.revokeObjectURL(photoPreview)
+      setPhotoPreview(URL.createObjectURL(file))
+    }
+  }
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (videoPreview) URL.revokeObjectURL(videoPreview)
+      setVideoPreview(URL.createObjectURL(file))
+      setVideoName(file.name)
+    }
+  }
+
+  const FLabel = ({ children }: { children: React.ReactNode }) => (
+    <label className="text-xs font-medium text-[#042230]">{children}</label>
+  )
+
+  return (
+    <div className="space-y-6">
+      {/* Avatar + stats */}
+      <div className="rounded-xl border border-border bg-[#F7F9FB] p-5">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+          <div className="relative shrink-0">
+            {photoPreview ? (
+              <img src={photoPreview} alt="Profile" className="h-20 w-20 rounded-full object-cover shadow-md" />
+            ) : (
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#354d73] to-[#5A8DA5] text-2xl font-bold text-white shadow-md">
+                {form.firstName[0]}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => photoInputRef.current?.click()}
+              className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-white border-2 border-[#354d73] shadow-sm hover:bg-[#F0F6FA] transition-colors"
+              aria-label="Change photo"
+            >
+              <Camera className="h-3 w-3 text-[#354d73]" />
+            </button>
+            <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" className="hidden" onChange={handlePhotoChange} />
+          </div>
+
+          <div className="flex-1 text-center sm:text-left">
+            <p className="text-base font-bold text-[#042230]">{form.firstName} {form.lastName}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{form.tagline}</p>
+            <p className="mt-2 text-xs text-[#354d73] font-medium">✏️ Click the camera icon to update your photo</p>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          <StatCard icon={Star}  value={4.9}  label="Avg rating" />
+          <StatCard icon={Users} value={214}  label="Students" />
+          <StatCard icon={Clock} value={1380} label="Lessons" />
+        </div>
+      </div>
+
+      {/* Intro video */}
+      <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-1">
+          <Video className="h-4 w-4 text-[#354d73]" />
+          <p className="text-sm font-semibold text-[#042230]">Intro Video</p>
+          <span className="ml-auto text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5">Highly recommended ✨</span>
+        </div>
+        <p className="text-xs text-muted-foreground mb-3">
+          A short intro video dramatically increases your booking rate. Say hello and let students know what to expect!
+        </p>
+        {videoPreview ? (
+          <div className="relative rounded-xl overflow-hidden border border-border bg-black">
+            <video src={videoPreview} controls className="w-full max-h-52 object-contain" />
+            <button
+              type="button"
+              onClick={() => { setVideoPreview(null); setVideoName(null) }}
+              className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+              aria-label="Remove video"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => videoInputRef.current?.click()}
+            className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-[#354d73]/30 bg-[#F0F6FA] px-6 py-6 transition-colors hover:border-[#354d73]/60 hover:bg-[#E8F2FA]"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#354d73]/10">
+              <Play className="h-6 w-6 text-[#354d73]" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-[#354d73]">Upload your intro video</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">MP4, MOV or WebM — max 100 MB</p>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-full bg-[#354d73] px-4 py-1.5 text-xs font-semibold text-white">
+              <Upload className="h-3.5 w-3.5" />
+              Choose video
+            </div>
+          </button>
+        )}
+        {videoName && <p className="mt-2 text-xs text-muted-foreground">📹 {videoName}</p>}
+        <input ref={videoInputRef} type="file" accept="video/mp4,video/quicktime,video/webm" className="hidden" onChange={handleVideoChange} />
+      </div>
+
+      {/* Fun prompt */}
+      <div className="rounded-xl border border-[#354d73]/20 bg-gradient-to-br from-[#F0F6FA] to-white p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-4 w-4 text-yellow-500" />
+          <p className="text-sm font-semibold text-[#042230]">Add some personality! 🎉</p>
+        </div>
+        <p className="text-xs text-muted-foreground mb-3">Answer a fun prompt to stand out:</p>
+        <div className="flex flex-wrap gap-2 mb-3">
+          {FUN_PROMPTS.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setFunPrompt(i)}
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                funPrompt === i
+                  ? "border-[#354d73] bg-[#354d73] text-white"
+                  : "border-border bg-white text-muted-foreground hover:border-[#354d73]"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        <textarea
+          rows={3}
+          placeholder={`${FUN_PROMPTS[funPrompt]}…`}
+          className="w-full rounded-xl border border-input bg-white px-4 py-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73] resize-none"
+        />
+      </div>
+
+      {/* Personal information */}
+      <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <p className="mb-4 text-sm font-semibold text-[#042230]">Personal Information</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {(["firstName","lastName","displayName","email","phone","city","country","timezone"] as const).map(name => (
+            <div key={name} className="flex flex-col gap-1.5">
+              <FLabel>
+                {name === "firstName" ? "First name"
+                  : name === "lastName" ? "Last name"
+                  : name === "displayName" ? "Display name"
+                  : name === "email" ? "Email"
+                  : name === "phone" ? "Phone"
+                  : name === "city" ? "City / Location"
+                  : name === "country" ? "Country"
+                  : "Timezone"}
+              </FLabel>
+              <input
+                name={name}
+                type={name === "email" ? "email" : "text"}
+                value={form[name]}
+                onChange={handleChange}
+                className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Public profile */}
+      <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <p className="mb-4 text-sm font-semibold text-[#042230]">Public Profile</p>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <FLabel>Tagline <span className="text-muted-foreground font-normal">(shown under your name)</span></FLabel>
+            <input
+              name="tagline"
+              value={form.tagline}
+              onChange={handleChange}
+              maxLength={100}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73]"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <FLabel>Bio</FLabel>
+            <textarea
+              name="bio"
+              rows={5}
+              value={form.bio}
+              onChange={handleChange}
+              className="rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#354d73] resize-none"
+            />
+          </div>
+        </div>
+      </div>
+
+      <SaveBanner saved={saved} onSave={() => { setSaved(true); setTimeout(() => setSaved(false), 3000) }} />
     </div>
   )
 }
