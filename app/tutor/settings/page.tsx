@@ -262,18 +262,24 @@ function ProfileTab() {
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
       if (photoPreview) URL.revokeObjectURL(photoPreview)
-      setPhotoPreview(URL.createObjectURL(file))
+      const url = URL.createObjectURL(file)
+      // Only accept blob: URLs produced by the browser — never external sources
+      if (url.startsWith("blob:")) setPhotoPreview(url)
     }
   }
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
+    if (file && file.type.startsWith("video/")) {
       if (videoPreview) URL.revokeObjectURL(videoPreview)
-      setVideoPreview(URL.createObjectURL(file))
-      setVideoName(file.name)
+      const url = URL.createObjectURL(file)
+      // Only accept blob: URLs produced by the browser — never external sources
+      if (url.startsWith("blob:")) {
+        setVideoPreview(url)
+        setVideoName(file.name)
+      }
     }
   }
 
