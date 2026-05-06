@@ -810,20 +810,20 @@ function WalletPanel() {
       <div className="grid gap-4 lg:grid-cols-2">
 
         {/* Left: balance cards */}
-        <div className="space-y-4">
-          <div className="rounded-xl border border-border bg-[#354d73] p-5 text-white shadow-sm">
+        <div className="flex flex-col gap-4 h-full">
+          <div className="flex-1 flex flex-col rounded-xl border border-border bg-[#354d73] p-5 text-white shadow-sm">
             <p className="text-xs font-medium text-white/70">Available Balance</p>
             <p className="mt-1 text-3xl font-bold">$0.00</p>
             <p className="mt-1 text-xs text-white/60">USD</p>
             <Button
               size="sm"
               variant="secondary"
-              className="mt-4 bg-white text-[#354d73] hover:bg-white/90"
+              className="mt-4 bg-white text-[#354d73] hover:bg-white/90 w-fit"
             >
               Withdraw Funds
             </Button>
           </div>
-          <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+          <div className="flex-1 flex flex-col rounded-xl border border-border bg-white p-5 shadow-sm">
             <p className="text-xs font-medium text-muted-foreground">Total Earned</p>
             <p className="mt-1 text-3xl font-bold text-[#042230]">$0.00</p>
             <p className="mt-1 text-xs text-muted-foreground">All time</p>
@@ -840,15 +840,16 @@ function WalletPanel() {
             <p className="text-sm font-semibold text-[#042230]">Earnings over time</p>
             <span className="text-[11px] text-muted-foreground">Last 12 months</span>
           </div>
-          <div className="flex-1 min-h-[300px]">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={WALLET_EARNINGS_DATA} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+          <div className="flex-1 min-h-[420px]">
+            <ResponsiveContainer width="100%" height={420}>
+              <LineChart data={WALLET_EARNINGS_DATA} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 11, fill: "#6B7280" }}
+                  tick={{ fontSize: 10, fill: "#6B7280" }}
                   axisLine={false}
                   tickLine={false}
+                  padding={{ left: 0, right: 0 }}
                 />
                 <YAxis
                   tick={{ fontSize: 11, fill: "#6B7280" }}
