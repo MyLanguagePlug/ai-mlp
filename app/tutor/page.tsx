@@ -789,12 +789,18 @@ function ReviewsPanel() {
 // ── Wallet panel ──────────────────────────────────────────────────────────────
 
 const WALLET_EARNINGS_DATA = [
-  { month: "Nov", earnings: 320 },
-  { month: "Dec", earnings: 480 },
-  { month: "Jan", earnings: 560 },
-  { month: "Feb", earnings: 420 },
-  { month: "Mar", earnings: 640 },
-  { month: "Apr", earnings: 280 },
+  { month: "May'24", earnings: 180 },
+  { month: "Jun'24", earnings: 240 },
+  { month: "Jul'24", earnings: 310 },
+  { month: "Aug'24", earnings: 275 },
+  { month: "Sep'24", earnings: 390 },
+  { month: "Oct'24", earnings: 450 },
+  { month: "Nov'24", earnings: 320 },
+  { month: "Dec'24", earnings: 480 },
+  { month: "Jan'25", earnings: 560 },
+  { month: "Feb'25", earnings: 420 },
+  { month: "Mar'25", earnings: 640 },
+  { month: "Apr'25", earnings: 280 },
 ]
 
 function WalletPanel() {
@@ -832,10 +838,10 @@ function WalletPanel() {
         <div className="flex flex-col rounded-xl border border-border bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm font-semibold text-[#042230]">Earnings over time</p>
-            <span className="text-[11px] text-muted-foreground">Last 6 months</span>
+            <span className="text-[11px] text-muted-foreground">Last 12 months</span>
           </div>
-          <div className="flex-1 min-h-[180px]">
-            <ResponsiveContainer width="100%" height={180}>
+          <div className="flex-1 min-h-[300px]">
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={WALLET_EARNINGS_DATA} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
                 <XAxis
