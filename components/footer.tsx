@@ -58,6 +58,7 @@ const footerLinks = {
       { label: "FAQ", href: "/faq" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
+      { label: "Payment Policy", href: "/payment-policy" },
     ],
   },
 }
@@ -196,6 +197,9 @@ export function Footer() {
             </Link>
             <Link href="/cookies" className="text-sm text-muted-foreground hover:text-primary">
               Cookies
+            </Link>
+            <Link href="/payment-policy" className="text-sm text-muted-foreground hover:text-primary">
+              Payments
             </Link>
           </div>
         </div>
