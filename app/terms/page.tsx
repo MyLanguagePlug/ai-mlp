@@ -456,6 +456,272 @@ export default function TermsPage() {
               <li>If applicable, you will keep all records necessary to establish that your Member Content does not violate any of the requirements of this clause and make such records available upon our reasonable request.</li>
             </ul>
 
+            {/* Section 10 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">10. Prohibitions and Restrictions on Use</h2>
+            <p className="leading-relaxed">
+              (a) You acknowledge and agree that you must not misuse the MLP platform or its content. Without limiting the foregoing, you agree that you must not:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>Provide false or misleading information to us;</li>
+              <li>Authorise any third party to use the MLP platform through your MLP account;</li>
+              <li>Schedule Language Service on behalf of anyone other than the person for whom the account was created (yourself or the 16 or 17 year old individual for whom you are the parent or guardian).</li>
+              <li>Schedule and/or provide for any Language Service other than through the MLP platform;</li>
+              <li>Make, accept, or receive payment in connection with Language Services other than through the MLP platform;</li>
+              <li>Solicit and/or recruit Members to work or study on other software or language learning platforms; or</li>
+              <li>Cause directly or indirectly in any way any of the events described in paragraphs 10(a)(i)–(vi).</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (b) For the avoidance of doubt, Tutors are not permitted to provide Language Service to any Students other than through MLP. This prohibition survives termination of the agreement between you and MLP.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (c) In addition, to the maximum extent permitted by law, you acknowledge and agree that you will not:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>Violate these Terms or any policies that appear on the MLP platform;</li>
+              <li>Infringe upon our rights or the rights of others;</li>
+              <li>Commit or encourage the commission of a criminal offence;</li>
+              <li>Violate any applicable regulations, rules, laws, or local ordinances;</li>
+              <li>Infringe upon or violate our Intellectual Property Rights or the Intellectual Property Rights of others;</li>
+              <li>Harass, abuse, insult, harm, threaten, stalk, defame, slander, disparage, intimidate, promote bigotry or discrimination, or discriminate based on gender, sexual orientation, religion, ethnicity, race, age, national origin, or disability;</li>
+              <li>Solicit personal information from minors, or submit or transmit pornography;</li>
+              <li>Upload any content that is indecent, libelous, defamatory, obscene, abusive, illegal or otherwise objectionable or otherwise invades on the rights of others;</li>
+              <li>Submit false or misleading information;</li>
+              <li>Record, process, mine, collect or track the personal information of others;</li>
+              <li>Transmit or distribute a virus, trojan, worm or any other material which is malicious, technologically harmful, designed to interrupt, destroy or limit the functionality of the MLP platform, or in breach of confidence or in any way offensive or obscene;</li>
+              <li>Hack into any aspect of the MLP Platform or otherwise access the MLP Platform other than via the public interfaces we make available to you; corrupt data; cause annoyance to other users;</li>
+              <li>Maliciously interrupt the purchase of Language Services available through the MLP Platform;</li>
+              <li>Infringe upon the rights (including without limitation proprietary rights) of any other person;</li>
+              <li>Send any unsolicited advertising or promotional material, commonly referred to as &quot;spam&quot;, or phish, pharm, pretext, spider, crawl, or scrape;</li>
+              <li>Interfere with or circumvent the security features of the MLP Platform or any related website, other websites, or the internet;</li>
+              <li>Attempt to affect, or in any way interfere with the performance or functionality of any computer facilities of or accessed through the MLP Platform;</li>
+              <li>Promote a business or other commercial venture or event, or otherwise use the MLP platform for commercial purposes;</li>
+              <li>Modify, adapt, appropriate, reproduce, distribute, translate, create derivative works or adaptations of, publicly display, reformat or frame, sell, trade or in any way exploit the MLP platform, any of MLP&apos;s content or any Member Content, unless you have obtained our prior written consent;</li>
+              <li>Reverse engineer any portion of the MLP platform; or</li>
+              <li>Cause directly or indirectly in any way any of the events described in paragraphs 10(b)(i)–(xx) to occur.</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (d) You acknowledge that:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>Breaching the prohibitions set out in paragraph 10(b) may constitute a criminal offence, and if so we may report any such breach to the relevant law enforcement authorities and disclose your identity to them.</li>
+              <li>
+                Irrespective of whether breach of any of the prohibitions set out in paragraph 10(b) constitutes a criminal offence, if:
+                <ul className="mt-2 ml-4 space-y-1 list-disc list-inside">
+                  <li>You breach any of the prohibitions set out in paragraphs 10(a) or 10(b);</li>
+                  <li>We reasonably believe that your actions may cause liability for us, you, or our Members; or</li>
+                  <li>We reasonably believe that you have otherwise acted in a manner that is inconsistent with the spirit of these Terms or any other policies that appear on the MLP platform</li>
+                </ul>
+                <p className="mt-2">we reserve the right to: suspend or terminate, in whole or in part, your Member account and/or your use of the MLP Platform or Language Services; or otherwise enforce any other rights available to us at law.</p>
+              </li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (e) Once suspended or terminated, you are not permitted to use the MLP platform in any way or under a different Member account or re-register a new Member account, and you may no longer have access to any data, messages, files or any other content or material you post, upload, transmit or store on the MLP platform. Further, MLP reserves the right, in its sole and absolute discretion, to refuse to provide registration and membership, or to suspend or terminate any Member account for any reason in the future.
+            </p>
+
+            {/* Section 11 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">11. Disclaimer as to Language Services</h2>
+            <p className="leading-relaxed">
+              (a) Before accepting individuals to become Tutors who are able to provide Language Services via the MLP Platform, MLP uses reasonable endeavours to vet such individuals to check that they are professional and competent language instructors.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) Notwithstanding paragraph 11(a), you acknowledge and agree that to the maximum extent permitted by law, MLP:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>Can not, and does not, provide any warranties, assurances or representations as to the qualities, competencies, professional accreditations, registrations, licences or the like, of Tutors, or the accuracy of the information they provide via the MLP Platform;</li>
+              <li>Provides no warranties or representations, express or implied, as to any Language Services purchased by a Student via the MLP platform;</li>
+              <li>Makes no recommendations to any particular Tutors.</li>
+              <li>MLP is not obliged to, and may not, monitor, control or vet Member Content or any content from third parties.</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (c) Irrespective of any feature on the MLP platform a Student may use to select a Tutor, each Student is responsible for selecting their Tutor and negotiating a price for Language Services from that Tutor.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (d) Your use of the MLP platform is at your own discretion and risk, and you are responsible for the protection of your property and your personal safety when interacting with other Members via the MLP Platform. MLP and its related parties, affiliates, licensors, are not liable or otherwise responsible for any Claims or Losses incurred as a result of, arising from or connected with your use of the MLP Platform including without limitation as a result of the conduct of Members whether or not such conduct occurs via the MLP Platform or otherwise.
+            </p>
+
+            {/* Section 12 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">12. Disclaimer as to Ownership of Trademarks, Images of Personalities and Third-Party Copyright</h2>
+            <p className="leading-relaxed">
+              (a) Except where expressly stated to the contrary all persons (including their names and images), third party trademarks and content, services and/or locations featured on the MLP Platform are in no way associated, linked or affiliated with MLP and you should not rely on the existence of such a connection or affiliation.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) Any trademarks/names featured on the MLP Platform are owned by the respective trademark owners.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (c) Where a trademark or brand name is referred to it is used solely to describe or identify the products or services and is in no way an assertion that such products or services are endorsed by or connected to MLP.
+            </p>
+
+            {/* Section 13 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">13. Limitation of Liability</h2>
+            <p className="leading-relaxed">
+              Without limiting the foregoing:
+            </p>
+            <p className="leading-relaxed mt-4">
+              (a) Subject to any non-excludable consumer guarantees and other consumer protection provisions set out in the Australian Consumer Law, the material displayed on the MLP Platform is provided without any guarantees, conditions or warranties, whether express or implied, as to its accuracy, completeness, reliability, suitability or availability.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) To the fullest extent permitted by law MLP hereby expressly excludes all warranties and other terms which might otherwise be implied by statute, common law or the law of equity.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (c) Without limiting the generality of the foregoing, in relation to the MLP Platform or the Services no warranties of any kind are provided, whether express or implied, including, without limitation, implied warranties of merchantability or fitness for a particular purpose. Further, MLP does not warrant that:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>the Website or any other part of the MLP Platform will function uninterrupted, timely, secure or error free, or be available at any particular time or location;</li>
+              <li>any errors or defects will be corrected;</li>
+              <li>the Website or MLP Platform is free of viruses or other harmful components; or</li>
+              <li>the results of using the Website or MLP Platform will meet your requirements.</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (d) In no case shall MLP, its directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers or licensors be liable for any damages, injury, loss or Claim whatsoever, including without limitation to any direct, indirect, special, consequential, punitive or incidental damages of any kind, including without limitation loss of use, profits, revenue, data or other intangibles, damage to goodwill or reputation, or the cost of procurement of substitute goods and services or any similar damages, arising out of or related to the use or inability to use the MLP Platform, performance errors or failures of the MLP Platform or any Linked Sites, any errors or omissions in any content on the MLP Platform or any Linked Sites, use of any content (or product) posted, transmitted, or otherwise made available via the MLP Platform, any Language Services procured using the MLP Platform, or the Linked Sites and any materials posted on those sites, irrespective of whether such damages were foreseeable or arise in contract, tort, equity, restitution, by statute, at common law or otherwise.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (e) We have no liability to the extent that our performance of the contract is prevented by force majeure. For these purposes, &quot;force majeure&quot; means any occurrence or omission as a direct or indirect result of which we are prevented from or delayed in performing any of our obligations, is beyond our reasonable control and which could not have been prevented or mitigated by reasonable diligence or precautionary measures, including forces of nature, natural disasters, acts of terrorism, riots, revolution, civil commotion, epidemic, industrial action and action or inaction by a government agency.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (f) We will not be liable for any loss or damage suffered by you as a result of your misuse of the MLP Platform, or as a result of a distributed denial-of-service attack, viruses or other technologically harmful material that may infect your computer equipment, computer programs, data or other proprietary material due to your use of the MLP Platform or to your downloading of any material posted on it, or on any Linked Sites.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (g) Our total liability for loss or damage of every kind, whether:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>arising under these Terms; or</li>
+              <li>arising in any other way out of or in relation to the supply of the Language Services, their sale, delivery or the way they behave, and whether in tort or contract or in any other cause of action,</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              is limited to the amount of the sum paid by you to us for the Language Services.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (h) The above does not affect MLP&apos;s liability for death or personal injury arising from its negligence, fraudulent misrepresentation, misrepresentation as to a fundamental matter or any other liability which cannot be excluded or limited under applicable law.
+            </p>
+
+            {/* Section 14 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">14. Indemnity</h2>
+            <p className="leading-relaxed">
+              (a) You agree to indemnify, defend and hold harmless MLP and our successors and assigns, MLP directors, officers, employees, contractors, consultants, partners, agents, affiliates, licensors, service provider and suppliers, from any and all third party claims, liability, damages, Loss or costs (including without limitation legal fees) due to, arising from or otherwise connected with:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>your breach of these Terms or the policies and documents they incorporate by reference, or your violation of any law or rights of a third party; and</li>
+              <li>any Member Content you provide or submit,</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              to the extent that you have caused or contributed towards such claims, liability, damages, Loss or costs.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) MLP must act reasonably to mitigate any Loss which it may incur as a consequence of any such claims, liability, damages, Loss or costs described in clause 14(a).
+            </p>
+
+            {/* Section 15 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">15. Linked Sites</h2>
+            <p className="leading-relaxed">
+              (a) This Website contains links to other websites (Linked Sites), which are not operated by us.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) In respect of all Linked Sites, you acknowledge and agree that:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>They have their own sets of terms and conditions, privacy policies and possibly other policies;</li>
+              <li>We have no control over the Linked Sites. Accordingly, we do not accept or assume any liability or responsibility for Linked Sites or for any loss or damage whatsoever that may arise from or in connection with your access and/or use of any Linked Sites or for your reliance on any content, goods or services available on or through any Linked Sites;</li>
+              <li>If/when you access/use Linked Sites, you do so at your own risk. Your use of the Linked Sites is subject to the terms and conditions of use and service, privacy policies and any other applicable policies contained within each such Linked Sites, and it is your responsibility to read the terms and conditions and privacy policies of those sites before using any Linked Sites.</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (c) You acknowledge and accept that some Linked Sites include websites which are necessary for the provision of Services and Language Services via the MLP Platform (&quot;Providers&quot;). In order to use the Services and obtain or give Language Services, you will be required to accept any terms and conditions of use and service, privacy policies and any other applicable policies in respect of those Providers.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (d) In respect of Linked Sites which are not necessary for the provision of Services and Language Services via the MLP Platform, you acknowledge and accept that we only provide links to those Linked Sites as a convenience, and the inclusion of such links does not imply or represent our endorsement of them or the resources or content products or services available from them.
+            </p>
+
+            {/* Section 16 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">16. Optional Tools</h2>
+            <p className="leading-relaxed">
+              (a) We may provide you with access to tools via the MLP Platform, including tools run by third parties.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) Access to such tools shall be subject to these Terms. However, where tools are run by third parties, access to those tools is provided without any warranties or representations of any kind and without any endorsement by us, and we shall have no liability whatsoever arising from or relating to your use of those tools. Your use of optional tools is at your own risk and subject to the terms on which those tools are provided by the relevant third party.
+            </p>
+
+            {/* Section 17 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">17. Linking to this Website</h2>
+            <p className="leading-relaxed">
+              You may link to the home page of the Website, provided you do so in a way that is fair and legal and does not damage our reputation or take advantage of it, but you must not establish a link in such a way as to suggest any form of association, approval or endorsement on our part where none exists. You must not establish a link from any website that is not owned by you. The Website and the MLP Platform must not be framed on any other site, nor may you create a link to any part of the Website other than the home page. We reserve the right to withdraw linking permission without notice.
+            </p>
+
+            {/* Section 18 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">18. Recording</h2>
+            <p className="leading-relaxed">
+              (a) You acknowledge and agree that all lessons conducted via the MLP Platform are recorded within MLP&apos;s zoom account, and you consent to such recording. This is done for various reasons, including without limitation for quality control, confirmation of completion of a lesson, and assistance in dispute resolution.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) Recordings will remain within MLP&apos;s zoom account and will be stored in accordance with the terms and conditions and privacy policies of zoom.us (
+              <Link href="https://explore.zoom.us/en/terms/" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">https://explore.zoom.us/en/terms/</Link>
+              {" "}and{" "}
+              <Link href="https://explore.zoom.us/en/privacy/" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">https://explore.zoom.us/en/privacy/</Link>
+              ).
+            </p>
+
+            {/* Section 19 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">19. Miscellaneous</h2>
+            <p className="leading-relaxed">
+              (a) <strong className="text-(--navy)">Entire agreement:</strong> These Terms, together with the other policies that appear on the Website, constitute the entire agreement of the parties and supersede any and all preceding and contemporaneous agreements between you and us.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) <strong className="text-(--navy)">Invalidity:</strong> If any part of the Terms is unenforceable (including any provision in which we exclude our liability to you) the enforceability of any other part of the Terms will not be affected and all other clauses remain in full force and effect. So far as possible, where any clause/sub-clause or part of a clause/sub-clause can be severed to render the remaining part valid, the clause must be interpreted accordingly. Alternatively, you agree that the clause must be rectified and interpreted in such a way that closely resembles the original meaning of the clause/sub-clause as is permitted by law.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (c) <strong className="text-(--navy)">Waiver:</strong> Any waiver of any provision of the Terms will be effective only if in writing and signed by us. Without limiting the foregoing, if you breach the Terms and we take no action, we will still be entitled to use our rights and remedies in any other situation where you breach the Terms.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (d) <strong className="text-(--navy)">Assignment:</strong> You are not permitted, at law or in equity, to assign, transfer or otherwise deal with any of your rights or obligations under these Terms without our prior written consent. MLP may assign or transfer its rights and obligations under these Terms without your consent, at its sole discretion and without restriction.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (e) <strong className="text-(--navy)">Governing Law:</strong> These Terms are governed by and construed in accordance with the laws for the time being in force in the State of Victoria, Australia without reference to any conflict of law principles, and you agree to submit to the jurisdiction of the courts and tribunals of the State of Victoria and any Courts that may hear appeals from those courts.
+            </p>
+
+            {/* Section 20 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">20. Dispute Resolution</h2>
+            <p className="leading-relaxed">
+              (a) If a dispute arises out of or relates to these Terms or the policies that appear on the Website/MLP platform, except where urgent interlocutory relief is sought, neither party may commence legal proceedings unless:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>The party claiming a dispute has given written notice of the dispute to the other; and</li>
+              <li>The parties endeavour, in good faith, to resolve the dispute expeditiously by any means upon which they mutually agree.</li>
+            </ul>
+            <p className="leading-relaxed mt-4">
+              (b) If the dispute remains unresolved within fourteen (14) days after notice has been given under paragraph 19(a), and:
+            </p>
+            <ul className="mt-3 space-y-2 list-disc list-inside">
+              <li>
+                All parties to the dispute are within Australia, then:
+                <ul className="mt-2 ml-4 space-y-1 list-disc list-inside">
+                  <li>The parties shall attend mediation with a mutually appointed mediator. If the parties cannot agree on a mediator, a mediator shall be appointed by the President of the Law Institute of Victoria or his/her nominee. The costs of the mediation shall be borne equally between the parties.</li>
+                  <li>If the dispute is not resolved within 60 days of being referred to mediation, either party may institute legal proceedings concerning the subject matter of the dispute.</li>
+                </ul>
+              </li>
+              <li>
+                One or more parties to the dispute are outside of Australia, then:
+                <ul className="mt-2 ml-4 space-y-1 list-disc list-inside">
+                  <li>The parties must attempt to resolve the dispute by mediation in accordance with the Australian Centre for International Commercial Arbitration (&quot;ACICA&quot;) mediation rules that are current at the time of the dispute. The mediation shall take place in Melbourne, Australia and be administered by the ACICA.</li>
+                  <li>If the dispute has not been settled pursuant to the said rules within 60 days following the written invitation to mediate or within such other period as the parties may agree in writing, the dispute shall be resolved by arbitration in accordance with the ACICA Arbitration Rules. The seat of arbitration shall be Melbourne, Australia. The language of the arbitration shall be English. The number of arbitrators shall be one.</li>
+                </ul>
+              </li>
+            </ul>
+
+            {/* Section 21 */}
+            <h2 className="text-xl font-bold text-(--navy) mt-10 mb-4">21. Notices / Contact</h2>
+            <p className="leading-relaxed">
+              (a) MLP will communicate with you by posting communications on the Website/MLP platform or by email to the email address you provided when registering as a Member, and you consent to receiving communications from MLP in this way. You must keep your email address and residential and postal addresses up to date, and regularly check your emails and the Website/MLP platform for any communications from MLP. If you fail to respond to an email from MLP regarding any breach, dispute or complaint within five business days, MLP reserves the right to suspend or terminate your Member account.
+            </p>
+            <p className="leading-relaxed mt-4">
+              (b) All notices to MLP intended to have a legal effect and which relate to your Member account, the Website/MLP platform, these Terms or the policies that appear on the Website/MLP platform must be in writing and delivered either in person, by post or via email to the corresponding address below:
+            </p>
+            <p className="leading-relaxed mt-4">
+              Email Address:{" "}
+              <Link href="mailto:contact@mylanguageplug.com" className="text-primary hover:underline">contact@mylanguageplug.com</Link>
+            </p>
+            <p className="leading-relaxed mt-4">
+              (c) If you have any complaints or comments, or would like to contact us for anything else relating to your Member account, the Website/MLP platform, please send us an email to{" "}
+              <Link href="mailto:contact@mylanguageplug.com" className="text-primary hover:underline">contact@mylanguageplug.com</Link>. If any complaints arise, we will attempt to resolve them as soon as practicable after we are notified of them.
+            </p>
+
           </div>
 
           <div className="mt-16 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
