@@ -174,7 +174,7 @@ export default function CookiesPage() {
               href="/terms"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
-              View Terms of Service <ArrowRight className="h-4 w-4" />
+              View Terms of Use <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

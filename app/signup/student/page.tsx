@@ -220,7 +220,7 @@ export default function StudentSignupPage() {
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
             By signing up you agree to our{" "}
-            <Link href="/terms" className="underline hover:text-foreground">Terms of Service</Link>{" "}
+            <Link href="/terms" className="underline hover:text-foreground">Terms of Use</Link>{" "}
             and{" "}
             <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
           </p>

@@ -57,7 +57,7 @@ const footerLinks = {
       { label: "Help Center", href: "/help" },
       { label: "FAQ", href: "/faq" },
       { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
+      { label: "Terms of Use", href: "/terms" },
       { label: "Payment Policy", href: "/payment-policy" },
     ],
   },
