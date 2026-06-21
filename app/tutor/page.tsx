@@ -1042,7 +1042,7 @@ function SettingsPanel() {
 
 type ActiveSection = "home" | "messages" | "reviews" | "schedule" | "wallet" | "settings"
 
-export default function TutorDashboardPage() {
+function TutorDashboardPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -1165,5 +1165,13 @@ export default function TutorDashboardPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function TutorDashboardPageWrapper() {
+  return (
+    <React.Suspense fallback={null}>
+      <TutorDashboardPage />
+    </React.Suspense>
   )
 }
