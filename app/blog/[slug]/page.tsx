@@ -228,7 +228,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         title="Ready to Start Learning?"
         description="Find the perfect language tutor and begin your journey to fluency today."
         primaryCTA={{ label: "Find a Tutor", href: "/tutors" }}
-        secondaryCTA={{ label: "Become a Tutor", href: "/teach" }}
+        secondaryCTA={{ label: "Become a Tutor", href: "/become-tutor" }}
       />
     </div>
   )
