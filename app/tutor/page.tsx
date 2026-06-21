@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   Home,
@@ -1042,9 +1043,25 @@ function SettingsPanel() {
 type ActiveSection = "home" | "messages" | "reviews" | "schedule" | "wallet" | "settings"
 
 export default function TutorDashboardPage() {
-  const [active, setActive] = useState<ActiveSection>("home")
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const [active, setActive] = useState<ActiveSection>(() => {
+    const tab = searchParams.get("tab")
+    if (tab === "messages" || tab === "reviews" || tab === "schedule" || tab === "wallet" || tab === "settings") return tab
+    return "home"
+  })
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [walletConnected] = useState(false)
+
+  useEffect(() => {
+    const tab = searchParams.get("tab")
+    if (tab === "messages" || tab === "reviews" || tab === "schedule" || tab === "wallet" || tab === "settings") {
+      setActive(tab)
+    } else {
+      setActive("home")
+    }
+  }, [searchParams])
 
   const sectionTitle: Record<ActiveSection, string> = {
     home:     "Dashboard",

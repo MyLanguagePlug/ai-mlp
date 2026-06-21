@@ -28,6 +28,7 @@ type NotifItem = {
   time: string
   date: "today" | "yesterday" | "earlier"
   read: boolean
+  href: string
 }
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
@@ -41,6 +42,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "5 min ago",
     date: "today",
     read: false,
+    href: "/tutor?tab=schedule",
   },
   {
     id: 2,
@@ -50,6 +52,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "1 h ago",
     date: "today",
     read: false,
+    href: "/tutor?tab=messages",
   },
   {
     id: 3,
@@ -59,6 +62,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "3 h ago",
     date: "today",
     read: false,
+    href: "/tutor?tab=wallet",
   },
   {
     id: 4,
@@ -68,6 +72,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "5 h ago",
     date: "today",
     read: true,
+    href: "/tutor?tab=schedule",
   },
   {
     id: 5,
@@ -77,6 +82,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "Yesterday, 4:30 PM",
     date: "yesterday",
     read: false,
+    href: "/tutor?tab=reviews",
   },
   {
     id: 6,
@@ -86,6 +92,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "Yesterday, 11:00 AM",
     date: "yesterday",
     read: true,
+    href: "/tutor?tab=schedule",
   },
   {
     id: 7,
@@ -95,6 +102,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "2 days ago",
     date: "earlier",
     read: true,
+    href: "/tutor/profile",
   },
   {
     id: 8,
@@ -104,6 +112,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "3 days ago",
     date: "earlier",
     read: true,
+    href: "/tutor?tab=wallet",
   },
   {
     id: 9,
@@ -113,6 +122,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "4 days ago",
     date: "earlier",
     read: true,
+    href: "/tutor?tab=schedule",
   },
   {
     id: 10,
@@ -122,6 +132,7 @@ const INIT_NOTIFICATIONS: NotifItem[] = [
     time: "5 days ago",
     date: "earlier",
     read: true,
+    href: "/tutor?tab=reviews",
   },
 ]
 
@@ -300,8 +311,8 @@ export default function TutorNotificationsPage() {
                         </div>
 
                         {/* Content */}
-                        <button
-                          type="button"
+                        <Link
+                          href={notif.href}
                           onClick={() => markRead(notif.id)}
                           className="min-w-0 flex-1 text-left"
                         >
@@ -320,7 +331,7 @@ export default function TutorNotificationsPage() {
                           <p className="mt-1.5 text-[11px] text-muted-foreground/70">
                             {notif.time}
                           </p>
-                        </button>
+                        </Link>
 
                         {/* Dismiss button */}
                         <button
