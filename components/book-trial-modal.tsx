@@ -336,24 +336,9 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
       <p className="text-sm text-muted-foreground">
         Pick a date and time that works for you
       </p>
-      
-      {/* Days with tutor slots info */}
-      <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 space-y-2">
-        <p className="text-xs font-medium text-blue-900">
-          Days highlighted in blue have available tutor slots
-        </p>
-        <div className="flex flex-wrap gap-1">
-          {Array.from(daysWithSlots).sort().map((dateStr) => {
-            const date = new Date(dateStr + "T00:00:00Z")
-            const dayName = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
-            return (
-              <span key={dateStr} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                {dayName}
-              </span>
-            )
-          })}
-        </div>
-      </div>
+      <p className="text-xs text-blue-700 font-medium">
+        Days highlighted in blue have available tutor slots
+      </p>
 
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="rounded-xl border border-border overflow-hidden">
@@ -366,10 +351,9 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
               const dateStr = date.toISOString().split("T")[0]
               return !daysWithSlots.has(dateStr)
             }}
-            className="p-0"
+            className="p-0 [&_button:not([aria-disabled=true])]:bg-blue-100 [&_button[data-selected-single=true]]:bg-blue-500 [&_button[data-selected-single=true]]:text-white [&_button[data-selected-single=true]]:font-bold"
             classNames={{
               day_selected: "bg-blue-500 text-white font-bold",
-              day_today: daysWithSlots.has(new Date().toISOString().split("T")[0]) ? "bg-blue-100 text-blue-900" : "",
             }}
           />
         </div>
