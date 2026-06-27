@@ -28,6 +28,13 @@ import {
   CalendarClock,
   Globe,
 } from "lucide-react"
+import {
+  addDays,
+  addWeeks,
+  isBefore,
+  startOfDay,
+  startOfWeek,
+} from "date-fns"
 
 export interface BookTrialTutor {
   id: string
@@ -78,6 +85,35 @@ const PACKAGES = [
 const MOCK_PAYMENT_PROCESSING_DELAY = 1500
 const MOCK_PAYMENT_FAILURE_RATE = 0.2
 
+// Deterministic pseudo-random value in [0, 1) from an integer seed
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed + 1) * 10000
+  return x - Math.floor(x)
+}
+
+// Returns sorted available time slot strings for a given tutor + day
+function getDaySlots(tutorId: string, date: Date): string[] {
+  // No availability on past days or weekends
+  if (isBefore(startOfDay(date), startOfDay(new Date()))) return []
+  const dow = date.getDay()
+  if (dow === 0 || dow === 6) return []
+
+  const numId = parseInt(tutorId, 10) || 1
+  // Use YYYYMMDD integer as the date component to avoid collisions across years
+  const dateKey =
+    date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
+  const seed = numId * 1_000_000 + dateKey
+
+  const count = Math.floor(seededRandom(seed) * 9) // 0–8 slots per day
+  const slots: string[] = []
+  for (let i = 0; i < count; i++) {
+    const idx = Math.floor(seededRandom(seed + i * 23 + 11) * TIME_SLOTS.length)
+    const slot = TIME_SLOTS[idx]
+    if (!slots.includes(slot)) slots.push(slot)
+  }
+  return slots.sort()
+}
+
 export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProps) {
   const [step, setStep] = useState<Step>("lesson-type")
   const [lessonType, setLessonType] = useState<"trial" | "single" | "package">("trial")
@@ -88,10 +124,28 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState<string>(tutor?.languages[0] ?? "")
+  const [daysWithSlots, setDaysWithSlots] = useState<Set<string>>(new Set())
 
   // Sync selected language when a different tutor opens the modal
   useEffect(() => {
     if (tutor) setSelectedLanguage(tutor.languages[0] ?? "")
+  }, [tutor])
+
+  // Compute days with available tutor slots for next week
+  useEffect(() => {
+    if (!tutor) return
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+    const nextWeekStart = startOfWeek(addWeeks(new Date(), 1), { weekStartsOn: 1 })
+    const days = Array.from({ length: 7 }, (_, i) => addDays(nextWeekStart, i))
+    
+    const daysSet = new Set<string>()
+    days.forEach((day) => {
+      const slots = getDaySlots(tutor.id, day)
+      if (slots.length > 0) {
+        daysSet.add(day.toISOString().split("T")[0])
+      }
+    })
+    setDaysWithSlots(daysSet)
   }, [tutor])
 
   function reset() {
@@ -282,14 +336,41 @@ export function BookTrialModal({ open, onOpenChange, tutor }: BookTrialModalProp
       <p className="text-sm text-muted-foreground">
         Pick a date and time that works for you
       </p>
+      
+      {/* Days with tutor slots info */}
+      <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 space-y-2">
+        <p className="text-xs font-medium text-blue-900">
+          Days highlighted in blue have available tutor slots
+        </p>
+        <div className="flex flex-wrap gap-1">
+          {Array.from(daysWithSlots).sort().map((dateStr) => {
+            const date = new Date(dateStr + "T00:00:00Z")
+            const dayName = date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
+            return (
+              <span key={dateStr} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                {dayName}
+              </span>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="rounded-xl border border-border overflow-hidden">
           <Calendar
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
-            disabled={(date) => date < new Date()}
+            disabled={(date) => {
+              if (date < new Date()) return true
+              const dateStr = date.toISOString().split("T")[0]
+              return !daysWithSlots.has(dateStr)
+            }}
             className="p-0"
+            classNames={{
+              day_selected: "bg-blue-500 text-white font-bold",
+              day_today: daysWithSlots.has(new Date().toISOString().split("T")[0]) ? "bg-blue-100 text-blue-900" : "",
+            }}
           />
         </div>
         {selectedDate && (
