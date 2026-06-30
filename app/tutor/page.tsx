@@ -983,6 +983,26 @@ function WalletPanel() {
         </div>
       </div>
 
+      {/* Payout settings hint */}
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">💳</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">Connect your payout method to get paid</p>
+            <p className="mt-1 text-xs text-amber-700">
+              To receive your earnings, you need to connect a payout method such as PayPal, a bank account, or Payoneer.
+              Once connected, payouts are processed every Friday automatically.
+            </p>
+            <p className="mt-2 text-xs text-amber-700 font-medium">
+              ⚠️ Without a connected payout method, your earnings will accumulate here but cannot be transferred.
+            </p>
+            <Button size="sm" variant="outline" className="mt-3 border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900">
+              Connect Payout Method
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Recent Transactions */}
       <div className="rounded-xl border border-border bg-white shadow-sm">
         <div className="border-b border-border px-5 py-4">
@@ -1011,26 +1031,6 @@ function WalletPanel() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Payout settings hint */}
-      <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
-        <div className="flex items-start gap-3">
-          <span className="text-2xl">💳</span>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-900">Connect your payout method to get paid</p>
-            <p className="mt-1 text-xs text-amber-700">
-              To receive your earnings, you need to connect a payout method such as PayPal, a bank account, or Payoneer.
-              Once connected, payouts are processed every Friday automatically.
-            </p>
-            <p className="mt-2 text-xs text-amber-700 font-medium">
-              ⚠️ Without a connected payout method, your earnings will accumulate here but cannot be transferred.
-            </p>
-            <Button size="sm" variant="outline" className="mt-3 border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900">
-              Connect Payout Method
-            </Button>
-          </div>
         </div>
       </div>
     </div>
