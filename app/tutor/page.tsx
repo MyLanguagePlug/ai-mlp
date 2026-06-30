@@ -377,6 +377,115 @@ function TutorMiniCalendar() {
   )
 }
 
+// ── Action items card ─────────────────────────────────────────────────────────
+
+const ACTION_ITEMS = [
+  {
+    id: "payment",
+    label: "Payment Processor Onboarding",
+    icon: DollarSign,
+    color: "amber",
+    content: (
+      <p className="text-sm text-amber-900 leading-relaxed">
+        Payment platform onboarding to be completed. In order to receive payments
+        from lessons, please{" "}
+        <Link
+          href="/tutor?tab=wallet"
+          className="font-semibold underline hover:opacity-80"
+        >
+          onboard with our payment processor
+        </Link>
+        .
+      </p>
+    ),
+  },
+  {
+    id: "profile",
+    label: "Pricing and Schedule",
+    icon: BookOpen,
+    color: "blue",
+    content: (
+      <p className="text-sm text-blue-900 leading-relaxed">
+        Update your{" "}
+        <Link
+          href="/tutor?tab=schedule"
+          className="font-semibold underline hover:opacity-80"
+        >
+          schedule
+        </Link>
+        ,{" "}
+        <Link
+          href="/tutor/settings?tab=pricing"
+          className="font-semibold underline hover:opacity-80"
+        >
+          lesson pricing
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="/tutor/settings?tab=teaching"
+          className="font-semibold underline hover:opacity-80"
+        >
+          languages
+        </Link>{" "}
+        to be seen by students.
+      </p>
+    ),
+  },
+] as const
+
+function ActionItemsCard() {
+  const [activeIdx, setActiveIdx] = useState(0)
+  const item = ACTION_ITEMS[activeIdx]
+  const isAmber = item.color === "amber"
+
+  return (
+    <div
+      className={`rounded-xl border shadow-sm overflow-hidden ${
+        isAmber ? "border-amber-200 bg-amber-50" : "border-blue-200 bg-blue-50"
+      }`}
+    >
+      {/* Slider / tab header */}
+      <div
+        className={`flex border-b ${
+          isAmber ? "border-amber-200" : "border-blue-200"
+        }`}
+      >
+        {ACTION_ITEMS.map((tab, idx) => {
+          const Icon = tab.icon
+          const active = idx === activeIdx
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveIdx(idx)}
+              className={`flex flex-1 items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors ${
+                active
+                  ? tab.color === "amber"
+                    ? "bg-amber-100 text-amber-800 border-b-2 border-amber-500"
+                    : "bg-blue-100 text-blue-800 border-b-2 border-blue-500"
+                  : "text-muted-foreground hover:bg-white/60"
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {tab.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Content */}
+      <div className="flex items-start gap-3 px-5 py-4">
+        <AlertTriangle
+          className={`h-4 w-4 shrink-0 mt-0.5 ${
+            isAmber ? "text-amber-600" : "text-blue-600"
+          }`}
+        />
+        {item.content}
+      </div>
+    </div>
+  )
+}
+
 // ── Home (schedule) panel ─────────────────────────────────────────────────────
 
 function HomePanel({ walletConnected }: { walletConnected: boolean }) {
@@ -402,19 +511,8 @@ function HomePanel({ walletConnected }: { walletConnected: boolean }) {
         <StatCard label="Wallet"                value="$0.00" icon={Wallet} />
       </div>
 
-      {/* Wallet warning banner */}
-      {!walletConnected && (
-        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
-          <p className="text-sm text-amber-800">
-            <span className="font-semibold">Wallet not connected.</span>{" "}
-            Connect a payout method to receive your earnings.{" "}
-            <button type="button" className="font-semibold underline hover:opacity-80">
-              Set up now
-            </button>
-          </p>
-        </div>
-      )}
+      {/* Action items card with slider */}
+      <ActionItemsCard />
 
       {/* My Schedule */}
       <div className="rounded-xl border border-border bg-white shadow-sm">
