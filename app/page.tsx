@@ -228,17 +228,18 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image */}
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-[4/3] w-full max-w-lg mx-auto">
+            <div className="relative">
+              <div className="relative aspect-[4/3] w-full max-w-sm mx-auto lg:max-w-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop"
+                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop"
                   alt="Students learning languages online"
                   fill
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 50vw"
                   className="rounded-2xl object-cover shadow-2xl"
                   priority
                 />
-                {/* Floating Card */}
-                <div className="absolute -left-8 bottom-8 rounded-xl bg-background p-4 shadow-lg">
+                {/* Floating Card — desktop only to avoid overflow on small screens */}
+                <div className="absolute -left-8 bottom-8 hidden lg:block rounded-xl bg-background p-4 shadow-lg">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
                       {onlineTutorAvatars.map((tutor, i) => (
