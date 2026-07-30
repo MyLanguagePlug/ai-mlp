@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
 interface CTASectionProps {
-  title: string
-  description: string
-  primaryCTA: {
+  title?: string
+  description?: string
+  primaryCTA?: {
     label: string
     href: string
   }
@@ -17,20 +17,20 @@ interface CTASectionProps {
 }
 
 export function CTASection({
-  title,
-  description,
-  primaryCTA,
+  title = "Ready to Start Learning?",
+  description = "Find the perfect language tutor and begin your journey to fluency today.",
+  primaryCTA = { label: "Find a Tutor", href: "/tutors" },
   secondaryCTA,
   variant = "default",
 }: CTASectionProps) {
   const bgClasses = {
-    default: "bg-[--light-blue]",
+    default: "bg-(--light-blue)",
     blue: "bg-primary",
-    navy: "bg-[--navy]",
+    navy: "bg-(--navy)",
   }
 
   const textClasses = {
-    default: "text-[--navy]",
+    default: "text-(--navy)",
     blue: "text-primary-foreground",
     navy: "text-white",
   }
@@ -42,7 +42,7 @@ export function CTASection({
   }
 
   return (
-    <section className={`py-16 md:py-24 ${bgClasses[variant]}`}>
+    <section className={`pt-8 pb-16 md:pt-10 md:pb-24 ${bgClasses[variant]}`}>
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className={`font-serif text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl ${textClasses[variant]}`}>
           {title}

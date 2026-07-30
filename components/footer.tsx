@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Globe, DollarSign, ChevronDown } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Globe, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -23,21 +23,11 @@ const siteLanguages = [
   { code: "ko", label: "Korean" },
 ]
 
-const currencies = [
-  { code: "USD", symbol: "$", label: "US Dollar" },
-  { code: "EUR", symbol: "E", label: "Euro" },
-  { code: "GBP", symbol: "£", label: "British Pound" },
-  { code: "CAD", symbol: "C$", label: "Canadian Dollar" },
-  { code: "AUD", symbol: "A$", label: "Australian Dollar" },
-  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
-]
-
 const footerLinks = {
   students: {
     title: "For Students",
     links: [
       { label: "Find Tutors", href: "/tutors" },
-      { label: "How It Works", href: "/how-it-works" },
       { label: "Pricing", href: "/pricing" },
       { label: "Languages", href: "/languages" },
       { label: "Student Reviews", href: "/reviews" },
@@ -56,9 +46,8 @@ const footerLinks = {
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Careers", href: "/careers" },
+      { label: "Corporate", href: "/corporate" },
       { label: "Blog", href: "/blog" },
-      { label: "Press", href: "/press" },
       { label: "Contact", href: "/contact" },
     ],
   },
@@ -68,7 +57,8 @@ const footerLinks = {
       { label: "Help Center", href: "/help" },
       { label: "FAQ", href: "/faq" },
       { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
+      { label: "Terms of Use", href: "/terms" },
+      { label: "Payment Policy", href: "/payment-policy" },
     ],
   },
 }
@@ -89,11 +79,10 @@ const socialLinks = [
 
 export function Footer() {
   const [selectedLanguage, setSelectedLanguage] = useState(siteLanguages[0])
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0])
 
   return (
-    <footer className="border-t border-border bg-[--light-blue]">
-      {/* Top Bar with Language/Currency Selectors */}
+    <footer className="border-t border-border bg-(--light-blue)">
+      {/* Top Bar with Language Selector */}
       <div className="border-b border-border/50">
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 px-4 py-3 sm:px-6 lg:px-8">
           {/* Language Selector */}
@@ -117,39 +106,12 @@ export function Footer() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Currency Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-                <DollarSign className="h-4 w-4" />
-                <span className="hidden sm:inline">{selectedCurrency.code}</span>
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {currencies.map((currency) => (
-                <DropdownMenuItem
-                  key={currency.code}
-                  onClick={() => setSelectedCurrency(currency)}
-                  className={selectedCurrency.code === currency.code ? "bg-muted" : ""}
-                >
-                  {currency.symbol} {currency.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Login Button */}
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
         </div>
       </div>
 
       {/* Popular Languages */}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <h3 className="mb-4 text-sm font-semibold text-[--navy]">Popular Languages</h3>
+        <h3 className="mb-4 text-sm font-semibold text-(--navy)">Popular Languages</h3>
         <div className="flex flex-wrap gap-2">
           {languages.map((lang) => (
             <Link
@@ -173,9 +135,9 @@ export function Footer() {
                 <Image
                   src="/images/logo.png"
                   alt="My Language Plug"
-                  width={240}
-                  height={70}
-                  className="h-14 w-auto sm:h-16 lg:h-18"
+                  width={888}
+                  height={364}
+                  className="h-12 w-auto sm:h-14"
                 />
               </Link>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -201,7 +163,7 @@ export function Footer() {
             {/* Links */}
             {Object.values(footerLinks).map((section) => (
               <div key={section.title}>
-                <h3 className="mb-4 text-sm font-semibold text-[--navy]">{section.title}</h3>
+                <h3 className="mb-4 text-sm font-semibold text-(--navy)">{section.title}</h3>
                 <ul className="space-y-3">
                   {section.links.map((link) => (
                     <li key={link.href}>
@@ -235,6 +197,9 @@ export function Footer() {
             </Link>
             <Link href="/cookies" className="text-sm text-muted-foreground hover:text-primary">
               Cookies
+            </Link>
+            <Link href="/payment-policy" className="text-sm text-muted-foreground hover:text-primary">
+              Payments
             </Link>
           </div>
         </div>

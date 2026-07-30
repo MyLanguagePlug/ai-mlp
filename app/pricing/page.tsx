@@ -15,8 +15,8 @@ const pricingPlans = [
   {
     name: "Pay As You Go",
     description: "Perfect for occasional learners",
-    price: null,
-    priceDescription: "From $15/hour",
+    price: "From $15",
+    priceDescription: "/hour",
     features: [
       "Access to all verified tutors",
       "Video lessons with screen sharing",
@@ -29,25 +29,24 @@ const pricingPlans = [
     popular: false,
   },
   {
-    name: "Premium",
-    description: "Best for committed learners",
-    price: "$99",
-    priceDescription: "/month",
+    name: "Lesson Packages",
+    description: "Private lessons, 50 minutes each",
+    price: "From $25.50",
+    priceDescription: "/lesson",
     features: [
-      "Everything in Pay As You Go",
-      "10% discount on all lessons",
-      "Priority tutor matching",
-      "Unlimited lesson recordings",
-      "Advanced learning materials",
-      "Progress tracking dashboard",
-      "Priority support",
+      "Free 20-minute trial lesson",
+      "1 lesson — $30.00/lesson",
+      "3 lessons — $28.50/lesson (5% off)",
+      "5 lessons — $27.75/lesson (7.5% off)",
+      "10 lessons — $27.00/lesson (10% off)",
+      "20 lessons — $25.50/lesson (15% off)",
     ],
-    cta: "Start Free Trial",
-    ctaHref: "/signup?plan=premium",
+    cta: "Book a Lesson",
+    ctaHref: "/tutors",
     popular: true,
   },
   {
-    name: "Enterprise",
+    name: "Corporate",
     description: "For teams and organizations",
     price: "Custom",
     priceDescription: "Contact for pricing",
@@ -61,7 +60,7 @@ const pricingPlans = [
       "SSO integration",
     ],
     cta: "Contact Sales",
-    ctaHref: "/contact?inquiry=enterprise",
+    ctaHref: "/contact?inquiry=corporate",
     popular: false,
   },
 ]
@@ -80,7 +79,7 @@ const tutorRates = [
 const faqs = [
   {
     q: "How does pricing work?",
-    a: "Each tutor sets their own hourly rate based on their experience and qualifications. You only pay for the lessons you book. Premium members receive a 10% discount on all lessons.",
+    a: "Each tutor sets their own hourly rate based on their experience and qualifications. You only pay for the lessons you book. Save more by purchasing a lesson package — bundles of 3, 5, 10, or 20 lessons come with discounts of up to 15%.",
   },
   {
     q: "Is there a free trial?",
@@ -88,7 +87,7 @@ const faqs = [
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes, Premium subscriptions can be canceled anytime. You'll continue to have access until the end of your billing period. Individual lesson cancellations require 24-hour notice.",
+    a: "Yes. Pre-purchased lesson packages have no expiry pressure — use them at your own pace. Individual lesson cancellations require 24-hour notice.",
   },
   {
     q: "What payment methods do you accept?",
@@ -96,7 +95,7 @@ const faqs = [
   },
   {
     q: "Are there any hidden fees?",
-    a: "No hidden fees. You pay the tutor's hourly rate plus a small platform fee (included in the displayed price). Premium members pay a monthly subscription plus discounted lesson rates.",
+    a: "No hidden fees. The per-lesson price shown in each package is the all-in price. Bigger bundles simply give you a better rate.",
   },
   {
     q: "Do you offer refunds?",
@@ -108,13 +107,13 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[--light-blue] to-background pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="bg-gradient-to-b from-(--light-blue) to-background pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="secondary" className="mb-4 px-4 py-1.5">
               Simple, Transparent Pricing
             </Badge>
-            <h1 className="font-serif text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl md:text-6xl">
+            <h1 className="font-serif text-4xl font-bold tracking-tight text-(--navy) sm:text-5xl md:text-6xl">
               Invest in Your Language Journey
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -132,7 +131,7 @@ export default function PricingPage() {
             {pricingPlans.map((plan) => (
               <Card 
                 key={plan.name} 
-                className={`relative flex flex-col ${
+                className={`relative flex flex-col transition-transform duration-300 hover:scale-[1.03] ${
                   plan.popular 
                     ? "border-primary shadow-lg ring-1 ring-primary" 
                     : ""
@@ -146,19 +145,19 @@ export default function PricingPage() {
                     </Badge>
                   </div>
                 )}
-                <CardHeader className={plan.popular ? "pt-8" : ""}>
-                  <CardTitle className="text-xl text-[--navy]">{plan.name}</CardTitle>
+                <CardHeader className="pt-8">
+                  <CardTitle className="text-xl text-(--navy)">{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col">
                   <div className="mb-6">
                     {plan.price ? (
                       <>
-                        <span className="text-4xl font-bold text-[--navy]">{plan.price}</span>
-                        <span className="text-muted-foreground">{plan.priceDescription}</span>
+                        <span className="text-4xl font-bold text-(--navy)">{plan.price}</span>
+                        <span className="mt-1 block text-muted-foreground">{plan.priceDescription}</span>
                       </>
                     ) : (
-                      <span className="text-2xl font-bold text-[--navy]">{plan.priceDescription}</span>
+                      <span className="text-2xl font-bold text-(--navy)">{plan.priceDescription}</span>
                     )}
                   </div>
 
@@ -190,10 +189,10 @@ export default function PricingPage() {
       </section>
 
       {/* Tutor Rates Section */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Average Tutor Rates by Language
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -205,10 +204,10 @@ export default function PricingPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     Language
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger className="flex items-center gap-1">
@@ -221,10 +220,10 @@ export default function PricingPage() {
                       </Tooltip>
                     </TooltipProvider>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-(--navy)">
                     Average Rate
                   </th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-[--navy]">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-(--navy)">
                     Action
                   </th>
                 </tr>
@@ -236,7 +235,7 @@ export default function PricingPage() {
                     className={index !== tutorRates.length - 1 ? "border-b" : ""}
                   >
                     <td className="px-6 py-4">
-                      <span className="font-medium text-[--navy]">{rate.language}</span>
+                      <span className="font-medium text-(--navy)">{rate.language}</span>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">{rate.range}</td>
                     <td className="px-6 py-4">
@@ -262,7 +261,7 @@ export default function PricingPage() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               What&apos;s Included in Every Lesson
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -309,7 +308,7 @@ export default function PricingPage() {
                 key={feature.title}
                 className="rounded-xl border bg-background p-6 text-center"
               >
-                <h3 className="font-semibold text-[--navy]">{feature.title}</h3>
+                <h3 className="font-semibold text-(--navy)">{feature.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{feature.description}</p>
               </div>
             ))}
@@ -321,7 +320,7 @@ export default function PricingPage() {
       <section className="bg-muted/30 py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-[--navy] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-bold tracking-tight text-(--navy) sm:text-4xl">
               Frequently Asked Questions
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -332,7 +331,7 @@ export default function PricingPage() {
           <div className="mt-12 space-y-6">
             {faqs.map((faq, index) => (
               <div key={index} className="rounded-lg border bg-background p-6">
-                <h3 className="font-semibold text-[--navy]">{faq.q}</h3>
+                <h3 className="font-semibold text-(--navy)">{faq.q}</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">{faq.a}</p>
               </div>
             ))}
@@ -354,7 +353,7 @@ export default function PricingPage() {
         title="Ready to Start Learning?"
         description="Join thousands of students who are achieving their language goals. Find your perfect tutor today."
         primaryCTA={{ label: "Find Your Tutor", href: "/tutors" }}
-        secondaryCTA={{ label: "Try Premium Free", href: "/signup?plan=premium" }}
+        secondaryCTA={{ label: "Book a Free Trial", href: "/tutors" }}
         variant="blue"
       />
     </div>

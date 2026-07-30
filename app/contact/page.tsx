@@ -87,10 +87,10 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[--light-blue] to-background pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="bg-gradient-to-b from-(--light-blue) to-background pb-16 pt-12 md:pb-24 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-serif text-4xl font-bold tracking-tight text-[--navy] sm:text-5xl">
+            <h1 className="font-serif text-4xl font-bold tracking-tight text-(--navy) sm:text-5xl">
               Get in Touch
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -110,7 +110,7 @@ export default function ContactPage() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                     <method.icon className="h-7 w-7 text-primary" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-[--navy]">{method.title}</h3>
+                  <h3 className="mt-4 text-lg font-semibold text-(--navy)">{method.title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{method.description}</p>
                   <a
                     href={method.href}
@@ -133,7 +133,7 @@ export default function ContactPage() {
             <div className="lg:col-span-3">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-[--navy]">Send Us a Message</CardTitle>
+                  <CardTitle className="text-2xl text-(--navy)">Send Us a Message</CardTitle>
                   <CardDescription>
                     Fill out the form below and we&apos;ll get back to you as soon as possible.
                   </CardDescription>
@@ -144,7 +144,7 @@ export default function ContactPage() {
                       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                         <Send className="h-8 w-8 text-green-600" />
                       </div>
-                      <h3 className="mt-4 text-xl font-semibold text-[--navy]">
+                      <h3 className="mt-4 text-xl font-semibold text-(--navy)">
                         Message Sent!
                       </h3>
                       <p className="mt-2 text-muted-foreground">
@@ -249,13 +249,13 @@ export default function ContactPage() {
               {/* Office Info */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-[--navy]">Office Location</CardTitle>
+                  <CardTitle className="text-lg text-(--navy)">Office Location</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
                     <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                     <div>
-                      <p className="font-medium text-[--navy]">Headquarters</p>
+                      <p className="font-medium text-(--navy)">Headquarters</p>
                       <p className="text-sm text-muted-foreground">
                         123 Language Lane<br />
                         San Francisco, CA 94102<br />
@@ -266,7 +266,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                     <div>
-                      <p className="font-medium text-[--navy]">Business Hours</p>
+                      <p className="font-medium text-(--navy)">Business Hours</p>
                       <p className="text-sm text-muted-foreground">
                         Monday - Friday: 9am - 6pm EST<br />
                         Saturday - Sunday: Closed
@@ -279,7 +279,7 @@ export default function ContactPage() {
               {/* Support Links */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-[--navy]">Quick Links</CardTitle>
+                  <CardTitle className="text-lg text-(--navy)">Quick Links</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Link
@@ -288,7 +288,7 @@ export default function ContactPage() {
                   >
                     <HelpCircle className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-medium text-[--navy]">Help Center</p>
+                      <p className="font-medium text-(--navy)">Help Center</p>
                       <p className="text-sm text-muted-foreground">
                         Browse our knowledge base
                       </p>
@@ -300,7 +300,7 @@ export default function ContactPage() {
                   >
                     <MessageSquare className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-medium text-[--navy]">FAQ</p>
+                      <p className="font-medium text-(--navy)">FAQ</p>
                       <p className="text-sm text-muted-foreground">
                         Common questions answered
                       </p>
@@ -312,7 +312,7 @@ export default function ContactPage() {
                   >
                     <Headphones className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-medium text-[--navy]">Tutor Support</p>
+                      <p className="font-medium text-(--navy)">Tutor Support</p>
                       <p className="text-sm text-muted-foreground">
                         Resources for tutors
                       </p>
@@ -326,10 +326,10 @@ export default function ContactPage() {
       </section>
 
       {/* Quick FAQs */}
-      <section className="bg-[--light-blue] py-16 md:py-24">
+      <section className="bg-(--light-blue) py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="font-serif text-2xl font-bold tracking-tight text-[--navy] sm:text-3xl">
+            <h2 className="font-serif text-2xl font-bold tracking-tight text-(--navy) sm:text-3xl">
               Common Questions
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -340,7 +340,7 @@ export default function ContactPage() {
           <div className="mt-8 space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="rounded-lg bg-background p-5 shadow-sm">
-                <h3 className="font-semibold text-[--navy]">{faq.q}</h3>
+                <h3 className="font-semibold text-(--navy)">{faq.q}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
               </div>
             ))}

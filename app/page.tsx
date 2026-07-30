@@ -1,58 +1,102 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Search, Globe, Users, Clock, Star, CheckCircle2, ArrowRight, Play } from "lucide-react"
+import { Search, Globe, Users, Clock, Star, CheckCircle2, ArrowRight, Play, CalendarCheck, BookOpen, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { TutorCardCompact } from "@/components/tutor-card"
+import { TutorCarousel, type Tutor } from "@/components/ui/product-carousel"
 import { TestimonialCard, TestimonialCardFeatured } from "@/components/testimonial-card"
 import { CTASection } from "@/components/cta-section"
 import { StatsSection } from "@/components/stats-section"
+import { Carousel, CarouselContent, CarouselItem, CarouselDots } from "@/components/ui/carousel"
 
-const featuredTutors = [
+const featuredTutors: Tutor[] = [
   {
     id: "1",
     name: "Maria Santos",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-    country: "Spain",
-    languages: ["Spanish", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
+    specialty: "Spanish · English",
     rating: 4.9,
     reviews: 234,
     hourlyRate: 25,
-    isVerified: true,
+    badge: "Top Rated",
+    availability: "Available Now",
   },
   {
     id: "2",
     name: "Jean-Pierre Dubois",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-    country: "France",
-    languages: ["French", "English", "Spanish"],
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    specialty: "French · English · Spanish",
     rating: 4.8,
     reviews: 189,
     hourlyRate: 30,
-    isVerified: true,
+    badge: "Verified",
+    availability: "Available Now",
   },
   {
     id: "3",
     name: "Yuki Tanaka",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-    country: "Japan",
-    languages: ["Japanese", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    specialty: "Japanese · English",
     rating: 5.0,
     reviews: 156,
     hourlyRate: 35,
-    isVerified: true,
+    badge: "Top Rated",
+    availability: "Available Now",
   },
   {
     id: "4",
     name: "Hans Mueller",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-    country: "Germany",
-    languages: ["German", "English"],
+    imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    specialty: "German · English",
     rating: 4.9,
     reviews: 203,
     hourlyRate: 28,
-    isVerified: true,
+    badge: "Verified",
+    availability: "Available Now",
+  },
+  {
+    id: "5",
+    name: "Ana Silva",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
+    specialty: "Portuguese · Spanish",
+    rating: 4.8,
+    reviews: 142,
+    hourlyRate: 22,
+    badge: "Verified",
+    availability: "Available Now",
+  },
+  {
+    id: "6",
+    name: "Wei Zhang",
+    imageUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=face",
+    specialty: "Mandarin · English",
+    rating: 4.9,
+    reviews: 178,
+    hourlyRate: 32,
+    badge: "Top Rated",
+    availability: "Available Now",
+  },
+  {
+    id: "7",
+    name: "Sofia Rossi",
+    imageUrl: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=400&fit=crop&crop=face",
+    specialty: "Italian · French",
+    rating: 4.7,
+    reviews: 98,
+    hourlyRate: 24,
+    availability: "Available Now",
+  },
+  {
+    id: "8",
+    name: "Min-jun Lee",
+    imageUrl: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&h=400&fit=crop&crop=face",
+    specialty: "Korean · English",
+    rating: 4.8,
+    reviews: 121,
+    hourlyRate: 27,
+    badge: "Verified",
+    availability: "Available Now",
   },
 ]
 
@@ -84,21 +128,27 @@ const testimonials = [
 ]
 
 const languages = [
-  { name: "Spanish", flag: "🇪🇸", tutors: 520 },
-  { name: "French", flag: "🇫🇷", tutors: 380 },
-  { name: "German", flag: "🇩🇪", tutors: 290 },
-  { name: "Japanese", flag: "🇯🇵", tutors: 210 },
-  { name: "Chinese", flag: "🇨🇳", tutors: 340 },
-  { name: "Italian", flag: "🇮🇹", tutors: 180 },
-  { name: "Portuguese", flag: "🇧🇷", tutors: 220 },
-  { name: "Korean", flag: "🇰🇷", tutors: 150 },
+  { name: "Spanish", flagCode: "es", tutors: 520 },
+  { name: "French", flagCode: "fr", tutors: 380 },
+  { name: "German", flagCode: "de", tutors: 290 },
+  { name: "Japanese", flagCode: "jp", tutors: 210 },
+  { name: "Chinese", flagCode: "cn", tutors: 340 },
+  { name: "Italian", flagCode: "it", tutors: 180 },
+  { name: "Portuguese", flagCode: "br", tutors: 220 },
+  { name: "Korean", flagCode: "kr", tutors: 150 },
 ]
 
 const stats = [
   { value: "10,000+", label: "Active Students" },
   { value: "500+", label: "Expert Tutors" },
-  { value: "50+", label: "Languages" },
-  { value: "98%", label: "Satisfaction Rate" },
+  { value: "50+", label: "Languages", mobileHidden: true },
+  { value: "98%", label: "Satisfaction Rate", mobileHidden: true },
+]
+
+const onlineTutorAvatars = [
+  { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 1" },
+  { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 2" },
+  { src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face", alt: "Online tutor profile picture 3" },
 ]
 
 const features = [
@@ -126,7 +176,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#F0F6FA] pb-16 pt-12 md:pb-24 md:pt-20">
+      <section className="relative overflow-hidden bg-[#F0F6FA] pb-8 pt-8 md:pb-12 md:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Hero Content */}
@@ -135,17 +185,17 @@ export default function HomePage() {
                 <Star className="mr-1 h-3 w-3 fill-amber-400 text-amber-400" />
                 Rated 4.9/5 by 10,000+ students
               </Badge>
-              <h1 className="font-serif text-balance text-4xl font-bold tracking-tight text-[#042230] sm:text-5xl md:text-6xl">
+              <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-[#042230] sm:text-4xl md:text-5xl">
                 Learn Any Language with{" "}
                 <span>Expert </span>
                 <span className="text-[#5A8DA5]">Tutors</span>
               </h1>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground md:text-xl">
                 Flexible scheduling, affordable rates, and real results.
               </p>
 
               {/* Search Bar */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -161,7 +211,7 @@ export default function HomePage() {
               </div>
 
               {/* Trust Indicators */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                   <span className="text-sm text-muted-foreground">Free trial lesson</span>
@@ -178,24 +228,33 @@ export default function HomePage() {
             </div>
 
             {/* Hero Image */}
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square w-full max-w-lg mx-auto">
+            <div className="relative">
+              <div className="relative aspect-[4/3] w-full max-w-sm mx-auto lg:max-w-lg">
                 <Image
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop"
+                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop"
                   alt="Students learning languages online"
                   fill
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 50vw"
                   className="rounded-2xl object-cover shadow-2xl"
                   priority
                 />
-                {/* Floating Card */}
-                <div className="absolute -left-8 bottom-8 rounded-xl bg-background p-4 shadow-lg">
+                {/* Floating Card — desktop only to avoid overflow on small screens */}
+                <div className="absolute -left-8 bottom-8 hidden lg:block rounded-xl bg-background p-4 shadow-lg">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
-                      {[1, 2, 3].map((i) => (
+                      {onlineTutorAvatars.map((tutor, i) => (
                         <div
                           key={i}
-                          className="h-8 w-8 rounded-full bg-primary ring-2 ring-background"
-                        />
+                          className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-background"
+                        >
+                          <Image
+                            src={tutor.src}
+                            alt={tutor.alt}
+                            width={32}
+                            height={32}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
                       ))}
                     </div>
                     <div>
@@ -218,44 +277,62 @@ export default function HomePage() {
 
 
       {/* Languages Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-8 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Header: centred heading */}
           <div className="text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Popular Languages
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
               Choose from over 50 languages taught by native speakers and certified professionals
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Link left-aligned above the first language card */}
+          <div className="mt-6 flex justify-start">
+            <Link
+              href="/languages"
+              className="text-base font-semibold text-primary transition-colors hover:text-primary/80"
+            >
+              View all languages →
+            </Link>
+          </div>
+
+          {/* Language cards grid — 2 columns on mobile, 4 on desktop */}
+          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
             {languages.map((lang) => (
               <Link
                 key={lang.name}
                 href={`/tutors?language=${lang.name.toLowerCase()}`}
-                className="group flex items-center justify-between rounded-xl border border-border bg-background p-4 transition-all hover:border-primary hover:shadow-md"
+                className="group relative flex flex-col items-center gap-3 overflow-hidden rounded-2xl border border-border bg-background px-4 py-6 text-center transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{lang.flag}</span>
-                  <div>
-                    <p className="font-semibold text-foreground group-hover:text-primary">
-                      {lang.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {lang.tutors} tutors
-                    </p>
-                  </div>
+                {/* Flag bubble */}
+                <div
+                  aria-label={lang.name}
+                  className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-secondary shadow-sm transition-all duration-300 group-hover:bg-primary/10 group-hover:shadow-md"
+                >
+                  <Image
+                    src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                    alt={`${lang.name} flag`}
+                    width={56}
+                    height={40}
+                    className="h-10 w-14 rounded-lg object-cover"
+                    unoptimized
+                  />
                 </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+                {/* Language name */}
+                <p className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+                  {lang.name}
+                </p>
+                {/* Tutor count */}
+                <p className="text-xs font-medium text-muted-foreground">
+                  {lang.tutors} tutors available
+                </p>
+                {/* Hover accent line */}
+                <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/languages">View All Languages</Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -274,7 +351,39 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {/* Mobile carousel */}
+          <div className="mt-12 sm:hidden">
+            <Carousel opts={{ align: "start", loop: false }}>
+              <CarouselContent className="-ml-4">
+                {features.map((feature) => (
+                  <CarouselItem key={feature.title} className="pl-4">
+                    <div className="group relative overflow-hidden rounded-2xl bg-background shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                      <div className="relative h-48 w-full overflow-hidden">
+                        <Image
+                          src={feature.image}
+                          alt={feature.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/90 shadow-lg transition-transform duration-300 group-hover:scale-110">
+                          <feature.icon className="h-6 w-6 text-primary-foreground" />
+                        </div>
+                      </div>
+                      <div className="p-6 text-center">
+                        <h3 className="text-xl font-semibold text-foreground">{feature.title}</h3>
+                        <p className="mt-3 leading-relaxed text-muted-foreground">{feature.description}</p>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselDots />
+            </Carousel>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="mt-12 hidden gap-8 sm:grid md:grid-cols-3">
             {features.map((feature) => (
               <div
                 key={feature.title}
@@ -311,50 +420,93 @@ export default function HomePage() {
 
 
       {/* How It Works */}
-      <section className="py-16 md:py-24">
+      <section className="bg-(--navy) py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Header */}
           <div className="text-center">
-            <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <span className="inline-block rounded-full bg-white/10 px-4 py-1 text-sm font-medium text-white/80">
+              Simple Process
+            </span>
+            <h2 className="mt-4 font-serif text-3xl font-bold tracking-tight text-white sm:text-4xl">
               How It Works
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              Start learning in three simple steps
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
+              Start speaking a new language in just three steps — it's that simple
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {/* Steps */}
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
             {[
               {
                 step: "01",
+                icon: Search,
                 title: "Find Your Tutor",
-                description: "Browse our vetted tutors, read reviews, and find the perfect match for your learning style and goals.",
+                description: "Browse hundreds of vetted, native-speaking tutors. Filter by language, schedule, budget, and teaching style to find your perfect match.",
+                highlight: "500+ expert tutors",
               },
               {
                 step: "02",
-                title: "Book a Trial Lesson",
-                description: "Schedule a free trial lesson to experience the teaching style and ensure it's the right fit for you.",
+                icon: CalendarCheck,
+                title: "Book a Free Trial",
+                description: "Schedule a complimentary trial lesson with zero commitment. Experience the teaching style first-hand and make sure the fit feels right.",
+                highlight: "No credit card needed",
               },
               {
                 step: "03",
+                icon: BookOpen,
                 title: "Start Learning",
-                description: "Begin your personalized language journey with flexible scheduling and ongoing support.",
+                description: "Begin your personalised language journey with flexible, one-on-one sessions. Track progress and celebrate milestones every step of the way.",
+                highlight: "98% satisfaction rate",
               },
             ].map((item, index) => (
-              <div key={item.step} className="relative text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                  {item.step}
-                </div>
+              <div key={item.step} className="relative">
+                {/* Connector arrow — only between steps on desktop */}
                 {index < 2 && (
-                  <div className="absolute left-[60%] top-8 hidden h-0.5 w-[80%] bg-border md:block" />
+                  <div className="absolute -right-3 top-10 z-10 hidden items-center md:flex">
+                    <ArrowRight className="h-6 w-6 text-white/30" />
+                  </div>
                 )}
-                <h3 className="mt-6 text-xl font-semibold text-foreground">
-                  {item.title}
-                </h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
+
+                <div className="flex h-full flex-col rounded-2xl bg-white/10 p-8 ring-1 ring-white/10 transition-all duration-300 hover:bg-white/[0.15] hover:ring-white/20">
+                  {/* Step number + icon row */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
+                      <item.icon className="h-7 w-7 text-white" />
+                    </div>
+                    <span className="font-serif text-5xl font-bold leading-none text-white/10 select-none">
+                      {item.step}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="mt-6 text-xl font-semibold text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 flex-1 leading-relaxed text-white/70">
+                    {item.description}
+                  </p>
+
+                  {/* Highlight pill */}
+                  <div className="mt-6">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white/80">
+                      <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                      {item.highlight}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* CTA row */}
+          <div className="mt-12 text-center">
+            <Button asChild size="lg" className="bg-white text-[--navy] hover:bg-white/90">
+              <Link href="/tutors">
+                Find Your Tutor
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -363,8 +515,8 @@ export default function HomePage() {
 
       {/* Featured Tutors */}
       <section className="bg-[#F0F6FA] py-16 md:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8">
             <div>
               <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Featured Tutors
@@ -373,26 +525,26 @@ export default function HomePage() {
                 Top-rated tutors ready to help you succeed
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/tutors">
-                View All Tutors
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <a
+              href="/tutors"
+              className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              See all tutors →
+            </a>
           </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredTutors.map((tutor) => (
-              <TutorCardCompact key={tutor.id} {...tutor} />
-            ))}
-          </div>
+          <TutorCarousel
+            tutors={featuredTutors}
+            viewAllHref="/tutors"
+            className="py-4"
+          />
         </div>
       </section>
 
 
 
       {/* Testimonials */}
-      <section className="py-16 md:py-24">
+      <section className="pt-16 pb-8 md:pt-24 md:pb-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -416,7 +568,23 @@ export default function HomePage() {
           </div>
 
           {/* Testimonial Grid */}
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+
+          {/* Mobile carousel */}
+          <div className="mt-8 sm:hidden">
+            <Carousel opts={{ align: "start", loop: false }}>
+              <CarouselContent className="-ml-4">
+                {testimonials.map((testimonial) => (
+                  <CarouselItem key={testimonial.name} className="pl-4">
+                    <TestimonialCard {...testimonial} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselDots />
+            </Carousel>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="mt-8 hidden gap-6 sm:grid md:grid-cols-3">
             {testimonials.map((testimonial) => (
               <TestimonialCard key={testimonial.name} {...testimonial} />
             ))}

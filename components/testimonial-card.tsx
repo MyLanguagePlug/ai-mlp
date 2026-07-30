@@ -23,7 +23,7 @@ export function TestimonialCard({
     <Card className="h-full">
       <CardContent className="flex h-full flex-col p-6">
         {/* Quote Icon */}
-        <Quote className="h-8 w-8 text-[--cyan] opacity-50" />
+        <Quote className="h-8 w-8 text-(--cyan) opacity-50" />
 
         {/* Rating */}
         <div className="mt-4 flex gap-0.5">
@@ -47,7 +47,7 @@ export function TestimonialCard({
         {/* Language Badge */}
         {language && (
           <div className="mt-4">
-            <span className="rounded-full bg-[--light-blue] px-3 py-1 text-xs font-medium text-[--navy]">
+            <span className="rounded-full bg-(--light-blue) px-3 py-1 text-xs font-medium text-(--navy)">
               Learning {language}
             </span>
           </div>
@@ -64,7 +64,7 @@ export function TestimonialCard({
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[--navy]">{name}</p>
+            <p className="text-sm font-semibold text-(--navy)">{name}</p>
             <p className="text-xs text-muted-foreground">{role}</p>
           </div>
         </div>
@@ -83,7 +83,7 @@ export function TestimonialCardFeatured({
   language,
 }: TestimonialCardProps) {
   return (
-    <Card className="overflow-hidden bg-[--light-blue]">
+    <Card className="overflow-hidden bg-(--light-blue)">
       <CardContent className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:gap-12">
         {/* Author Image */}
         <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-full ring-4 ring-background md:h-40 md:w-40">
@@ -112,14 +112,14 @@ export function TestimonialCardFeatured({
           </div>
 
           {/* Quote */}
-          <blockquote className="mt-4 text-lg leading-relaxed text-[--navy] md:text-xl">
+          <blockquote className="mt-4 text-lg leading-relaxed text-(--navy) md:text-xl">
             &ldquo;{content}&rdquo;
           </blockquote>
 
           {/* Author Info */}
           <div className="mt-6 flex items-center gap-4">
             <div>
-              <p className="font-semibold text-[--navy]">{name}</p>
+              <p className="font-semibold text-(--navy)">{name}</p>
               <p className="text-sm text-muted-foreground">{role}</p>
             </div>
             {language && (
